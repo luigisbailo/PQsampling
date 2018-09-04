@@ -11,7 +11,6 @@ add_executable(PQsampling
 #    Fig2/main_GF.cpp
     Fig3/main_GFproj.cpp
 #    main.cpp
-#    main2.cpp
     bruteForce.hpp
     burst.hpp
     checks.hpp

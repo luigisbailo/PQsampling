@@ -78,9 +78,6 @@ double getR_aGF ( particle *particles, int *particleList, double *shells, double
 	shells[j] = shells[j] - particles[jPart].shellRed;
 	}
 
-
-
-
     }
 
 

@@ -283,7 +283,7 @@ double PQder ( double radius, double t, double r0, double tau, double b, double 
     PQ += term2;
     m += 1;
 
-  } while ( abs(term2) > conv | termA*m*m>0.00001 | m<200);
+  } while ( abs(term2) > conv | termA*m*m>0.00001 | m<2000);
 
   return PQ;
 
@@ -342,12 +342,12 @@ double PQ00funct ( double radius, double t, double tau, double b, double D, doub
 
       n += 1;
 
-    } while (  abs (term1) > conv | termA*n*n>0.00001 | n<40 ) ;
+    } while (  abs (term1) > conv | termA*n*n>0.000001 | n<5 ) ;
 
     // cout << term2 << endl;
     PQ += term2;
     m += 1;
-  } while ( abs (term2) > conv | termA*m*m>0.00001 | m<40 );
+  } while ( abs (term2) > conv | termA*m*m>0.000001 | m<5 );
  
   return PQ;  
 
@@ -397,11 +397,11 @@ double PQ00der ( double radius, double t, double tau, double b, double D, double
       term1 =  coeff2 * termA * termB / q;
       term2 -= term1;
 
-    } while ( abs(term1) > conv | termA*n*n>0.0000001 | n<20 );
+    } while ( abs(term1) > conv | termA*n*n>0.000001 | n<5 );
 
     PQ += term2;
     m += 1;
-  } while ( abs(term2) > conv | termA*m*m>0.00001 | m<20);
+  } while ( abs(term2) > conv | termA*m*m>0.000001 | m<15);
 
   return PQ;
 

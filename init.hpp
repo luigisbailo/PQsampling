@@ -33,7 +33,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
     particles[count].label = count;
     particles[count].time = 0;
     particles[count].tau_exit = 0;
-    particles[count].tau_exitSampled=-1;
+    particles[count].tau_exitSampled=0;
     particles[count].shell = 0; 
     particles[count].burst = false; 
     particles[count].gf = false;
@@ -181,7 +181,10 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
     (*stat) ++;
  
     particles[i].gf = true;
-    particles[i].tau_exit += drawTimeNewt ( R, particles[i].Diff, gsl_rng_uniform(r) ); 
+    particles[i].tau_exit += drawTimeNewt ( R, particles[i].Diff, gsl_rng_uniform(r) );
+    particles[i].tau_exitSampled = particles[i].tau_exit;
+    particles[i].tau_exit = trunc( particles[i].tau_exit / tau_bm ) * tau_bm;
+
     particles[i].shell = R;
     particles[i].pos_exit[0]= -1;
     particles[i].pos_exit[1]= -1;
@@ -196,7 +199,7 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
     deltaPos[1] = 0;
     deltaPos[2] = 0;
 
-    for ( int j=0; j<N; j++){
+    for ( int j=0; j<N; j++ ){
 
       if ( dists [j] < 0 && i!=j ){
 
@@ -308,6 +311,5 @@ void initShell_GF_proj ( particle *particles, gsl_rng *r, int N, double tau_bm, 
   }
 
  }
-
 
 }

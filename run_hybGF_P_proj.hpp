@@ -43,23 +43,25 @@ void run_hybGF_P_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double D
 
     while ( particles[partList[0]].tau_exit < Tsim ) {
 
-        std::cout << particles[partList[0]].tau_exit << std::endl;
+//        std::cout << particles[partList[0]].tau_exit << std::endl;
     	if ( particles[partList[0]].burst ) stat[0]++;
 
-		// cout << setprecision(6);
-		// printPos_per ( particles, partList, N );
-		// // printDist_per (particles, partList, N, L);
-		// cout << "\n";
+//		 std::cout << std::setprecision(6);
+//		 printPos_per ( particles, partList, N );
+//		 // printDist_per (particles, partList, N, L);
+//		 std::cout << "\n";
 
 		updatePart_GF_P_proj ( &particles[partList[0]], r, tau_bm, L );    
 		//differently from aGF, updatePart() here samples also the exit position from the shell
-		// check_GF ( particles, partList,  N, L );
 
+		// check_GF ( particles, partList,  N, L );
 		// check_times ( particles, partList, N);
 
+		std::cout << "check 1 " << std::endl;
 		getDist ( particles, partList, distRow, &maxSh, N, L );
+		std::cout << "check 2 " << std::endl;
 
-		burst_P_GF ( particles, partList, distRow, r, N, partList[0], L); 
+//		burst_P_GF ( particles, partList, distRow, r, N, partList[0], L);
 
 		R = getR_GF ( particles, partList, shells, distRow, N, L );
 		//it returns zero in case the determined shell is smaller than the smallest possible
@@ -67,9 +69,9 @@ void run_hybGF_P_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double D
 		particles[partList[0]].burst = false;
 
 		if ( R > 0 ) {
-
+//std::cout << "GF" << std::endl;
 			stat [1] ++;
-			if (R>L/2) R=L/2;
+			if (R>L/8) R=L/8;
 			GFstep_GF_proj ( &particles[partList[0]], r, R , tau_bm);
 			particles[partList[0]].gf = true;
 
@@ -86,9 +88,26 @@ void run_hybGF_P_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double D
 
 		sortPart ( particles,partList,N);
 
+//
+//            std::cout << "not synch" << std::endl;
+//            std::cout << std::setprecision(6);
+//            printPos_per(particles, partList, N);
+//            // printDist_per (particles, partList, N, L);
+//            std::cout << "\n";
 
-		if ( particles[partList[0]].tau_exit > tProj ) {
+
+		if ( particles[partList[0]].tau_exit > tProj | particles[partList[0]].tau_exit == tProj ) {
+//            std::cout << "synch" << std::endl;
+//            std::cout << particles[partList[0]].tau_exit << std::endl;
+//             std::cout << std::setprecision(6);
+//             printPos_per ( particles, partList, N );
+
 		    synchPart_P_GF ( particles, partList, r, N, tProj, L );
+//
+//            std::cout << std::setprecision(6);
+//            printPos_per ( particles, partList, N );
+//            // printDist_per (particles, partList, N, L);
+//            std::cout << "\n";
 
 		    for ( int n=0; n<N; n++ ){
 
@@ -107,6 +126,7 @@ void run_hybGF_P_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double D
 			tProj = countProj * Tsim / nProj;
 
 		}
+
 
 
     } ;

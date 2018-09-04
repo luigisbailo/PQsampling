@@ -52,13 +52,13 @@ int main (int argc, char *argv[]) {
 	double alpha= 9;
 	double L = 20;
 
-	int nProj=10;
-	double Tsim=1000;
-	int Nsamples=10;
+	int nProj=5;
+	double Tsim=100;
+	int Nsamples=100;
 
 //	std::stringstream convert_nProj (argv[1]);
 //  	std::stringstream convert_Tsim (argv[2]);
-//  	std::stringstream convert_Nsamples (argv[3]);
+//  	std::stringstream convert_Nsamples (argv[3]
 
 //	if (!(convert_nProj >> nProj ))
 //	    exit (EXIT_FAILURE);
@@ -80,7 +80,7 @@ int main (int argc, char *argv[]) {
 
 
 	for ( int count = 0; count < Nsamples; count++){
-
+std::cout << count << std::endl;
 
 		for (int d=0; d<3; d++ )
 			stat[d] = 0;
@@ -95,8 +95,8 @@ int main (int argc, char *argv[]) {
 
 			for ( int n=0; n<N; n++){
 
-				Diff_P [n][count][t] = diffStat[t][n];		
-			}
+				Diff_P [n][count][t] = diffStat[t][n];
+	         }
 
 		}
 
@@ -143,7 +143,7 @@ int main (int argc, char *argv[]) {
 
 		avDiff_P [t] = avDiff_P [t] / (Nsamples*N);
 		avDiff_PQ [t] = avDiff_PQ [t] / (Nsamples*N);
-
+//std::cout << avDiff_P[t] << std::endl;
 	}
 
 

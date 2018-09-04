@@ -313,7 +313,6 @@ void updatePart_GF_P_proj ( particle *P, gsl_rng *r, double dt, double L ) {
 
   if ( P->gf  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
 
-
     polarTransf ( deltaPos, drawPosNewt ( P->tau_exit-P->time, P->shell, P->Diff, gsl_rng_uniform(r) ), gsl_rng_uniform (r), gsl_rng_uniform (r) );
     //deltaPos now contains the displacements in cartesian coordinates
     P -> pos[0] += deltaPos[0];  
@@ -322,7 +321,7 @@ void updatePart_GF_P_proj ( particle *P, gsl_rng *r, double dt, double L ) {
     checkBound ( P -> pos, P -> pos_period, L );
     P->shell = 0;
     P->time = P->tau_exit;
-    P->time = P->tau_exit;P->tau_exitSampled = -1;
+    P->tau_exitSampled = -1;
 
   }
   else if (P->gf ) {
@@ -333,7 +332,8 @@ void updatePart_GF_P_proj ( particle *P, gsl_rng *r, double dt, double L ) {
     P -> pos[2] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     checkBound ( P->pos, P->pos_period, L );
     P->shell = 0;
-    P->time = P->tau_exit;P->tau_exitSampled = -1;
+    P->time = P->tau_exit;
+    P->tau_exitSampled = -1;
 
 
   }
@@ -357,21 +357,40 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
 // differently from aGF, the positions are not sampled when the domain is constructed
 // the function is called for the particle P that has the lowest tau_exit, while instead the tau_exitSampled can be higher
 
-  double deltaPos [3];
+  double deltaPos[3],deltaPosFut[3];
 
   if ( P->gf  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
 
-//    double R = drawPosPQ00bis ( P->tau_exit-P->time, P->tau_exitSampled-P->time,P->shell, P->Diff, gsl_rng_uniform(r) );
-    double R = P->shell;
-    polarTransf ( deltaPos, R , gsl_rng_uniform (r), gsl_rng_uniform (r) );
-    //deltaPos now contains the displacements in cartesian coordinates
-    P -> pos[0] += deltaPos[0];  
-    P -> pos[1] += deltaPos[1];
-    P -> pos[2] += deltaPos[2];      
-    checkBound ( P -> pos, P -> pos_period, L );
-    P->shell = 0;
-    P->time = P->tau_exit;
-    P->tau_exitSampled = -1;
+      double R = drawPosPQ00bis ( P->tau_exit-P->time, P->tau_exitSampled-P->time, P->shell, P->Diff, gsl_rng_uniform(r) );
+      double R1 = gsl_rng_uniform (r);
+      double R2 = gsl_rng_uniform (r);
+      polarTransf ( deltaPos, R, R1, R2 );
+
+      P -> pos[0] += deltaPos[0];
+      P -> pos[1] += deltaPos[1];
+      P -> pos[2] += deltaPos[2];
+
+      P -> totPQdispl = 1;
+      P -> countPQ = 0;
+
+      double deltaT = dt - ( P->tau_exitSampled - P->tau_exit );
+      polarTransf ( deltaPosFut, P->shell, R1, R2 );
+
+
+      P->displPQ[0][0] = deltaPosFut[0] - deltaPos[0] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
+      P->displPQ[1][0] = deltaPosFut[1] - deltaPos[1] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
+      P->displPQ[2][0] = deltaPosFut[2] - deltaPos[2] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
+
+
+
+      checkBound ( P -> pos, P -> pos_period, L );
+      P -> pos_exit [0] = P -> pos[0];
+      P -> pos_exit [1] = P -> pos[1];
+      P -> pos_exit [2] = P -> pos[2];
+
+      P->shell = 0;
+      P->time = P->tau_exit;
+      P -> gf = false;
 
   }
   else if (P->gf ) {
@@ -380,31 +399,26 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
     P -> pos[0] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     P -> pos[1] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     P -> pos[2] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
-    checkBound ( P->pos, P->pos_period, L );
+
+      checkBound ( P->pos, P->pos_period, L );
+      P -> pos_exit [0] = P -> pos[0];
+      P -> pos_exit [1] = P -> pos[1];
+      P -> pos_exit [2] = P -> pos[2];
+
     P->shell = 0;
     P->time = P->tau_exit;
-    P->tau_exitSampled = -1;
+    P->tau_exitSampled = P->tau_exit;
+      P -> gf = false;
 
 
   }
   else if ( !P->burst  ){
-    // it is the case of a BM integration
+    // it is the case of a BM integration, when the particle has been burst, it skips the update cycle
 
     P->pos[0] = P->pos_exit[0];
     P->pos[1] = P->pos_exit[1];
     P->pos[2] = P->pos_exit[2];
     P->time = P->tau_exit;
-
-    if ( P->tau_exitSampled < P->tau_exit && P->countPQ>0 ){
-        P->tau_exitSampled = -1;
-//        for (int count = 0; count<P->countPQ; count++){
-//            P->displPQ[0][count]=0;
-//            P->displPQ[1][count]=0;
-//            P->displPQ[2][count]=0;
-//        }
-        P->countPQ = 0;
-        P->totPQdispl = 0;
-    }
 
   }
 

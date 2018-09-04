@@ -106,6 +106,7 @@ double drawPosNewt ( double t, double b, double D, double xi ) {
 }
 
 
+
 double drawFree ( double t, double D, double xi ){
 
   double dr = sqrt(6*D*t)/10000;
@@ -129,94 +130,166 @@ double drawFree ( double t, double D, double xi ){
 }
 
 
-double drawPosPQbis ( double t, double radius0, double tau, double b, double D, double xi ) {
-
-  double r0 = 0;
-  double r1 = b;
-  double r = radius0;
-  double q = qFunct (radius0,tau,b,D);
-  double P = PQfunct (r,t,radius0,tau,b,D,q);
-  // double dP = PQder (r,t,radius0,tau,b,D,q);
-  // double rMem=-1;
-  int count = 0;
-
-  // if ( xi<pow(10,-16) )
-  //   return 0;
-
-  while ( abs(P-xi)>DRAW_CONVERGENCE | abs(P-xi) > DRAW_CONVERGENCE ){
-
-    count++;
-    if (count > MAX_ITERATIONS){
-      std::cout << std::setprecision (15);
-      std::cout << "Error: finding the root of P was not possible for:" << std::endl;
-      std::cout << "r0 = " << radius0 << "\tt = " << t << "\ttau = " << tau << "\t b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
-      // exit (EXIT_FAILURE);
-      return r;
-    }
-
-    if ( P<xi ) r0 = r;
-    else r1 = r;  
-
-    r = (r0 + r1)/2; 
-    P = PQfunct (r,t,radius0,tau,b,D,q);
-
-   
-
-    // rMem =r;
-    // r = r - (P-xi)/dP;
-
-    // q = qFunct (radius0,tau,b,D);
-    // P = PQfunct (r,t,radius0,tau,b,D,q);
-    // dP = PQder (r,t,radius0,tau,b,D,q);
-
-
-
-  // std::cout << r0 << "\t" <<r  << "\t" << r1 << "\t" << P-xi << std::endl;
-
-
-  }; 
-
-  return r;
-    
-}
 
 
 double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
 
-  double r0 = 0;
-  double r1 = b;
-  double r = (r0 + r1) /2;
-  double q = Sder (tau,b,D);
-  double P = PQ00funct (r,t,tau,b,D,q);
-  double dP,dP0,P0;
-  int count = 0;
-  double rMem = -1;
-
-  while ( abs(P-xi)>0.001 | abs(r-rMem) > DRAW_CONVERGENCE ){
-
-    count++;
-    if (count > MAX_ITERATIONS){
-      std::cout << std::setprecision (15);
-      std::cout << "Error: finding the root of P was not possible for:" << std::endl;
-      std::cout << "t = " << t << "\t b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
-      exit (EXIT_FAILURE);
+    if (t>=tau){
+        exit (EXIT_FAILURE);
+        std::cout << "error drawPosPQ00bis" << std::endl;
     }
+    double q = Sder (tau,b,D);
+    double r0;
 
-    rMem = r;
-    if ( P<xi ) r0 = r;
-    else r1 = r;  
+    if ( t/tau>0.99) {
+        double deltaR = 10 * b * (1-t / tau);
+        r0 = b - deltaR;
+        double PQ = PQ00funct (r0,t,tau,b,D,q);
+//        std :: cout << PQ << " " << xi << std::endl;
+        while ( PQ > xi ){
+            r0 -= deltaR;
+            PQ = PQ00funct (r0,t,tau,b,D,q);;
+//            std :: cout << PQ << std::endl;
 
-    r = (r0 + r1)/2; 
-    P = PQ00funct (r,t,tau,b,D,q);
+        }
 
-  // std::cout << r0 << "\t" <<r  << "\t" << r1 << "\t" << P-xi << std::endl;
+    }
+    else {
+        r0 = 0;
+      }
 
+    double r1 = b;
+    double r = (r0 + r1) /2;
 
-  }; 
+    double P = PQ00funct (r,t,tau,b,D,q);
+    int count = 0;
+    double rMem = -1;
 
-  return r;
-    
+    while ( abs(P-xi)>DRAW_CONVERGENCE | abs(r-rMem) > DRAW_CONVERGENCE*b ){
+//        std::cout << r0 << " " << r1 << " " << r << " " << P << " " << xi << std::endl;
+
+        count++;
+        if (count > MAX_ITERATIONS){
+            std::cout << std::setprecision (15);
+            std::cout << "Error: finding the root of P was not possible for:" << std::endl;
+            std::cout << "t = " << t << "\t b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
+            exit (EXIT_FAILURE);
+            }
+
+        rMem = r;
+        if ( P<xi ) r0 = r;
+        else r1 = r;
+
+        r = (r0 + r1)/2;
+        P = PQ00funct (r,t,tau,b,D,q);
+
+    };
+
+    return r;
+
 }
+
+
+double drawPosPQbis ( double t, double radius0, double tau, double b, double D, double xi ) {
+
+    double r0 = 0;
+    double r1 = b;
+    double r = radius0;
+    double q = qFunct (radius0,tau,b,D);
+    double P = PQfunct (r,t,radius0,tau,b,D,q);
+    // double dP = PQder (r,t,radius0,tau,b,D,q);
+    // double rMem=-1;
+    int count = 0;
+
+    // if ( xi<pow(10,-16) )
+    //   return 0;
+
+    while ( abs(P-xi)>DRAW_CONVERGENCE*b | abs(P-xi) > DRAW_CONVERGENCE ){
+
+        count++;
+        if (count > MAX_ITERATIONS){
+            std::cout << std::setprecision (15);
+            std::cout << "Error: finding the root of P was not possible for:" << std::endl;
+            std::cout << "r0 = " << radius0 << "\tt = " << t << "\ttau = " << tau << "\t b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
+            // exit (EXIT_FAILURE);
+            return r;
+        }
+
+        if ( P<xi ) r0 = r;
+        else r1 = r;
+
+        r = (r0 + r1)/2;
+        P = PQfunct (r,t,radius0,tau,b,D,q);
+
+
+
+        // rMem =r;
+        // r = r - (P-xi)/dP;
+
+        // q = qFunct (radius0,tau,b,D);
+        // P = PQfunct (r,t,radius0,tau,b,D,q);
+        // dP = PQder (r,t,radius0,tau,b,D,q);
+
+
+
+        // std::cout << r0 << "\t" <<r  << "\t" << r1 << "\t" << P-xi << std::endl;
+
+
+    };
+
+    return r;
+
+}
+
+
+//double drawPosPQ00Newt ( double t, double tau, double b, double D, double xi ) {
+//
+//
+//    double r= b*t/tau;
+//
+//    if (D*t/b/b<0.01){
+//        std::cout << "ERROR: time too small in drawPos" << std::endl;
+//    }
+//
+//    double q = Sder (tau,b,D);
+//    double P = PQ00funct (r,t,tau,b,D,q);
+//    double dP = PQ00der (r,t,tau,b,D,q);
+//    int count = 0;
+//    double rMem=-1;
+//
+//
+//    while ( abs(r-rMem) > DRAW_CONVERGENCE*b | abs(P-xi) > DRAW_CONVERGENCE ) {
+//
+//
+//        count++;
+//        if (count > MAX_ITERATIONS){
+//            // cout << setprecision (15);
+//            std::cout << "Error: finding the root of P was not possible for:" << std::endl;
+//            std::cout << "t = " << t << "\tb = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
+//            // exit (EXIT_FAILURE);
+//            return r;
+//        }
+//
+//
+//        rMem = r;
+//        r = r - (P-xi)/dP;
+//
+//        P = PQ00funct (r,t,tau,b,D,q);
+//        dP = PQ00der (r,t,tau,b,D,q);
+//
+//// std::cout << r <<std::endl;
+//// std::cout << r << "\t" << P << "\t" << dP  <<std::endl;
+//    }
+//
+//
+//    // return count;
+//    return r;
+//
+//
+//}
+//
+
+
 
 
 // double drawFree ( double t, double D, double xi){

@@ -16,6 +16,7 @@
 #include <chrono>
 #include <cstring>
 #include <sstream>
+#include <random>
 
 using namespace std::chrono;
 
@@ -34,9 +35,75 @@ using namespace std::chrono;
 int main () {         
 
 // cout << drawTimeNewt (1.5541445463895798e-08,0.001,0.38271502428688109) << endl;
-std::cout << drawPosNewt (0.1,0.2,0.01,0.2) << std::endl;
+  std::default_random_engine generator;
+  std::uniform_real_distribution<double> distribution(0.0,1.0);
+  high_resolution_clock::time_point t2,t1;
 
+  double tau = 20;
+  double t = 0.98*tau;
+  double b = 1.54;
+  double D = 0.01;
+  double radius0 = 0.1;
+
+  double dX = 0.01;
+
+//    for ( double X = dX; X<1; X += dX){
+//
+////      std::cout << X << "\t" << drawPosPQ00Newt (t, tau, b, D, X) << "\t" << drawPosPQ00Newt (t, tau, b, D, X) << std::endl;
+//        std::cout << X << "\t" << PQ00funct (X, t, tau, b, D, Sder(t,b,D)) << std::endl;
+//    }
+
+    int nsamples = 10000;
+
+  t1 = high_resolution_clock::now();
+  for (int count = 0; count<nsamples; count++ ){
+      double xi =  distribution(generator);
+      double r = drawPosNewt(t,b,D,xi);
+//      std::cout << r << std::endl;
+    }
+  t2 = high_resolution_clock::now();
+
+  double t12 = double(std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count())/1000000;
+
+  std::cout << "P\t" << t12 << std::endl;
+
+  t1 = high_resolution_clock::now();
+  for (int count = 0; count<nsamples; count++ ){
+    double xi =  distribution(generator);
+    double r = drawPosPQ00bis(t,tau,b,D,xi);
+//      std::cout << r << std::endl;
   }
+  t2 = high_resolution_clock::now();
+
+  t12 = double(std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count())/1000000;
+
+  std:: cout << "PQ bis\t" << t12 << std::endl;
+
+
+
+//  double dr = 0.01;
+//  double R;
+//  double PQ_temp;
+//
+//  double PQ_max=0;
+//  double R_max=0;
+//
+//  for ( double r=dr; r<b; r+=dr ) {
+//
+////      PQ_temp = PQ00funct(r,t,tau,b,D,Sder(tau,b,D));
+//
+//    PQ_temp = PQ00der(r,t,tau,b,D,Sder(tau,b,D));
+//    if ( PQ_temp > PQ_max ){
+//      R_max = r;
+//      PQ_max = PQ_temp;
+//    }
+////    std :: cout << r << "\t" << PQ_temp << std::endl;
+//  }
+//
+//  std::cout << R_max << std::endl;
+//  std::cout << t/tau*b << std::endl;
+
+}
 
 
 

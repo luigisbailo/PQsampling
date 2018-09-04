@@ -43,32 +43,38 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
     while ( particles[partList[0]].tau_exit < Tsim ) {
 
-//		std::cout<< particles[partList[0]].tau_exit << std::endl;
 
     	if ( particles[partList[0]].burst ) stat[0]++;
-
-//        printPos_per ( particles, partList, N );
+//
+//		 std::cout << std::setprecision(6);
+//		 printPos_per ( particles, partList, N );
+//		 // printDist_per (particles, partList, N, L);
+//		 std::cout << "\n";
 
 		updatePart_GF_PQ_proj ( &particles[partList[0]], r, tau_bm, L );
 		//differently from aGF, updatePart() here samples also the exit position from the shell
-	
-		// check_GF ( particles, partList,  N, L );
+//
 
+        // check_GF ( particles, partList,  N, L );
 		// check_times ( particles, partList, N);
 
 		getDist ( particles, partList, distRow, &maxSh, N, L );
 
 		burst_PQ_GF_proj ( particles, partList, distRow, r, N, partList[0], tau_bm, L);
 
-		R = getR_GF ( particles, partList, shells, distRow, N, L );
-		//it returns zero in case the determined shell is smaller than the smallest possible
+        if (particles[partList[0]].tau_exitSampled<particles[partList[0]].time) {
+            R = getR_GF(particles, partList, shells, distRow, N, L);
+        }
+        else{
+            R=0;
+        }
 
 		particles[partList[0]].burst = false; //when a particle is burst its position is updated and put on top of the list
 
 		if ( R > 0 ) {
 
 			stat [1] ++;
-			if (R>L/2) R=L/2;
+			if (R>L/10) R=L/10;
 			GFstep_GF_proj ( &particles[partList[0]], r, R , tau_bm);
 			particles[partList[0]].gf = true;
 
@@ -86,15 +92,9 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 		sortPart ( particles,partList,N);
 
 
-		if ( particles[partList[0]].tau_exit > tProj ) {
-
-//                    printPos_per ( particles, partList, N );
-//        printPos_per ( particles, partList, N );
-
+		if ( particles[partList[0]].tau_exit > tProj | particles[partList[0]].tau_exit == tProj ) {
 
             synchPart_PQ_GF ( particles, partList, r, N, tProj, L );
-//        printPos_per ( particles, partList, N );
-
 
 		    for ( int n=0; n<N; n++ ){
 
