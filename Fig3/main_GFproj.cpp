@@ -33,6 +33,7 @@ using namespace std::chrono;
 #include "../checks.hpp"
 #include "../run_hybGF_P_proj.hpp"
 #include "../run_hybGF_PQ_proj.hpp"
+#include "../run_BM.hpp"
 
 
 int main (int argc, char *argv[]) {
@@ -49,12 +50,12 @@ int main (int argc, char *argv[]) {
 	const int N_A = 5;
 	const int N_B = 5;
 
-	double alpha= 9;
+	double alpha= 9000000;
 	double L = 20;
 
 	int nProj=5;
-	double Tsim=100;
-	int Nsamples=100;
+	double Tsim=1000;
+	int Nsamples=500;
 
 //	std::stringstream convert_nProj (argv[1]);
 //  	std::stringstream convert_Tsim (argv[2]);
@@ -71,6 +72,7 @@ int main (int argc, char *argv[]) {
 	double diffStat[nProj][10];
 	double Diff_P [N][Nsamples][nProj];
 	double Diff_PQ [N][Nsamples][nProj];
+    double Diff_BM [N][Nsamples][nProj];
 
 	//"double diffStat[][10]" where 10 indicates the number of particles
 	if (N != 10){
@@ -80,7 +82,8 @@ int main (int argc, char *argv[]) {
 
 
 	for ( int count = 0; count < Nsamples; count++){
-std::cout << count << std::endl;
+
+        std::cout << count << std::endl;
 
 		for (int d=0; d<3; d++ )
 			stat[d] = 0;
@@ -89,7 +92,7 @@ std::cout << count << std::endl;
 			for ( int t=0; t<nProj; t++)
 				diffStat[t][n] = 0;
 
-//		run_hybGF_P_proj ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, diffStat );
+		run_hybGF_P_proj ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, diffStat );
 
 		for ( int t=0; t<nProj; t++){
 
@@ -119,53 +122,78 @@ std::cout << count << std::endl;
 
 
 
+        for (int d=0; d<3; d++ )
+            stat[d] = 0;
+        for ( int n=0; n<N; n++ )
+            for ( int t=0; t<nProj; t++)
+                diffStat[t][n] = 0;
 
-	}	
+        run_BM ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, Tsim, nProj, L, diffStat );
+
+        for ( int n=0; n<N; n++){
+            for ( int t=0; t<nProj; t++){
+
+                Diff_BM [n][count][t] = diffStat[t][n];
+
+            }
+        }
+
+
+
+    }
 
 	
 
 	double avDiff_P [nProj];
 	double avDiff_PQ [nProj];
+    double avDiff_BM [nProj];
 
 	for ( int t=0; t<nProj; t++ ){
 
 		avDiff_P [t] = 0;
 		avDiff_PQ [t] = 0;
+        avDiff_BM [t] = 0;
 
 		for ( int count=0; count<Nsamples; count++){
 			for ( int n=0; n<N; n++) {
 
 				avDiff_P [t] += Diff_P [n][count][t]; 
-				avDiff_PQ [t] += Diff_PQ [n][count][t]; 
+				avDiff_PQ [t] += Diff_PQ [n][count][t];
+                avDiff_BM [t] += Diff_BM [n][count][t];
 
-			}
+            }
 		}
 
 		avDiff_P [t] = avDiff_P [t] / (Nsamples*N);
 		avDiff_PQ [t] = avDiff_PQ [t] / (Nsamples*N);
-//std::cout << avDiff_P[t] << std::endl;
+        avDiff_BM [t] = avDiff_BM [t] / (Nsamples*N);
+
 	}
 
 
 	double sdDiff_P [nProj];
 	double sdDiff_PQ [nProj];
+    double sdDiff_BM [nProj];
 
 	for ( int t=0; t<nProj; t++ ){
 
 		sdDiff_P [t] = 0;
 		sdDiff_PQ [t] = 0;
+        sdDiff_BM [t] = 0;
 
 		for ( int count=0; count<Nsamples; count++){
 			for (int n=0; n<N; n++){
 
 				sdDiff_P [t] += pow(Diff_P[n][count][t]-avDiff_P[t],2); 
-				sdDiff_PQ [t] += pow(Diff_PQ[n][count][t]-avDiff_PQ[t],2); 
-			
-			}
+				sdDiff_PQ [t] += pow(Diff_PQ[n][count][t]-avDiff_PQ[t],2);
+                sdDiff_BM [t] += pow(Diff_BM[n][count][t]-avDiff_BM[t],2);
+
+            }
 		}
 	
 		sdDiff_P [t] = sqrt(sdDiff_P [t] / pow(Nsamples*N,2) );
 		sdDiff_PQ [t] = sqrt(sdDiff_PQ [t] / pow(Nsamples*N,2) );
+        sdDiff_BM [t] = sqrt(sdDiff_BM [t] / pow(Nsamples*N,2) );
 
 	}
 
@@ -175,8 +203,8 @@ std::cout << count << std::endl;
 
 	for ( int t=0; t<nProj; t++){
 
-		std::cout << (t+1)*Tsim/nProj << "\t" << avDiff_P[t] << "\t" << avDiff_PQ[t] << "\t" ;
-		std::cout << sdDiff_P[t] << "\t" << sdDiff_PQ[t] << "\t" <<(t+1)*Tsim/nProj*6*D_A  << std::endl;
+		std::cout << (t+1)*Tsim/nProj << "\t" << avDiff_P[t] << "\t" << avDiff_PQ[t] << "\t" << avDiff_BM[t] << "\t" ;
+		std::cout << sdDiff_P[t] << "\t" << sdDiff_PQ[t] << "\t" << sdDiff_BM[t] << "\t" <<(t+1)*Tsim/nProj*6*D_A  << std::endl;
 
 	}
 

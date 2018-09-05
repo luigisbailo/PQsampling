@@ -22,9 +22,6 @@ void GFstep_GF_proj ( particle *myPart, gsl_rng *r, double R, double dt){
   myPart->tau_exit += drawTimeNewt ( R, myPart->Diff, gsl_rng_uniform(r) );
   myPart->tau_exitSampled = myPart -> tau_exit;
   myPart->tau_exit = trunc( myPart->tau_exit / dt ) * dt;
-  myPart->pos_exit[0] = -1;
-  myPart->pos_exit[1] = -1;
-  myPart->pos_exit[2] = -1;
   myPart->shell = R;
 
     
@@ -82,6 +79,8 @@ void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, d
      
 }
 
+
+
 void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L ) {
 //sqrtTAU_BM is sqrt(2*TAU_BM)
 
@@ -130,8 +129,8 @@ void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r,
     }
 
     if ( particles[partList[0]].tau_exitSampled>particles[partList[0]].time) {
-//std::cout << particles[partList[0]].tau_exitSampled << "\t" << particles[partList[0]].time << "\t" <<particles[partList[0]].countPQ
-//          << "\t"  << particles[partList[0]].displPQ[0][particles[partList[0]].countPQ] <<  std::endl;
+
+        //std::cout << "\t" <<particles[partList[0]].countPQ << "\t"  << sqrt(pow(particles[partList[0]].displPQ[0][particles[partList[0]].countPQ],2) + pow(particles[partList[0]].displPQ[1][particles[partList[0]].countPQ],2) + pow(particles[partList[0]].displPQ[2][particles[partList[0]].countPQ],2)) <<  std::endl;
         deltaPosDiff[0] = particles[partList[0]].displPQ[0][particles[partList[0]].countPQ];
         deltaPosDiff[1] = particles[partList[0]].displPQ[1][particles[partList[0]].countPQ];
         deltaPosDiff[2] = particles[partList[0]].displPQ[2][particles[partList[0]].countPQ];
@@ -147,11 +146,10 @@ void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r,
     particles[partList[0]].pos_exit[0] = particles[partList[0]].pos[0] + deltaPosInt[0] + deltaPosDiff[0];
     particles[partList[0]].pos_exit[1] = particles[partList[0]].pos[1] + deltaPosInt[1] + deltaPosDiff[1];
     particles[partList[0]].pos_exit[2] = particles[partList[0]].pos[2] + deltaPosInt[2] + deltaPosDiff[2];
-
-    checkBound (particles[partList[0]].pos_exit, particles[partList[0]].pos_period, L );
     particles[partList[0]].tau_exit += tau_bm;
 
 }
+
 
 
 void synchPart_P_GF ( particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
@@ -243,7 +241,6 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
        // exit (EXIT_FAILURE);
 
     }
-
            
     particles[n].gf = false;
     particles[n].burst = false;
@@ -251,43 +248,42 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
     if (particles[n].shell>0 && Tsynch-particles[n].time> (particles[n].shell*particles[n].shell)/particles[n].Diff/100  ){
 
         double Rsynch =  drawPosPQ00bis( Tsynch-particles[n].time, particles[n].tau_exitSampled-particles[n].time, particles[n].shell, particles[n].Diff, gsl_rng_uniform(r) );
-
-
-      polarTransf ( synchPos, Rsynch, gsl_rng_uniform (r), gsl_rng_uniform (r));
-      particles[n].pos[0] += synchPos[0];
-      particles[n].pos[1] += synchPos[1];
-      particles[n].pos[2] += synchPos[2];
-      checkBound (particles[n].pos,particles[n].pos_period, L );
+        polarTransf ( synchPos, Rsynch, gsl_rng_uniform (r), gsl_rng_uniform (r));
+        particles[n].pos[0] += synchPos[0];
+        particles[n].pos[1] += synchPos[1];
+        particles[n].pos[2] += synchPos[2];
 
     }
-    else if (particles[n].shell>0) {
+    else if (particles[n].tau_exitSampled > particles[n].time){
 
-      particles[n].pos[0] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
-      particles[n].pos[1] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
-      particles[n].pos[2] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
-      checkBound (particles[n].pos, particles[n].pos_period, L );
+//TO DO: INSERT INTERACTIONS ----------------------------------------------------
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 
+        particles[n].pos[0] += particles[n].displPQ[0][particles[n].countPQ];
+        particles[n].pos[1] += particles[n].displPQ[1][particles[n].countPQ];
+        particles[n].pos[2] += particles[n].displPQ[2][particles[n].countPQ];
+        particles[n].countPQ ++;
     }
     else{
         //It is the case of BM
-        if (particles[n].pos[0]<0){
-            std::cout << "Error in synch PQ" << std::endl;
-        }
-          particles[n].pos[0] = particles[n].pos_exit[0];
-          particles[n].pos[1] = particles[n].pos_exit[1];
-          particles[n].pos[2] = particles[n].pos_exit[2];
+        particles[n].pos[0] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
+        particles[n].pos[1] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
+        particles[n].pos[2] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
 
       }
+      checkBound (particles[n].pos, particles[n].pos_period, L );
 
-      particles[n].pos_exit[0] = -1;
-      particles[n].pos_exit[1] = -1;
-      particles[n].pos_exit[2] = -1;
+      particles[n].pos_exit[0] = particles[n].pos[0];
+      particles[n].pos_exit[1] = particles[n].pos[1];
+      particles[n].pos_exit[2] = particles[n].pos[2];
+
       particles[n].shell = 0;
       particles[n].time = Tsynch;
       particles[n].tau_exit = Tsynch;
-      particles[n].tau_exitSampled = Tsynch;
-      particles[n].countPQ=0;
-      particles[n].totPQdispl=0;
+//      particles[n].tau_exitSampled = Tsynch;
+//      particles[n].countPQ=0;
+//      particles[n].totPQdispl=0;
 
   }
     

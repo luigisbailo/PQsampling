@@ -57,9 +57,9 @@ void run_hybGF_P_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double D
 		// check_GF ( particles, partList,  N, L );
 		// check_times ( particles, partList, N);
 
-		std::cout << "check 1 " << std::endl;
+//		std::cout << "check 1 " << std::endl;
 		getDist ( particles, partList, distRow, &maxSh, N, L );
-		std::cout << "check 2 " << std::endl;
+//		std::cout << "check 2 " << std::endl;
 
 //		burst_P_GF ( particles, partList, distRow, r, N, partList[0], L);
 

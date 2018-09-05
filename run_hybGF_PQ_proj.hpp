@@ -74,7 +74,7 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 		if ( R > 0 ) {
 
 			stat [1] ++;
-			if (R>L/10) R=L/10;
+			if (R>L/20) R=L/20;
 			GFstep_GF_proj ( &particles[partList[0]], r, R , tau_bm);
 			particles[partList[0]].gf = true;
 
@@ -94,9 +94,19 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
 		if ( particles[partList[0]].tau_exit > tProj | particles[partList[0]].tau_exit == tProj ) {
 
+//            		 std::cout << std::setprecision(6);
+//		 printPos_per ( particles, partList, N );
+//		 // printDist_per (particles, partList, N, L);
+//		 std::cout << "\n";
+
             synchPart_PQ_GF ( particles, partList, r, N, tProj, L );
 
-		    for ( int n=0; n<N; n++ ){
+//            std::cout << std::setprecision(6);
+//            printPos_per ( particles, partList, N );
+//            // printDist_per (particles, partList, N, L);
+//            std::cout << "\n";
+
+            for ( int n=0; n<N; n++ ){
 
 		    	diffStat[countProj-1][n] += pow(particles[n].pos[0]-particles[n].pos_init[0] + particles[n].pos_period[0]*L, 2);
 		    	diffStat[countProj-1][n] += pow(particles[n].pos[1]-particles[n].pos_init[1] + particles[n].pos_period[1]*L, 2);

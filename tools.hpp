@@ -415,6 +415,8 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
   else if ( !P->burst  ){
     // it is the case of a BM integration, when the particle has been burst, it skips the update cycle
 
+    checkBound (P->pos_exit,P->pos_period, L);
+
     P->pos[0] = P->pos_exit[0];
     P->pos[1] = P->pos_exit[1];
     P->pos[2] = P->pos_exit[2];

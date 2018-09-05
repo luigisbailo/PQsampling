@@ -1,6 +1,6 @@
 #pragma once
 
-void run_BM ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, double tau_bm, double Tsim, int nProj, double L, double diffStat[] ) {
+void run_BM ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, double tau_bm, double Tsim, int nProj, double L, double diffStat[][10] ) {
 
 
 	const gsl_rng_type *Type;
@@ -36,14 +36,12 @@ void run_BM ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, double
 
 		if ( particles[0].time > tProj ) {
 
+			for ( int n=0; n<N; n++ ){
 
-		    for ( int n=0; n<N; n++ ){
-
-		    	diffStat[countProj-1] += pow(particles[n].pos[0]-particles[n].pos_init[0] + particles[n].pos_period[0]*L, 2);
-		    	diffStat[countProj-1] += pow(particles[n].pos[1]-particles[n].pos_init[1] + particles[n].pos_period[1]*L, 2);
-		    	diffStat[countProj-1] += pow(particles[n].pos[2]-particles[n].pos_init[2] + particles[n].pos_period[2]*L, 2);
-
-		    }
+				diffStat[countProj-1][n] += pow(particles[n].pos[0]-particles[n].pos_init[0] + particles[n].pos_period[0]*L, 2);
+				diffStat[countProj-1][n] += pow(particles[n].pos[1]-particles[n].pos_init[1] + particles[n].pos_period[1]*L, 2);
+				diffStat[countProj-1][n] += pow(particles[n].pos[2]-particles[n].pos_init[2] + particles[n].pos_period[2]*L, 2);
+			}
 
 			countProj ++;
 			tProj = countProj * Tsim / nProj;

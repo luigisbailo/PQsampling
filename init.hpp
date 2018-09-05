@@ -47,10 +47,11 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
     particles[count].countPQ = 0;
 
     double distMin,dist;
+      int k =0;
     //The following cycle ensures that particles are not in within interaction distance at initialization
     do{
 
-      distMin = 0;
+      distMin = L;
 
       x = gsl_rng_uniform (r)*L;
       y = gsl_rng_uniform (r)*L;  
@@ -62,17 +63,21 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
 
       for ( int n=0; n<count; n++ ){
 
-        dist = sqrt(dist2_per ( &particles[count], &particles[n], L )) - particles[count].radius - particles[n].radius; 
+        dist = sqrt(dist2_per ( &particles[count], &particles[n], L ));// - particles[count].radius - particles[n].radius;
         if (dist<distMin) distMin = dist;
 
-     } 
-
-    }while (distMin<-particles[count].radius/2);
+     }
+      k++;
+      if (k>100*MAX_ITERATIONS) {
+        std::cout << "kill sim. init" << std::endl;
+        exit(EXIT_FAILURE);
+      }
+      }while (distMin<particles[count].radius );
 
     
-    particles[count].pos_exit[0] = -1;
-    particles[count].pos_exit[1] = -1;
-    particles[count].pos_exit[2] = -1;   
+    particles[count].pos_exit[0] = x;
+    particles[count].pos_exit[1] = y;
+    particles[count].pos_exit[2] = z;
     particles[count].pos_init[0] = x;
     particles[count].pos_init[1] = y;
     particles[count].pos_init[2] = z; 
@@ -100,10 +105,11 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
     particles[count].gf = false;
 
     double distMin,dist;
+    int k =0;
 
     do{
 
-      distMin = 0;
+      distMin = L;
 
       x = gsl_rng_uniform (r)*L;
       y = gsl_rng_uniform (r)*L;  
@@ -115,12 +121,17 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
 
       for ( int n=0; n<count; n++ ){
 
-        dist = sqrt(dist2_per ( &particles[count], &particles[n], L )) - particles[count].radius - particles[n].radius; 
+        dist = sqrt(dist2_per ( &particles[count], &particles[n], L ));// - particles[count].radius - particles[n].radius;
         if (dist<distMin) distMin = dist;
 
      } 
+      k++;
+      if (k>100*MAX_ITERATIONS){
+        std::cout << "kill sim. init" << std::endl;
+        exit(EXIT_FAILURE);
 
-    }while (distMin<0);
+      }
+    }while (distMin<particles[count].radius );
 
     
 
@@ -186,9 +197,9 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
     particles[i].tau_exit = trunc( particles[i].tau_exit / tau_bm ) * tau_bm;
 
     particles[i].shell = R;
-    particles[i].pos_exit[0]= -1;
-    particles[i].pos_exit[1]= -1;
-    particles[i].pos_exit[2]= -1;
+//    particles[i].pos_exit[0]= -1;
+//    particles[i].pos_exit[1]= -1;
+//    particles[i].pos_exit[2]= -1;
 
   }      
   else {
@@ -266,9 +277,6 @@ void initShell_GF_proj ( particle *particles, gsl_rng *r, int N, double tau_bm, 
     particles[i].tau_exitSampled = particles[i].tau_exit;
     particles[i].tau_exit = trunc ( particles[i].tau_exit / tau_bm ) * tau_bm;
     particles[i].shell = R;
-    particles[i].pos_exit[0]= -1;
-    particles[i].pos_exit[1]= -1;
-    particles[i].pos_exit[2]= -1;
 
   }      
   else {
@@ -306,7 +314,6 @@ void initShell_GF_proj ( particle *particles, gsl_rng *r, int N, double tau_bm, 
     particles[i].pos_exit[1] = particles[i].pos[1] + deltaPos[1] + gsl_ran_gaussian (r,1)*particles[i].sqrtDiff * sqrt2TAU_BM;
     particles[i].pos_exit[2] = particles[i].pos[2] + deltaPos[2] + gsl_ran_gaussian (r,1)*particles[i].sqrtDiff * sqrt2TAU_BM;
 
-    checkBound (particles[i].pos_exit,particles[i].pos_period, L);
 
   }
 
