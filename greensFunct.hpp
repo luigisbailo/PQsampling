@@ -224,13 +224,13 @@ double PQfunct ( double radius, double t, double r0, double tau, double b, doubl
 
       n += 1;
 
-    } while (  abs (term1) > conv | termA*n*n>0.000001 | n<200 ) ;
+    } while (  abs (term1) > conv | termA*n*n>0.000001 | n<10 ) ;
 
     PQ += term2;
     m += 1;
 
-  } while ( abs (term2) > conv | termA*m*m>0.00001 | m<200 );
- 
+  } while ( abs (term2) > conv | termA*m*m>0.00001 | m<10 );
+// std::cout << "\t\t"  << PQ << std::endl;
   return PQ;  
 
 
@@ -416,7 +416,7 @@ double qFunct ( double radius, double t, double b, double D ) {
   double q;
   double  term, term1, term2;
   int m;
-  double conv = 0.00000000001/(b*b/D);
+  double conv = 0.000000001/(b*b/D);
 
   // cout << radius << "\t" << t << "\t" << b << "\t" << D << endl;
 

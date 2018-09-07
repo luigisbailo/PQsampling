@@ -130,7 +130,7 @@ void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r,
 
     if ( particles[partList[0]].tau_exitSampled>particles[partList[0]].time) {
 
-        //std::cout << "\t" <<particles[partList[0]].countPQ << "\t"  << sqrt(pow(particles[partList[0]].displPQ[0][particles[partList[0]].countPQ],2) + pow(particles[partList[0]].displPQ[1][particles[partList[0]].countPQ],2) + pow(particles[partList[0]].displPQ[2][particles[partList[0]].countPQ],2)) <<  std::endl;
+//        std::cout << "\t" <<particles[partList[0]].countPQ << "\t"  << sqrt(pow(particles[partList[0]].displPQ[0][particles[partList[0]].countPQ],2) + pow(particles[partList[0]].displPQ[1][particles[partList[0]].countPQ],2) + pow(particles[partList[0]].displPQ[2][particles[partList[0]].countPQ],2)) <<  std::endl;
         deltaPosDiff[0] = particles[partList[0]].displPQ[0][particles[partList[0]].countPQ];
         deltaPosDiff[1] = particles[partList[0]].displPQ[1][particles[partList[0]].countPQ];
         deltaPosDiff[2] = particles[partList[0]].displPQ[2][particles[partList[0]].countPQ];

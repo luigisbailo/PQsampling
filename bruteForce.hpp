@@ -37,11 +37,11 @@ void BFstep ( particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, in
       }
       else{
            dist = d[j].dd[i];
-      } 
+      }
 
       if ( dist <particles[i].radius+particles[j].radius){
 
-        // varPos is the cartesian projection of the particles distancce 
+        // varPos is the cartesian projection of the particles distancce
         // the origin is centered in the count position
 
         varPos[0] = particles[i].pos[0]-particles[j].pos[0];

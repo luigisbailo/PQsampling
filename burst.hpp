@@ -10,7 +10,7 @@ void burst_P_GF ( particle *particles, int *partList, double *distRow, gsl_rng *
     int jPart = partList[j];
 
 
-    if ( particles[jPart].gf == true && distRow[j] - particles[jPart].shell < particles[iPart].burstR ){
+    if ( particles[jPart].gf && distRow[j] - particles[jPart].shell < particles[iPart].burstR ){
 
       particles[jPart].burst = true;  
       particles[jPart].gf = false;
@@ -74,7 +74,7 @@ void burst_P_GF ( particle *particles, int *partList, double *distRow, gsl_rng *
 
 
 
-void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl_rng *r,  int N, int iPart, double tau_bm, double L ) {
+void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl_rng *r,  int N, int iPart, double tau_bm, double L, double tProj ) {
 
     double deltaPos [3];
 
@@ -85,7 +85,7 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
 
     if ( particles[jPart].gf  && distRow[j] - particles[jPart].shell < particles[iPart].burstR ){
 
-        //        std::cout<<"Burst  " << particles[iPart].time <<std::endl;
+//                std::cout<<"Burst  " << particles[iPart].time <<std::endl;
         particles[jPart].gf = false;
 
         //The P function is not sampled at very small times, when the survival function S can be approximated to 1
@@ -95,7 +95,9 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
             double tempPosOld[3],tempPosNew[3], radiusPQ;
             double R1 = gsl_rng_uniform (r);
             double R2 = gsl_rng_uniform (r);
-            radiusPQ = drawPosPQ00bis ( particles[iPart].time-particles[jPart].time, particles[jPart].tau_exitSampled-particles[jPart].time, particles[jPart].shell, particles[jPart].Diff, gsl_rng_uniform(r) );
+            double tau_exit = particles[jPart].tau_exitSampled-particles[jPart].time;
+            double t_sampling = particles[iPart].time-particles[jPart].time;
+            radiusPQ = drawPosPQ00bis ( t_sampling, tau_exit, particles[jPart].shell, particles[jPart].Diff, gsl_rng_uniform(r) );
 
             polarTransf ( deltaPos, radiusPQ, R1, R2);
             //deltaPos now contains the displacements in cartesian coordinate
@@ -105,58 +107,58 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
             particles[jPart].pos_exit[2] = particles[jPart].pos[2] + deltaPos[2];
             checkBound ( particles[jPart].pos_exit, particles[jPart].pos_period, L );
 
-
-            particles[jPart].totPQdispl = int(ceil((particles[jPart].tau_exitSampled-particles[iPart].time)/tau_bm ));
             particles[jPart].countPQ = 0;
-
-            if (particles[jPart].totPQdispl>MEMORY_PQ){
-                std::cout<< "ERROR: MEMORY_PQ too small " << MEMORY_PQ << " " << particles[jPart].countPQ << std::endl;
-                exit(EXIT_FAILURE);
-            }
 
             tempPosOld[0] = deltaPos[0];
             tempPosOld[1] = deltaPos[1];
             tempPosOld[2] = deltaPos[2];
 
-//std::cout << "Part. label: " <<  particles[jPart].label << "\t" << particles[jPart].tau_exitSampled - particles[iPart].time << "\t" << particles[jPart].totPQdispl << std::endl;
+            double radius0;
+            tau_exit -= t_sampling;
+            radius0 = radiusPQ;
+            int count_PQ = 0;
 
-            double deltaRadius, deltaT;
-            //deltaRadius is constant, it should be sampled from PQ instead
-            deltaRadius = (particles[jPart].shell-radiusPQ)/(particles[jPart].totPQdispl-1);
-//            std::cout << radiusPQ << "\t" << particles[jPart].shell << std::endl;
-//            std::cout << particles[jPart].shell << "\t" << radiusPQ << "\t" << particles[jPart].tau_exitSampled-particles[iPart].time << "\t"  << std::endl;
-            for ( int count=0; count<particles[jPart].totPQdispl-1; count++){
-
+            double totDispl[3];
+            totDispl[0]=0;
+            totDispl[1]=0;
+            totDispl[2]=0;
+            while (tau_exit>tau_bm) {
+//
+//                R1 += gsl_ran_gaussian (r,1)/1000/radius0;
+//                R2 += gsl_ran_gaussian (r,1)/1000/radius0;
+//                if (R1<0) R1 = abs(R1);
+//                if (R2<0) R2 = abs(R2);
+                radiusPQ = drawPosPQbis ( tau_bm, radius0, tau_exit, particles[jPart].shell, particles[jPart].Diff, gsl_rng_uniform(r));
+                polarTransf(tempPosNew, radiusPQ-radius0, R1, R2);
                 //it is assumed that there is no angular displacement, i.e. always the same R1,R2 are used
-                polarTransf(tempPosNew,radiusPQ+deltaRadius, R1, R2);
-                particles[jPart].displPQ[0][count] = tempPosNew[0] - tempPosOld[0];
-                particles[jPart].displPQ[1][count] = tempPosNew[1] - tempPosOld[1];
-                particles[jPart].displPQ[2][count] = tempPosNew[2] - tempPosOld[2];
-//                std::cout << count << " \t" << sqrt(pow(particles[jPart].displPQ[0][count],2) + pow(particles[jPart].displPQ[1][count],2) + pow(particles[jPart].displPQ[2][count],2)) << std::endl;
-                radiusPQ += deltaRadius;
-//                std::cout << radiusPQ << std::endl;
+                particles[jPart].displPQ[0][count_PQ] = tempPosNew[0];
+                particles[jPart].displPQ[1][count_PQ] = tempPosNew[1];
+                particles[jPart].displPQ[2][count_PQ] = tempPosNew[2];
                 tempPosOld[0] = tempPosNew[0];
                 tempPosOld[1] = tempPosNew[1];
                 tempPosOld[2] = tempPosNew[2];
+                tau_exit -= tau_bm;
+                radius0 = radiusPQ;
+
+                count_PQ ++;
+                if (count_PQ>MEMORY_PQ){
+                    std::cout<< "ERROR: MEMORY_PQ too small " << MEMORY_PQ << " " << particles[jPart].countPQ << std::endl;
+                    exit(EXIT_FAILURE);
+                }
+                totDispl[0] += particles[jPart].displPQ[0][count_PQ];
+                totDispl[1] += particles[jPart].displPQ[1][count_PQ];
+                totDispl[2] += particles[jPart].displPQ[2][count_PQ];
+
             }
-            if (particles[jPart].shell+0.01<radiusPQ ){
-                std::cout << radiusPQ << "\t" << particles[jPart].shell << std::endl;
-                std::cout<<"ERROR1: in burst PQ proj" << std::endl;
-                exit(EXIT_FAILURE);
-            }
+            polarTransf(tempPosNew, particles[jPart].shell-radius0, R1, R2);
 
-            polarTransf(deltaPos, particles[jPart].shell-radiusPQ, R1, R2);
-            deltaT = tau_bm;// -  (particles[jPart].tau_exitSampled - particles[jPart].tau_exit);
+            double deltaT = tau_bm -  (particles[jPart].tau_exitSampled - particles[jPart].tau_exit);
 
-            particles[jPart].displPQ[0][particles[jPart].totPQdispl-1] = sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1); // + random displacement after exiting the old shell ;
-            particles[jPart].displPQ[1][particles[jPart].totPQdispl-1] = sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
-            particles[jPart].displPQ[2][particles[jPart].totPQdispl-1] = sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
+            particles[jPart].displPQ[0][count_PQ] = tempPosNew[0] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1); // + random displacement after exiting the old shell ;
+            particles[jPart].displPQ[1][count_PQ] = tempPosNew[1] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
+            particles[jPart].displPQ[2][count_PQ] = tempPosNew[2] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
 
-
-//            particles[jPart].displPQ[0][particles[jPart].totPQdispl-1] = deltaPos[0] - tempPosNew[0] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1); // + random displacement after exiting the old shell ;
-//            particles[jPart].displPQ[1][particles[jPart].totPQdispl-1] = deltaPos[1] - tempPosNew[1] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
-//            particles[jPart].displPQ[2][particles[jPart].totPQdispl-1] = deltaPos[2] - tempPosNew[2] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
-//            std::cout << particles[jPart].totPQdispl-1 << " \t" << sqrt(pow(particles[jPart].displPQ[0][particles[jPart].totPQdispl-1],2) + pow(particles[jPart].displPQ[1][particles[jPart].totPQdispl-1],2) + pow(particles[jPart].displPQ[2][particles[jPart].totPQdispl-1],2)) << std::endl;
+            particles[jPart].totPQdispl = count_PQ;
 
             particles[jPart].pos[0] = particles[jPart].pos_exit[0];
             particles[jPart].pos[1] = particles[jPart].pos_exit[1];
@@ -164,7 +166,8 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
             particles[jPart].shell = 0;
             particles[jPart].time = particles[iPart].time;
             particles[jPart].tau_exit = particles[iPart].time;
-
+            if (particles[jPart].tau_exitSampled>tProj)
+                particles[jPart].tau_exitSampled = particles[iPart].time - tau_bm;
             // tau_exitSampled remains unchanged
 
         }

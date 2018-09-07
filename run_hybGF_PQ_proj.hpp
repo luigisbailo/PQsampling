@@ -60,7 +60,7 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
 		getDist ( particles, partList, distRow, &maxSh, N, L );
 
-		burst_PQ_GF_proj ( particles, partList, distRow, r, N, partList[0], tau_bm, L);
+		burst_PQ_GF_proj ( particles, partList, distRow, r, N, partList[0], tau_bm, L, tProj);
 
         if (particles[partList[0]].tau_exitSampled<particles[partList[0]].time) {
             R = getR_GF(particles, partList, shells, distRow, N, L);

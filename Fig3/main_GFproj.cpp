@@ -50,7 +50,7 @@ int main (int argc, char *argv[]) {
 	const int N_A = 5;
 	const int N_B = 5;
 
-	double alpha= 9000000;
+	double alpha= 9;
 	double L = 20;
 
 	int nProj=5;

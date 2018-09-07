@@ -376,12 +376,9 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
       double deltaT = dt - ( P->tau_exitSampled - P->tau_exit );
       polarTransf ( deltaPosFut, P->shell, R1, R2 );
 
-
       P->displPQ[0][0] = deltaPosFut[0] - deltaPos[0] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
       P->displPQ[1][0] = deltaPosFut[1] - deltaPos[1] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
       P->displPQ[2][0] = deltaPosFut[2] - deltaPos[2] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
-
-
 
       checkBound ( P -> pos, P -> pos_period, L );
       P -> pos_exit [0] = P -> pos[0];
@@ -409,7 +406,6 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
     P->time = P->tau_exit;
     P->tau_exitSampled = P->tau_exit;
       P -> gf = false;
-
 
   }
   else if ( !P->burst  ){
