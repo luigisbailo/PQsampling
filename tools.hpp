@@ -247,6 +247,7 @@ void fixBound_aGF ( double *pos, double *pos_exit, int *pos_period, double L) {
 };
 
 
+
 void polarTransf ( double *pos, double R, double u, double v ) {
 //Theta is defined in [0,2pi]
 //Phi is defined in [0,pi]
@@ -260,6 +261,18 @@ void polarTransf ( double *pos, double R, double u, double v ) {
 
 }
 
+
+
+void polarTransf_angles ( double *pos, double R, double theta, double phi ) {
+//Theta is defined in [0,2pi]
+//Phi is defined in [0,pi]
+
+
+    pos[0] = R * cos(theta) * sin(phi);
+    pos[1] = R * sin(theta) * sin(phi);
+    pos[2] = R * cos(phi);
+
+}
 
 
 void updatePart_GF ( particle *P, gsl_rng *r, double dt, double L ) {

@@ -93,13 +93,13 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
             particles[jPart].burst = true;
 
             double tempPosOld[3],tempPosNew[3], radiusPQ;
-            double R1 = gsl_rng_uniform (r);
-            double R2 = gsl_rng_uniform (r);
+            double theta =  2 * M_PI * gsl_rng_uniform (r);
+            double phi = acos( 2*gsl_rng_uniform (r) - 1 );
             double tau_exit = particles[jPart].tau_exitSampled-particles[jPart].time;
             double t_sampling = particles[iPart].time-particles[jPart].time;
             radiusPQ = drawPosPQ00bis ( t_sampling, tau_exit, particles[jPart].shell, particles[jPart].Diff, gsl_rng_uniform(r) );
 
-            polarTransf ( deltaPos, radiusPQ, R1, R2);
+            polarTransf_angles ( deltaPos, radiusPQ, theta, phi);
             //deltaPos now contains the displacements in cartesian coordinate
 
             particles[jPart].pos_exit[0] = particles[jPart].pos[0] + deltaPos[0];
@@ -123,13 +123,18 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
             totDispl[1]=0;
             totDispl[2]=0;
             while (tau_exit>tau_bm) {
-//
-//                R1 += gsl_ran_gaussian (r,1)/1000/radius0;
-//                R2 += gsl_ran_gaussian (r,1)/1000/radius0;
-//                if (R1<0) R1 = abs(R1);
-//                if (R2<0) R2 = abs(R2);
+
+                theta += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0 / sin(phi);   //20000000/radius0/radius0;
+                phi += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0; //20000000/radius0/radius0;
+
+//                if (theta>2*M_PI) theta -= 2*M_PI;
+//                if (theta<0) theta = 2*M_PI + theta;
+
+                if (phi>M_PI) phi = M_PI - (phi - M_PI);
+                if (phi<0) phi = abs(phi);
+//std::cout << phi/M_PI << " " << theta/M_PI << std::endl;
                 radiusPQ = drawPosPQbis ( tau_bm, radius0, tau_exit, particles[jPart].shell, particles[jPart].Diff, gsl_rng_uniform(r));
-                polarTransf(tempPosNew, radiusPQ-radius0, R1, R2);
+                polarTransf_angles(tempPosNew, radiusPQ-radius0, theta, phi);
                 //it is assumed that there is no angular displacement, i.e. always the same R1,R2 are used
                 particles[jPart].displPQ[0][count_PQ] = tempPosNew[0];
                 particles[jPart].displPQ[1][count_PQ] = tempPosNew[1];
@@ -150,7 +155,12 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
                 totDispl[2] += particles[jPart].displPQ[2][count_PQ];
 
             }
-            polarTransf(tempPosNew, particles[jPart].shell-radius0, R1, R2);
+
+            theta += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0 / sin(phi);   //20000000/radius0/radius0;
+            phi += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0; //20000000/radius0/radius0;
+            if (phi>M_PI) phi = M_PI - (phi - M_PI);
+            if (phi<0) phi = abs(phi);
+            polarTransf_angles(tempPosNew, particles[jPart].shell-radius0, theta, phi);
 
             double deltaT = tau_bm -  (particles[jPart].tau_exitSampled - particles[jPart].tau_exit);
 

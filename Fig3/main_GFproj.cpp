@@ -55,7 +55,7 @@ int main (int argc, char *argv[]) {
 
 	int nProj=5;
 	double Tsim=1000;
-	int Nsamples=500;
+	int Nsamples=200;
 
 //	std::stringstream convert_nProj (argv[1]);
 //  	std::stringstream convert_Tsim (argv[2]);
@@ -83,7 +83,7 @@ int main (int argc, char *argv[]) {
 
 	for ( int count = 0; count < Nsamples; count++){
 
-        std::cout << count << std::endl;
+//        std::cout << count << std::endl;
 
 		for (int d=0; d<3; d++ )
 			stat[d] = 0;
