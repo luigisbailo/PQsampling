@@ -80,43 +80,50 @@ int main () {
 //  std:: cout << "PQ bis\t" << t12 << std::endl;
 //
 
+//
+//  double dr = 0.01;
+//  double R;
+//  double PQ_temp;
+//  b = 2;
+//  radius0 = 1.9;
+//  double q = qFunct (radius0,tau,b,D);
+//  t=0.7*tau;
+//  int nsamples = 10000;
+////  drawPosPQbis(t,radius0, tau,b,D,0.1896897718996439219374395);
+//  t1 = high_resolution_clock::now();
+//  for (int count = 0; count<nsamples; count++ ){
+//      double xi =  distribution(generator);
+//      double r = drawPosPQbis(t,radius0, tau,b,D,xi);
+////      std::cout << std::endl << std::endl;
+//    }
+//  t2 = high_resolution_clock::now();
+//
+//  double t12 = double(std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count())/1000000;
+//
+//  std::cout << "PQ\t" << t12 << std::endl;
+//
+//  t1 = high_resolution_clock::now();
+//  for (int count = 0; count<nsamples; count++ ){
+//      double xi =  distribution(generator);
+//      double r = drawPosNewt(t,b,D,xi);
+////      std::cout << r << std::endl;
+//    }
+//  t2 = high_resolution_clock::now();
+//
+//  t12 = double(std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count())/1000000;
+//
+//  std::cout << "P\t" << t12 << std::endl;
 
-  double dr = 0.01;
-  double R;
-  double PQ_temp;
-  b = 2;
-  radius0 = 1.9;
+  radius0 = b/4*3;
+  double dr = b/1000;
+  double dt = 0.1;
   double q = qFunct (radius0,tau,b,D);
-  t=0.7*tau;
-  int nsamples = 10000;
-//  drawPosPQbis(t,radius0, tau,b,D,0.1896897718996439219374395);
-  t1 = high_resolution_clock::now();
-  for (int count = 0; count<nsamples; count++ ){
-      double xi =  distribution(generator);
-      double r = drawPosPQbis(t,radius0, tau,b,D,xi);
-//      std::cout << std::endl << std::endl;
-    }
-  t2 = high_resolution_clock::now();
 
-  double t12 = double(std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count())/1000000;
+  for (double r=radius0-100*dt*D; r<radius0+100*dt*D; r+=dr) {
+    double sigma = sqrt(2*D*dt);
 
-  std::cout << "PQ\t" << t12 << std::endl;
-
-  t1 = high_resolution_clock::now();
-  for (int count = 0; count<nsamples; count++ ){
-      double xi =  distribution(generator);
-      double r = drawPosNewt(t,b,D,xi);
-//      std::cout << r << std::endl;
-    }
-  t2 = high_resolution_clock::now();
-
-  t12 = double(std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count())/1000000;
-
-  std::cout << "P\t" << t12 << std::endl;
-
-//  for (double r=dr; r<b; r+=dr) {
-//    std::cout << r << "\t" << PQfunct(r, t, radius0, tau, b, D, q)<<std::endl;
-//  }
+    std::cout << r << "\t" << PQder(r, dt, radius0, tau, b, D, q) << "\t" << exp(-pow((r-radius0)/sigma,2)/2)/sqrt(2*M_PI*sigma*sigma)<<std::endl;
+  }
 
 //  double PQ_max=0;
 //  double R_max=0;

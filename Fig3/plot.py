@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 plt.style.use(['style1'])
-print('hello')
 # f, ((ax1),(ax2)) = pl.subplots(2,1,sharex=True)
 
 plt.figure(figsize=(3.37,2))
@@ -12,7 +11,7 @@ plt.figure(figsize=(3.37,2))
 
 data = np.loadtxt('plot.out')
 
-plt.plot (data[:,0], 6*0.01*data[:,0],  '--', label = r'$BM$')
+plt.plot (data[:,0], 6*0.01*data[:,0],  '--')
 plt.plot (data[:,0], data[:,3],  'x', label = r'$BM$')
 plt.plot (data[:,0], data[:,2],  '.', label = r'$p_{\Omega}(r,t|0,0;\tau)$')
 plt.plot (data[:,0], data[:,1], '.', label = r'$p_{\Omega}(r,t|0,0)$')

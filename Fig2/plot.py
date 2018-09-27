@@ -15,8 +15,8 @@ pl.plot (dataBM[:,0], dataBM[:,1],  '--', label = r'$BM$')
 pl.plot (dataGF[:,0], dataGF[:,1], 'v', label = r'$p_{\Omega}(r,t|0,0)/S_{\Omega}(t|0,0)$')
 pl.plot (dataGF[:,0], dataGF[:,2], '^',label = r'$p_{\Omega}(r,t|0,0;\tau)$')
 
-pl.xlabel (r'$MSD\thinspace [nm^2]$',fontsize=7)
-pl.ylabel (r'$Time\thinspace [ns]$',fontsize=7)
+pl.ylabel (r'$MSD\thinspace [nm^2]$',fontsize=7)
+pl.xlabel (r'$Time\thinspace [ns]$',fontsize=7)
 
 lgd=pl.legend (fontsize=7,ncol=2,bbox_to_anchor=(0.5, 1.4), loc='upper center', columnspacing=0)
 

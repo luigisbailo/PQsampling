@@ -61,7 +61,7 @@ void run_hybGF_P_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double D
 		getDist ( particles, partList, distRow, &maxSh, N, L );
 //		std::cout << "check 2 " << std::endl;
 
-//		burst_P_GF ( particles, partList, distRow, r, N, partList[0], L);
+		burst_P_GF ( particles, partList, distRow, r, N, partList[0], L);
 
 		R = getR_GF ( particles, partList, shells, distRow, N, L );
 		//it returns zero in case the determined shell is smaller than the smallest possible

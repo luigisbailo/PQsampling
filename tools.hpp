@@ -172,6 +172,7 @@ void sortPart ( particle *particles, int *partList, int N) {
 
 void printPos_per (particle *particle, int *partList, int N);
 
+
 void sortBurst ( particle *particles, int *partList, int N) {
 
   int tempList;
@@ -227,24 +228,24 @@ void checkBound (double *pos, int *pos_period, double L) {
 };
 
 
-void fixBound_aGF ( double *pos, double *pos_exit, int *pos_period, double L) {
-
-  if ( pos[0]-pos_exit[0] > L/2 )
-    pos_period [0] --;
-  else  if ( pos_exit[0]-pos[0] > L/2 )
-      pos_period[0] ++;
-
-  if ( pos[1]-pos_exit[1] > L/2 )
-    pos_period [1] --;
-  else if ( pos_exit[1]-pos[1] > L/2 )
-      pos_period[1] ++;
-
-  if ( pos[2]-pos_exit[2] > L/2 )
-    pos_period [2] --;
-  else if ( pos_exit[2]-pos[2] > L/2 )
-      pos_period[2] ++;
-
-};
+//void fixBound_aGF ( double *pos, double *pos_exit, int *pos_period, double L) {
+//
+//  if ( pos[0]-pos_exit[0] > L/2 )
+//    pos_period [0] --;
+//  else  if ( pos_exit[0]-pos[0] > L/2 )
+//      pos_period[0] ++;
+//
+//  if ( pos[1]-pos_exit[1] > L/2 )
+//    pos_period [1] --;
+//  else if ( pos_exit[1]-pos[1] > L/2 )
+//      pos_period[1] ++;
+//
+//  if ( pos[2]-pos_exit[2] > L/2 )
+//    pos_period [2] --;
+//  else if ( pos_exit[2]-pos[2] > L/2 )
+//      pos_period[2] ++;
+//
+//};
 
 
 
@@ -280,15 +281,13 @@ void updatePart_GF ( particle *P, gsl_rng *r, double dt, double L ) {
 
   double deltaPos [3];
 
-  if ( P->gf == true ){
-
+  if ( P->gf ){
 
     polarTransf ( deltaPos, P -> shell, gsl_rng_uniform (r), gsl_rng_uniform (r));
     //deltaPos now contains the displacements in cartesian coordinates
     P -> pos[0] += deltaPos[0];  
     P -> pos[1] += deltaPos[1];
-    P -> pos[2] += deltaPos[2];      
-    // checkBound ( P -> pos, P -> pos_period, L );
+    P -> pos[2] += deltaPos[2];
     P->shell = 0;
     P->time = P->tau_exit;
 
@@ -298,9 +297,11 @@ void updatePart_GF ( particle *P, gsl_rng *r, double dt, double L ) {
     P -> pos[1] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     P -> pos[2] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     checkBound ( P->pos, P->pos_period, L );
+      P -> pos_exit[0] = P -> pos[0];
+      P -> pos_exit[1] = P -> pos[1];
+      P -> pos_exit[2] = P -> pos[2];
     P->time += deltaT;
     P->tau_exit = P->time;
-
 
   }
   else if ( P->burst == false ){
@@ -310,10 +311,7 @@ void updatePart_GF ( particle *P, gsl_rng *r, double dt, double L ) {
     P->pos[1] = P->pos_exit[1];
     P->pos[2] = P->pos_exit[2];
     P->time = P->tau_exit;
-    P->pos_exit[0] = -1;
-    P->pos_exit[1] = -1;
-    P->pos_exit[2] = -1;
- 
+
   }
 
 }

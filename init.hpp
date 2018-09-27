@@ -65,8 +65,9 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
 
         dist = sqrt(dist2_per ( &particles[count], &particles[n], L ));// - particles[count].radius - particles[n].radius;
         if (dist<distMin) distMin = dist;
-
+//std::cout << distMin << std::endl;
      }
+//        std::cout << k << std::endl;
       k++;
       if (k>100*MAX_ITERATIONS) {
         std::cout << "kill sim. init" << std::endl;
@@ -104,6 +105,20 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
     particles[count].burst = false; 
     particles[count].gf = false;
 
+    if (count < N_A){
+
+      particles[count].Diff = D_A;
+      particles[count].sqrtDiff = sqrt(D_A);
+      particles[count].radius = R_A;
+
+    }
+    else{
+
+      particles[count].Diff = D_B;
+      particles[count].sqrtDiff = sqrt(D_B);
+      particles[count].radius = R_B;
+
+    }
     double distMin,dist;
     int k =0;
 
@@ -124,9 +139,9 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
         dist = sqrt(dist2_per ( &particles[count], &particles[n], L ));// - particles[count].radius - particles[n].radius;
         if (dist<distMin) distMin = dist;
 
-     } 
+     }
       k++;
-      if (k>100*MAX_ITERATIONS){
+      if (k>10*MAX_ITERATIONS){
         std::cout << "kill sim. init" << std::endl;
         exit(EXIT_FAILURE);
 
@@ -146,20 +161,6 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
     particles[count].pos_period[2] = 0;
 
 
-    if (count < N_A){        
-
-      particles[count].Diff = D_A;    
-      particles[count].sqrtDiff = sqrt(D_A); 
-      particles[count].radius = R_A;
-      
-    }
-    else{
-
-      particles[count].Diff = D_B;    
-      particles[count].sqrtDiff = sqrt(D_B); 
-      particles[count].radius = R_B;
-
-    }
   }
 }
 
@@ -194,12 +195,9 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
     particles[i].gf = true;
     particles[i].tau_exit += drawTimeNewt ( R, particles[i].Diff, gsl_rng_uniform(r) );
     particles[i].tau_exitSampled = particles[i].tau_exit;
-    particles[i].tau_exit = trunc( particles[i].tau_exit / tau_bm ) * tau_bm;
+//    particles[i].tau_exit = trunc( particles[i].tau_exit / tau_bm ) * tau_bm;
 
     particles[i].shell = R;
-//    particles[i].pos_exit[0]= -1;
-//    particles[i].pos_exit[1]= -1;
-//    particles[i].pos_exit[2]= -1;
 
   }      
   else {

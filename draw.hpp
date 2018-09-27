@@ -135,6 +135,7 @@ double drawFree ( double t, double D, double xi ){
 double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
 
     if (t>=tau){
+        std::cout << t << "\t" << tau << std::endl;
         std::cout << "error drawPosPQ00bis" << std::endl;
         exit (EXIT_FAILURE);
     }
