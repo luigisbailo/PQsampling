@@ -83,7 +83,7 @@ int main (int argc, char *argv[]) {
 
 	for ( int count = 0; count < Nsamples; count++){
 
-		std::cout << count << std::endl;
+//		std::cout << count << std::endl;
 
 //		double average = 0;
 

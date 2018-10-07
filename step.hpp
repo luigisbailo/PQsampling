@@ -19,6 +19,7 @@ void GFstep_GF_proj ( particle *myPart, gsl_rng *r, double R, double dt){
   myPart->tau_exit += drawTimeNewt ( R, myPart->Diff, gsl_rng_uniform(r) );
   myPart->tau_exitSampled = myPart -> tau_exit;
   myPart->tau_exit = trunc( myPart->tau_exit / dt ) * dt;
+//    std::cout << "-------"<<myPart->tau_exit-myPart->time<<"\t"<<myPart->tau_exitSampled-myPart->time<<std::endl;
   myPart->shell = R;
 
     
@@ -67,25 +68,13 @@ void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, d
 
   }
 
-  particles[partList[0]].pos_exit[0] += gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM + deltaPos[0];
+  particles[partList[0]].pos_exit[0] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM + deltaPos[0];
   particles[partList[0]].pos_exit[1] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM + deltaPos[1];
-  particles[partList[0]].pos_exit[2] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM + deltaPos[2];s
-//std::cout << particles[partList[0]].pos_exit[0] << "\t" << particles[partList[0]].pos[0] << std::endl;
-//   bool mybool=false;
-//    if (particles[partList[0]].pos_exit[2]>L | particles[partList[0]].pos_exit[2]<0 ){
-//        std::cout << "part: " << partList[0] << std::endl;
-//        std::cout << particles[partList[0]].pos_exit[2] << std::endl;
-//        mybool = true;
-//    }
-  checkBound (particles[partList[0]].pos_exit, particles[partList[0]].pos_period, L );
-//    if (mybool ){
-//        std::cout << particles[partList[0]].pos_exit[2] << std::endl;
-//        std::cout << particles[partList[0]].pos_period[2] << std::endl;
-//
-//    }
+  particles[partList[0]].pos_exit[2] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM + deltaPos[2];
 
-//    std::cout << particles[partList[0]].pos_exit[0] << "\t" << particles[partList[0]].pos[0] << std::endl;
-//std::cout << particles[partList[0]].sqrtDiff * sqrt2TAU_BM << std::endl;
+
+  checkBound (particles[partList[0]].pos_exit, particles[partList[0]].pos_period, L );
+
     particles[partList[0]].tau_exit += tau_bm;
      
 }
@@ -203,6 +192,7 @@ void synchPart_P_GF ( particle *particles, int *partList, gsl_rng *r, int N, dou
 
     }
     else if (particles[n].shell>0) {
+
       particles[n].pos[0] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
       particles[n].pos[1] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
       particles[n].pos[2] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;

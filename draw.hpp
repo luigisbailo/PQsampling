@@ -194,7 +194,11 @@ double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
 double drawPosPQbis ( double t, double radius0, double tau, double b, double D, double xi ) {
 
     if (t>=tau){
-        std::cout << "error drawPosPQbis" << std::endl;
+        std::cout << "error time drawPosPQbis" << std::endl;
+        exit (EXIT_FAILURE);
+    }
+    if (radius0>=b){
+        std::cout << "error position drawPosPQbis" << std::endl;
         exit (EXIT_FAILURE);
     }
     double r0,r1,r,q,P;

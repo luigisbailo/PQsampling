@@ -55,7 +55,7 @@ int main (int argc, char *argv[]) {
 
 	int nProj=5;
 	double Tsim=1000;
-	int Nsamples=250;
+	int Nsamples=1;
 
 //	std::stringstream convert_nProj (argv[1]);
 //  	std::stringstream convert_Tsim (argv[2]);
@@ -99,10 +99,13 @@ int main (int argc, char *argv[]) {
 			for ( int n=0; n<N; n++){
 
 				Diff_P [n][count][t] = diffStat[t][n];
-	         }
+//                std::cout << diffStat[t][n] << "\t";
 
+	         }
+//        std::cout<<std::endl;
 		}
 
+//        std::cout << "-----------------"<< std::endl;
 
 		for (int d=0; d<3; d++ )
 			stat[d] = 0;
@@ -111,17 +114,20 @@ int main (int argc, char *argv[]) {
 				diffStat[t][n] = 0;
 	
 		run_hybGF_PQ_proj ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, diffStat );
+        for ( int t=0; t<nProj; t++){
 
-		for ( int n=0; n<N; n++){
-			for ( int t=0; t<nProj; t++){
+		    for ( int n=0; n<N; n++){
 
 				Diff_PQ [n][count][t] = diffStat[t][n];
-		
+//                std::cout << diffStat[t][n] << "\t";
+
 			}
-		}
+//            std::cout<<std::endl;
+
+        }
 
 
-
+//std::cout << "-----------------"<< std::endl;
         for (int d=0; d<3; d++ )
             stat[d] = 0;
         for ( int n=0; n<N; n++ )
@@ -130,14 +136,18 @@ int main (int argc, char *argv[]) {
 
         run_BM ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, Tsim, nProj, L, diffStat );
 
-        for ( int n=0; n<N; n++){
             for ( int t=0; t<nProj; t++){
+                for ( int n=0; n<N; n++){
 
                 Diff_BM [n][count][t] = diffStat[t][n];
+//                std::cout << diffStat[t][n] << "\t";
 
             }
+//            std::cout<<std::endl;
+
         }
 
+//        std::cout << "-------------------------------------------------"<< std::endl;
 
 
     }

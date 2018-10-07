@@ -74,7 +74,7 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 		if ( R > 0 ) {
 
 			stat [1] ++;
-			if (R>L/20) R=L/20;
+			if (R>L/8) R=L/8;
 			GFstep_GF_proj ( &particles[partList[0]], r, R , tau_bm);
 			particles[partList[0]].gf = true;
 
@@ -114,7 +114,7 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
             }
 
 
-		    initShell_GF ( particles, r, N, tau_bm, sqrt2TAU_BM, L, &stat[1]);
+		    initShell_GF_proj ( particles, r, N, tau_bm, sqrt2TAU_BM, L, &stat[1]);
 
 		    std::sort ( particles, particles+N, compareTime );
 		    for (int n=0; n<N; n++) partList[n]=n;

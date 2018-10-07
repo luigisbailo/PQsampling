@@ -11,16 +11,9 @@ void burst_P_GF ( particle *particles, int *partList, double *distRow, gsl_rng *
 
 
     if ( particles[jPart].gf && distRow[j] - particles[jPart].shell < particles[iPart].burstR && particles[iPart].time<particles[jPart].tau_exit){
-//
-      particles[jPart].burst = true;  
+
+      particles[jPart].burst = true;
       particles[jPart].gf = false;
-
-//        std::cout << particles[jPart].label << std::endl ;
-//        		 std::cout << std::setprecision(6);
-//		 printPos_per ( particles, partList, N );
-//		 // printDist_per (particles, partList, N, L);
-//		 std::cout << "\n";
-
 
       //The P function is not sampled at very small times, when the survival function S can be approximated to 1      
       if (particles[iPart].time-particles[jPart].time> (particles[jPart].shell*particles[jPart].shell)/particles[jPart].Diff/100){
@@ -67,11 +60,6 @@ void burst_P_GF ( particle *particles, int *partList, double *distRow, gsl_rng *
       // "distRow[]" is updated with the new distances, and weather there is a new closest distance to insert in distRow[0] is checked    
       distRow [j] = sqrt(dist2_per ( &particles[iPart], &particles[jPart], L )) - particles[iPart].radius - particles[jPart].radius;
       if (distRow[j]<distRow[0]) distRow[0]=distRow[j];
-
-//        std::cout << std::setprecision(6);
-//        printPos_per ( particles, partList, N );
-//        // printDist_per (particles, partList, N, L);
-//        std::cout << "\n";
 
     }
 
@@ -165,25 +153,29 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
 
     double deltaPos [3];
 
-  // it cycles over all particles to check weather they are within the bursting radius
+    // it cycles over all particles to check weather they are within the bursting radius
     for (int j=1; j<N; j++){
 
     int jPart = partList[j];
+    //Conditions:
+    // 1 - particle in GF mode
+    // 2 - particle exit-time smaller than bursting time
+    //     one particle may exit its domain, do the BM fractional propagation and then burst the other domain after its exit time
+    // 3 - domain in within bursting distance
+    if ( particles[jPart].gf && particles[iPart].time<particles[jPart].tau_exitSampled && distRow[j] - particles[jPart].shell < particles[iPart].burstR ){
 
-    if ( particles[jPart].gf  && distRow[j] - particles[jPart].shell < particles[iPart].burstR ){
-
-//                std::cout<<"Burst  " << particles[iPart].time <<std::endl;
         particles[jPart].gf = false;
 
         //The P function is not sampled at very small times, when the survival function S can be approximated to 1
         if (particles[iPart].time-particles[jPart].time> (particles[jPart].shell*particles[jPart].shell)/particles[jPart].Diff/100){
             particles[jPart].burst = true;
 
-            double tempPosOld[3],tempPosNew[3], radiusPQ;
+            double tempPos[3], radiusPQ;
             double theta =  2 * M_PI * gsl_rng_uniform (r);
             double phi = acos( 2*gsl_rng_uniform (r) - 1 );
             double tau_exit = particles[jPart].tau_exitSampled-particles[jPart].time;
             double t_sampling = particles[iPart].time-particles[jPart].time;
+//            std::cout << tau_exit << "\t" << t_sampling << std::endl;
             radiusPQ = drawPosPQ00bis ( t_sampling, tau_exit, particles[jPart].shell, particles[jPart].Diff, gsl_rng_uniform(r) );
 
             polarTransf_angles ( deltaPos, radiusPQ, theta, phi);
@@ -196,99 +188,94 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
 
             particles[jPart].countPQ = 0;
 
-            tempPosOld[0] = deltaPos[0];
-            tempPosOld[1] = deltaPos[1];
-            tempPosOld[2] = deltaPos[2];
-
             double radius0;
             tau_exit -= t_sampling;
             radius0 = radiusPQ;
             int count_PQ = 0;
 
-            double totDispl[3];
-            totDispl[0]=0;
-            totDispl[1]=0;
-            totDispl[2]=0;
 
-            double deltaXtot = deltaPos[0];
-            double deltaYtot = deltaPos[1];
-            double deltaZtot = deltaPos[2];
+            double X_temp = deltaPos[0];
+            double Y_temp = deltaPos[1];
+            double Z_temp = deltaPos[2];
+            double dx_trial=0;
+            double dy_trial=0;
+            double dz_trial=0;
 
-            double corrCoeff = 1/sqrt(particles[jPart].Diff * tau_bm);
+            double epsilon = 0.01;
 
             while (tau_exit>tau_bm) {
 
-                polarTransf_angles(tempPosOld, radius0, theta, phi);
+                double Xi = gsl_rng_uniform(r);
 
-                radiusPQ = drawPosPQbis ( tau_bm, radius0, tau_exit, particles[jPart].shell, particles[jPart].Diff, gsl_rng_uniform(r));
-//                double deltaR = radiusPQ - radius0;
-//
-//                double dx = gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt(2*tau_bm);
-//                double dy = gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt(2*tau_bm);
+                radiusPQ = drawPosPQbis ( tau_bm, radius0, tau_exit, particles[jPart].shell, particles[jPart].Diff, Xi);
 
+                double R_temp = radius0;
+                if (abs(radius0-radiusPQ)<3*sqrt(6*particles[jPart].Diff*tau_bm)) {
+                     do{
+                        dx_trial = gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt(2 * tau_bm);
+                        dy_trial = gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt(2 * tau_bm);
+                        dz_trial = gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt(2 * tau_bm);
 
-                theta += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0 / sin(phi)/(1+1/radius0/corrCoeff);
-                phi += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0/(1+1/radius0/corrCoeff);
-                if (phi>M_PI) phi = M_PI - (phi - M_PI);
-                if (phi<0) phi = abs(phi);
-//                std::cout << theta << "\t" << phi << std::endl;
+                        R_temp = sqrt(pow(X_temp + dx_trial, 2) + pow(Y_temp + dy_trial, 2) + pow(Z_temp + dz_trial, 2));
 
+                    }while (!(R_temp > radiusPQ - epsilon && R_temp < radiusPQ + epsilon && R_temp<particles[jPart].shell) );
 
-                polarTransf_angles(tempPosNew, radiusPQ, theta, phi);
-//
-//                deltaXtot += tempPosNew [0];
-//                deltaYtot += tempPosNew [1];
-//                deltaZtot += tempPosNew [2];
-//
-//                radius0 = sqrt(pow(deltaXtot,2) + pow(deltaYtot,2) + pow(deltaZtot,2));
+                }
+                else{
+                    if (X_temp>0){
+                        theta = atan(Y_temp/X_temp);
+                    }
+                    else{
+                        theta = atan(Y_temp/X_temp)+M_PI;
 
+                    }
+                    phi = acos (Z_temp/radius0);
 
-//                double deltax =  gsl_ran_gaussian(r, 1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm);
-//                double deltay =  gsl_ran_gaussian(r, 1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm);
+                    dx_trial = (radiusPQ - radius0) * cos(theta) * sin(phi);
+                    dy_trial = (radiusPQ - radius0) * sin(theta) * sin(phi);
+                    dz_trial = (radiusPQ - radius0) * cos(phi);
 
+                }
+                X_temp += dx_trial;
+                Y_temp += dy_trial;
+                Z_temp += dz_trial;
 
+                particles[jPart].displPQ[0][count_PQ] = dx_trial;
+                particles[jPart].displPQ[1][count_PQ] = dy_trial;
+                particles[jPart].displPQ[2][count_PQ] = dz_trial;
 
-//                if (theta>2*M_PI) theta -= 2*M_PI;
-//                if (theta<0) theta = 2*M_PI + theta;
-
-
-
-                //it is assumed that there is no angular displacement, i.e. always the same R1,R2 are used
-                particles[jPart].displPQ[0][count_PQ] = tempPosNew[0] - tempPosOld[0];
-                particles[jPart].displPQ[1][count_PQ] = tempPosNew[1] - tempPosOld[1];
-                particles[jPart].displPQ[2][count_PQ] = tempPosNew[2] - tempPosOld[2];
-                tempPosOld[0] = tempPosNew[0];
-                tempPosOld[1] = tempPosNew[1];
-                tempPosOld[2] = tempPosNew[2];
+                radius0 = sqrt(X_temp * X_temp + Y_temp * Y_temp + Z_temp * Z_temp);
                 tau_exit -= tau_bm;
-                radius0 = radiusPQ;
 
                 count_PQ ++;
                 if (count_PQ>MEMORY_PQ){
                     std::cout<< "ERROR: MEMORY_PQ too small " << MEMORY_PQ << " " << particles[jPart].countPQ << std::endl;
                     exit(EXIT_FAILURE);
                 }
-                totDispl[0] += particles[jPart].displPQ[0][count_PQ];
-                totDispl[1] += particles[jPart].displPQ[1][count_PQ];
-                totDispl[2] += particles[jPart].displPQ[2][count_PQ];
 
             }
-//std::cout << std::endl;
 
-            polarTransf_angles(tempPosOld, radius0, theta, phi);
+            if (X_temp>0){
+                theta = atan(Y_temp/X_temp);
+            }
+            else{
+                theta = atan(Y_temp/X_temp)+M_PI;
 
-            theta += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0 / sin(phi)/(1+1/radius0/corrCoeff);   //20000000/radius0/radius0;
-            phi += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0/(1+1/radius0/corrCoeff); //20000000/radius0/radius0;
+            }
+            phi = acos (Z_temp/radius0);
+
+            theta += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0 / sin(phi);
+            phi += gsl_ran_gaussian (r,1) * particles[jPart].sqrtDiff * sqrt(2*tau_bm) / radius0;
             if (phi>M_PI) phi = M_PI - (phi - M_PI);
             if (phi<0) phi = abs(phi);
 
-            polarTransf_angles(tempPosNew, particles[jPart].shell, theta, phi);
+            polarTransf_angles(tempPos, particles[jPart].shell, theta, phi);
 
-            double deltaT = tau_bm -  (particles[jPart].tau_exitSampled - particles[jPart].tau_exit);
+            double deltaT = tau_bm - (particles[jPart].tau_exitSampled - particles[jPart].tau_exit);
 
-            particles[jPart].displPQ[0][count_PQ] = tempPosNew[0] - tempPosOld[0] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1); // + random displacement after exiting the old shell ;
-            particles[jPart].displPQ[1][count_PQ] = tempPosNew[1] - tempPosOld[1] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
-            particles[jPart].displPQ[2][count_PQ] = tempPosNew[2] - tempPosOld[2] + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
+            particles[jPart].displPQ[0][count_PQ] = tempPos[0] - X_temp + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
+            particles[jPart].displPQ[1][count_PQ] = tempPos[1] - Y_temp + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
+            particles[jPart].displPQ[2][count_PQ] = tempPos[2] - Z_temp + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
 
             particles[jPart].totPQdispl = count_PQ;
 
@@ -298,9 +285,9 @@ void burst_PQ_GF_proj ( particle *particles, int *partList, double *distRow, gsl
             particles[jPart].shell = 0;
             particles[jPart].time = particles[iPart].time;
             particles[jPart].tau_exit = particles[iPart].time;
-            if (particles[jPart].tau_exitSampled>tProj)
-                particles[jPart].tau_exitSampled = particles[iPart].time - tau_bm;
-            // tau_exitSampled remains unchanged
+//            if (particles[jPart].tau_exitSampled>tProj)
+//                particles[jPart].tau_exitSampled = particles[iPart].time - tau_bm;
+//            // tau_exitSampled remains unchanged
 
         }
       else if (particles[iPart].time>particles[jPart].time){

@@ -228,26 +228,6 @@ void checkBound (double *pos, int *pos_period, double L) {
 };
 
 
-//void fixBound_aGF ( double *pos, double *pos_exit, int *pos_period, double L) {
-//
-//  if ( pos[0]-pos_exit[0] > L/2 )
-//    pos_period [0] --;
-//  else  if ( pos_exit[0]-pos[0] > L/2 )
-//      pos_period[0] ++;
-//
-//  if ( pos[1]-pos_exit[1] > L/2 )
-//    pos_period [1] --;
-//  else if ( pos_exit[1]-pos[1] > L/2 )
-//      pos_period[1] ++;
-//
-//  if ( pos[2]-pos_exit[2] > L/2 )
-//    pos_period [2] --;
-//  else if ( pos_exit[2]-pos[2] > L/2 )
-//      pos_period[2] ++;
-//
-//};
-
-
 
 void polarTransf ( double *pos, double R, double u, double v ) {
 //Theta is defined in [0,2pi]
@@ -324,15 +304,21 @@ void updatePart_GF_P_proj ( particle *P, gsl_rng *r, double dt, double L ) {
 
   if ( P->gf  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
 
-    polarTransf ( deltaPos, drawPosNewt ( P->tau_exit-P->time, P->shell, P->Diff, gsl_rng_uniform(r) ), gsl_rng_uniform (r), gsl_rng_uniform (r) );
+    double R = drawPosNewt ( P->tau_exit-P->time, P->shell, P->Diff, gsl_rng_uniform(r) );
+    double R1 = gsl_rng_uniform (r);
+    double R2 = gsl_rng_uniform (r);
+    polarTransf ( deltaPos, R, R1, R2 );
     //deltaPos now contains the displacements in cartesian coordinates
     P -> pos[0] += deltaPos[0];  
     P -> pos[1] += deltaPos[1];
     P -> pos[2] += deltaPos[2];      
     checkBound ( P -> pos, P -> pos_period, L );
+    P->pos_exit[0] = P->pos[0];
+    P->pos_exit[1] = P->pos[1];
+    P->pos_exit[2] = P->pos[2];
+
     P->shell = 0;
     P->time = P->tau_exit;
-    P->tau_exitSampled = -1;
 
   }
   else if (P->gf ) {
@@ -342,10 +328,12 @@ void updatePart_GF_P_proj ( particle *P, gsl_rng *r, double dt, double L ) {
     P -> pos[1] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     P -> pos[2] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     checkBound ( P->pos, P->pos_period, L );
-    P->shell = 0;
-    P->time = P->tau_exit;
-    P->tau_exitSampled = -1;
+      P->pos_exit[0] = P->pos[0];
+      P->pos_exit[1] = P->pos[1];
+      P->pos_exit[2] = P->pos[2];
 
+      P->shell = 0;
+    P->time = P->tau_exit;
 
   }
   else if ( !P->burst ){
@@ -355,10 +343,7 @@ void updatePart_GF_P_proj ( particle *P, gsl_rng *r, double dt, double L ) {
     P->pos[1] = P->pos_exit[1];
     P->pos[2] = P->pos_exit[2];
     P->time = P->tau_exit;
-    P->pos_exit[0] = -1;
-    P->pos_exit[1] = -1;
-    P->pos_exit[2] = -1;
- 
+
   }
 
 }
@@ -371,7 +356,7 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
   double deltaPos[3],deltaPosFut[3];
 
   if ( P->gf  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
-
+//std::cout << P->tau_exit-P->time << "\t" << P->tau_exitSampled-P->time << "\t" <<  P->time << std::endl;
       double R = drawPosPQ00bis ( P->tau_exit-P->time, P->tau_exitSampled-P->time, P->shell, P->Diff, gsl_rng_uniform(r) );
       double R1 = gsl_rng_uniform (r);
       double R2 = gsl_rng_uniform (r);
@@ -397,7 +382,8 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
       P -> pos_exit [2] = P -> pos[2];
 
       P->shell = 0;
-      P->time = P->tau_exit;
+      P->time = P->tau_exit + dt;
+      P->tau_exit = P ->time;
       P -> gf = false;
 
   }
@@ -415,7 +401,6 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
 
     P->shell = 0;
     P->time = P->tau_exit;
-    P->tau_exitSampled = P->tau_exit;
       P -> gf = false;
 
   }

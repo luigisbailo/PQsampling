@@ -63,11 +63,9 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
 
       for ( int n=0; n<count; n++ ){
 
-        dist = sqrt(dist2_per ( &particles[count], &particles[n], L ));// - particles[count].radius - particles[n].radius;
+        dist = sqrt(dist2_per ( &particles[count], &particles[n], L ));
         if (dist<distMin) distMin = dist;
-//std::cout << distMin << std::endl;
      }
-//        std::cout << k << std::endl;
       k++;
       if (k>100*MAX_ITERATIONS) {
         std::cout << "kill sim. init" << std::endl;

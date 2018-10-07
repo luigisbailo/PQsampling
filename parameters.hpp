@@ -4,4 +4,4 @@
 #define SDER_CONVERGENCE 0.0001
 #define DRAW_CONVERGENCE 0.01
 #define K 10
-#define MEMORY_PQ 50
+#define MEMORY_PQ 5000

@@ -6,10 +6,10 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(PQsampling
 #    Fig1/main.cpp
-    Fig2/main.cpp
+#    Fig2/main.cpp
 #    Fig2/main_BM.cpp
 #    Fig2/main_GF.cpp
-#    Fig3/main_GFproj.cpp
+    Fig3/main_GFproj.cpp
 #    main.cpp
     bruteForce.hpp
     burst.hpp
