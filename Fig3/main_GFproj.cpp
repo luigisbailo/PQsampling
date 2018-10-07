@@ -55,7 +55,7 @@ int main (int argc, char *argv[]) {
 
 	int nProj=5;
 	double Tsim=1000;
-	int Nsamples=1;
+	int Nsamples=10;
 
 //	std::stringstream convert_nProj (argv[1]);
 //  	std::stringstream convert_Tsim (argv[2]);

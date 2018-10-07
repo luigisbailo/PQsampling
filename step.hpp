@@ -243,7 +243,9 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
            
     particles[n].gf = false;
     particles[n].burst = false;
-
+    if (particles[n].time>=Tsynch){
+        continue;
+    }
     if (particles[n].shell>0 && Tsynch-particles[n].time> (particles[n].shell*particles[n].shell)/particles[n].Diff/100  ){
 
         double Rsynch =  drawPosPQ00bis( Tsynch-particles[n].time, particles[n].tau_exitSampled-particles[n].time, particles[n].shell, particles[n].Diff, gsl_rng_uniform(r) );
