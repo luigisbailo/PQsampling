@@ -52,8 +52,6 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 //		 std::cout << "\n";
 
 		updatePart_GF_PQ_proj ( &particles[partList[0]], r, tau_bm, L );
-		//differently from aGF, updatePart() here samples also the exit position from the shell
-//
 
         // check_GF ( particles, partList,  N, L );
 		// check_times ( particles, partList, N);

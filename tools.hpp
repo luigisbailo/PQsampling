@@ -356,11 +356,12 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
   double deltaPos[3],deltaPosFut[3];
 
   if ( P->gf  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
-//std::cout << P->tau_exit-P->time << "\t" << P->tau_exitSampled-P->time << "\t" <<  P->time << std::endl;
+
       double R = drawPosPQ00bis ( P->tau_exit-P->time, P->tau_exitSampled-P->time, P->shell, P->Diff, gsl_rng_uniform(r) );
-      double R1 = gsl_rng_uniform (r);
-      double R2 = gsl_rng_uniform (r);
-      polarTransf ( deltaPos, R, R1, R2 );
+      double theta =  2 * M_PI * gsl_rng_uniform (r);
+      double phi = acos( 2*gsl_rng_uniform (r) - 1 );
+
+      polarTransf_angles ( deltaPos, R, theta, phi );
 
       P -> pos[0] += deltaPos[0];
       P -> pos[1] += deltaPos[1];
@@ -370,20 +371,26 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
       P -> countPQ = 0;
 
       double deltaT = dt - ( P->tau_exitSampled - P->tau_exit );
-      polarTransf ( deltaPosFut, P->shell, R1, R2 );
+
+      theta += gsl_ran_gaussian (r,1) * P->sqrtDiff * sqrt(2*deltaT) / R / sin(phi);
+      phi += gsl_ran_gaussian (r,1) * P->sqrtDiff * sqrt(2*deltaT) / R;
+      if (phi>M_PI) phi = M_PI - (phi - M_PI);
+      if (phi<0) phi = abs(phi);
+
+      polarTransf_angles ( deltaPosFut, P->shell, theta, phi );
 
       P->displPQ[0][0] = deltaPosFut[0] - deltaPos[0] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
       P->displPQ[1][0] = deltaPosFut[1] - deltaPos[1] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
       P->displPQ[2][0] = deltaPosFut[2] - deltaPos[2] + sqrt(2*deltaT)*P->sqrtDiff*gsl_ran_gaussian (r,1);
 
       checkBound ( P -> pos, P -> pos_period, L );
+      
       P -> pos_exit [0] = P -> pos[0];
       P -> pos_exit [1] = P -> pos[1];
       P -> pos_exit [2] = P -> pos[2];
 
       P->shell = 0;
       P->time = P->tau_exit;
-      P->tau_exit = P ->time;
       P -> gf = false;
 
   }
