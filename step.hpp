@@ -231,16 +231,15 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
 
   for ( int n=0; n<N; n++) {
 
-    if ( Tsynch < particles[n].time ){
-
-       std::cout << "ERROR: synch;  Tsynch = " << Tsynch <<"\n";
-       std::cout << std::setprecision(5);
-       std::cout << "Particle : " << particles[n].label << std::endl;
-       printPos_per ( particles, partList, N );
-       // exit (EXIT_FAILURE);
-
-    }
-           
+//    if ( Tsynch < particles[n].time ){
+//
+//       std::cout << "ERROR: synch;  Tsynch = " << Tsynch <<"\n";
+//       std::cout << std::setprecision(5);
+//       std::cout << "Particle : " << particles[n].label << std::endl;
+//       printPos_per ( particles, partList, N );
+//
+//    }
+//
     particles[n].gf = false;
     particles[n].burst = false;
     if (particles[n].time>=Tsynch){
@@ -282,9 +281,6 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
       particles[n].shell = 0;
       particles[n].time = Tsynch;
       particles[n].tau_exit = Tsynch;
-//      particles[n].tau_exitSampled = Tsynch;
-//      particles[n].countPQ=0;
-//      particles[n].totPQdispl=0;
 
   }
     
