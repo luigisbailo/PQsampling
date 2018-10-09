@@ -382,7 +382,7 @@ void updatePart_GF_PQ_proj ( particle *P, gsl_rng *r, double dt, double L ) {
       P -> pos_exit [2] = P -> pos[2];
 
       P->shell = 0;
-      P->time = P->tau_exit + dt;
+      P->time = P->tau_exit;
       P->tau_exit = P ->time;
       P -> gf = false;
 
