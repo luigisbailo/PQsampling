@@ -29,8 +29,7 @@ public:
     double displPQ [3][MEMORY_PQ];
     int countPQ;
     int totPQdispl;
-
-
+    bool active;
 
  };
 
@@ -105,6 +104,23 @@ void printPos_per (particle *particles, int *partList, int N){
 }
 
 
+void printPos_annih (particle *particles, int *partList, int N){
+
+  std::cout <<"Part.\t"<<"Time\t\t"<<"Tau\t\t"
+            <<"Radius\t" <<"BURST\t"<<"GF\t"<<"Active\n";
+
+  for (int count=0; count<N; count++){
+    std::cout <<particles[partList[count]].label << "\t"
+              <<particles[partList[count]].time << "\t\t"
+              <<particles[partList[count]].tau_exit<<"\t\t"
+              <<particles[partList[count]].radius <<"\t"
+              <<particles[partList[count]].burst <<"\t"
+              <<particles[partList[count]].gf<<"\t"
+              <<particles[partList[count]].active << std::endl;
+  }
+}
+
+
 void getDist ( particle *particles, int* partList, double *distRow, double *maxSh ,int N, double L ) {
 
   int pos;
@@ -113,7 +129,10 @@ void getDist ( particle *particles, int* partList, double *distRow, double *maxS
   //The 0 position is left empty, since "getDist()" is always called for the particle 0   
   for ( int j=1; j<N; j++ ) {
 
-    if (particles[partList[j]].gf){
+    if (particles[partList[j]].active == false) {
+      distRow [j] = L;
+    }
+    else if (particles[partList[j]].gf){
       distRow [j] = sqrt(dist2_per ( &particles[partList[0]], &particles[partList[j]], L )) - particles[partList[0]].radius - particles[partList[j]].radius;
     }
     //distance in case of BM. The two particles times are in within an integration step

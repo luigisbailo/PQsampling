@@ -159,7 +159,10 @@ void synchPart_P_GF ( particle *particles, int *partList, gsl_rng *r, int N, dou
 
   for ( int n=0; n<N; n++) {
 
-    if ( Tsynch < particles[n].time ){
+    if (!particles[n].active)
+        continue;
+
+    if ( Tsynch < particles[n].time && particles[n].active ){
 
        std::cout << "ERROR: synch;  Tsynch = " << Tsynch <<"\n";
        std::cout << std::setprecision(5);
@@ -240,6 +243,9 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
 //
 //    }
 //
+      if (!particles[n].active)
+          continue;
+
     particles[n].gf = false;
     particles[n].burst = false;
     if (particles[n].time>=Tsynch){

@@ -15,6 +15,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
       particles[count].R_gfrd = alpha*sqrt(D_A*tau_bm);
       particles[count].R_bd = alpha*sqrt(D_A*tau_bm);
       particles[count].burstR = alpha*sqrt(fmin(D_A,D_B)*tau_bm);
+      particles[count].active = true;
 
     }
     else{
@@ -26,6 +27,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
       particles[count].R_gfrd = alpha*sqrt(D_B*tau_bm);
       particles[count].R_bd = alpha*sqrt(D_A*tau_bm);
       particles[count].burstR = alpha*sqrt(fmin(D_A,D_B)*tau_bm);
+      particles[count].active = true;
 
     }
 
@@ -108,6 +110,8 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
       particles[count].Diff = D_A;
       particles[count].sqrtDiff = sqrt(D_A);
       particles[count].radius = R_A;
+      particles[count].active = true;
+      particles[count].type = 0;
 
     }
     else{
@@ -115,7 +119,8 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
       particles[count].Diff = D_B;
       particles[count].sqrtDiff = sqrt(D_B);
       particles[count].radius = R_B;
-
+      particles[count].active = true;
+        particles[count].type = 1;
     }
     double distMin,dist;
     int k =0;
@@ -171,6 +176,10 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
   double dists [N], deltaPos[3], varPos[3];
 
   for (int i=0; i<N; i++){
+
+    if (!particles[i].active){
+        continue;
+    }
 
     for (int j=0; j<N; j++) {
 
