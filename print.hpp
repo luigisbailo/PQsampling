@@ -47,6 +47,7 @@ void printPosInit ( particle *particles, int *partList, int N){
     }
 }
 
+
 void printPosPQ ( particle *particles, int *partList, int N){
 
 	std::cout <<"Part.\t"<<"Time\t"<<"Tau\t"<<"Shell\t" <<"BURST\n";
@@ -61,34 +62,6 @@ void printPosPQ ( particle *particles, int *partList, int N){
 				  <<particles[partList[count]].burst <<"\n";
 	}
 }
-// void printPos_per (particle *particles, int *partList, int N){
-
-//   cout <<"Part.\t"<<"Time\t\t"<<"Tau\t\t"<<"Shell\t"
-//        <<"x\t"<<"y\t"<<"z\t"
-//        <<"x_ex\t"<<"y_ex\t"<<"z_ex\t"
-//        <<"x_per\t"<<"y_per\t"<<"z_per\t"
-//        <<"Radius\t" <<"BURST\t"<<"GF\n";
-
-//   for (int count=0; count<N; count++){
-//     cout <<particles[partList[count]].label << "\t"
-// 	 <<particles[partList[count]].time << "\t\t" 
-// 	 <<particles[partList[count]].tau_exit<<"\t\t"
-// 	 <<particles[partList[count]].shell<<"\t"
-// 	 <<particles[partList[count]].pos[0]<<"\t"
-// 	 <<particles[partList[count]].pos[1]<<"\t"
-// 	 <<particles[partList[count]].pos[2] <<"\t"
-// 	 <<particles[partList[count]].pos_exit[0]<<"\t"
-// 	 <<particles[partList[count]].pos_exit[1]<<"\t"
-// 	 <<particles[partList[count]].pos_exit[2] <<"\t"
-// 	 <<particles[partList[count]].pos_period[0]<<"\t"
-// 	 <<particles[partList[count]].pos_period[1]<<"\t"
-// 	 <<particles[partList[count]].pos_period[2] <<"\t"
-// 	 <<particles[partList[count]].radius <<"\t"
-// 	 <<particles[partList[count]].burst <<"\t"
-// 	 <<particles[partList[count]].gf<<"\n";
-//   }
-// }
-
 
 void printDist_per (particle *particles, int *partList, int N, double L ) {
  

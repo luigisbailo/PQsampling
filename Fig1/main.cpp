@@ -21,13 +21,12 @@ int main () {
 	double b=1;
 	double D=1;
 	double tau = 1;
-// tau = 0.166666...
  	double t1 = 0.01;
  	double t2 = 0.1;
  	double t3 = 0.99;
  	double r;
 
-PQ00der (0.1,0.1,tau,b,D,Sder(tau,b,D));
+	PQ00der (0.1,0.1,tau,b,D,Sder(tau,b,D));
 
 	for ( double r=b/100; r<b; r+=b/100){
 

@@ -95,20 +95,3 @@ void check_times ( particle *particles, int *partList, int N) {
 }
 
 
-// void checkShells (vector <particle> *particles, int N, double *XYZ){
-
-//   if (particles[0].shell>0) {
-//     for (int j=1; j<N; j++) {
-
-//       if (sqrt(dist2_per(&particles[0],&particles[j],XYZ)) < particles[0].shell + particles[j].shell + particles[0].radius + particles[j].radius) {
-//         std::cout << "ERROR: shells \t"
-//              << sqrt(dist2_per(&particles[0],&particles[j],XYZ)) - particles[0].shell - particles[j].shell - particles[0].radius - particles[j].radius
-//              << "\n"; 
-//         // exit(EXIT_FAILURE);
-//       }
-//     }
-
-//   }
-
-
-// }

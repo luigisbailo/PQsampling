@@ -45,16 +45,8 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
 
     	if ( particles[partList[0]].burst ) stat[0]++;
-//
-//		 std::cout << std::setprecision(6);
-//		 printPos_per ( particles, partList, N );
-//		 // printDist_per (particles, partList, N, L);
-//		 std::cout << "\n";
 
 		updatePart_GF_PQ_proj ( &particles[partList[0]], r, tau_bm, L );
-
-        // check_GF ( particles, partList,  N, L );
-		// check_times ( particles, partList, N);
 
 		getDist ( particles, partList, distRow, &maxSh, N, L );
 
@@ -92,17 +84,7 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
 		if ( particles[partList[0]].tau_exit > tProj | particles[partList[0]].tau_exit == tProj ) {
 
-//            		 std::cout << std::setprecision(6);
-//		 printPos_per ( particles, partList, N );
-//		 // printDist_per (particles, partList, N, L);
-//		 std::cout << "\n";
-
             synchPart_PQ_GF ( particles, partList, r, N, tProj, L );
-
-//            std::cout << std::setprecision(6);
-//            printPos_per ( particles, partList, N );
-//            // printDist_per (particles, partList, N, L);
-//            std::cout << "\n";
 
             for ( int n=0; n<N; n++ ){
 

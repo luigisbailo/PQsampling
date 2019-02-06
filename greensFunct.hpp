@@ -61,9 +61,6 @@ double Sder ( double t, double b, double D) {
       termD = (m+1)*(m+1);
       term = coeff2 * ( termA*termB - termC*termD );
 
-      // cout << m << "\t" << pow(coeff1,m*m) << endl;
-      // cout << m+1 << "\t" << pow(coeff1,(m+1)*(m+1)) << "\t" << term << endl;
-
       S += term;
       m += 2;
 
@@ -91,8 +88,6 @@ double Pfunct ( double radius, double t, double b, double D, double S ) {
   int m;
   double conv = 0.00000001/b;
 
-  // cout << radius << "\t" << t << "\t" << b << "\t" << D << endl;
-
   P = 0;
   m = 1;
 
@@ -107,15 +102,13 @@ double Pfunct ( double radius, double t, double b, double D, double S ) {
       term =  coeff2 * termA * termB / (1-S);
       P += term;
       m += 1;
-      // cout << m << "\t" << termA << "\t" << termB << "\t" << term <<endl;
-      // cout<< "P: " << P << endl;
+
     } while ( abs(term) > conv  |  termA>termB/100 |  P>1 );
 
   } else {
 
     P = sin(M_PI*radius/b)/M_PI - cos(M_PI*radius/b)*radius/b;
 
-  // cout << "P: " << P << endl;
   }
 
 
@@ -148,11 +141,9 @@ double Pder ( double radius, double t, double b, double D, double S ) {
       termA = pow(coeff1,m*m);
       termB = sin (m*M_PI*radius/b) * m * radius;
       term = coeff2 * termA * termB / (1-S);
-      // cout << m << "\t" << term2 << endl;
       P += term;
       m += 1;
 
-    // } while ( abs (term2 - term1) > P_CONVERGENCE | termA>termB/100);
     } while ( abs(term) > conv  |  termA>termB/100 );
 
   }
@@ -162,11 +153,6 @@ double Pder ( double radius, double t, double b, double D, double S ) {
 
   }
 
-
-
-  // cout << P << endl;
-
-  // return m-1;
   return P;
 }
 
@@ -182,7 +168,6 @@ double PQfunct ( double radius, double t, double r0, double tau, double b, doubl
   int m,n;
   double conv = 0.00000001/b;
 
-  // cout << radius << "\t" << t << "\t" << b << "\t" << D << endl;
 
   PQ = 0;
   m = 1;
@@ -230,8 +215,8 @@ double PQfunct ( double radius, double t, double r0, double tau, double b, doubl
     m += 1;
 
   } while ( abs (term2) > conv | termA*m*m>0.00001 | m<10 );
-// std::cout << "\t\t"  << PQ << std::endl;
-  return PQ;  
+
+  return PQ;
 
 
 }
@@ -301,8 +286,6 @@ double PQ00funct ( double radius, double t, double tau, double b, double D, doub
   int m,n;
   double conv = 0.00000001/b;
 
-  // cout << radius << "\t" << t << "\t" << b << "\t" << D << endl;
- 
  PQ = 0;
   m = 1;
       
@@ -344,7 +327,6 @@ double PQ00funct ( double radius, double t, double tau, double b, double D, doub
 
     } while (  abs (term1) > conv | termA*n*n>0.000001 | n<5 ) ;
 
-    // cout << term2 << endl;
     PQ += term2;
     m += 1;
   } while ( abs (term2) > conv | termA*m*m>0.000001 | m<5 );
@@ -368,7 +350,6 @@ double PQ00der ( double radius, double t, double tau, double b, double D, double
 
   PQ = 0;
   m = 1;
-// cout << t << "\t" <<tau << "\t" << radius << endl;
 
 
   do {
@@ -418,8 +399,6 @@ double qFunct ( double radius, double t, double b, double D ) {
   int m;
   double conv = 0.000000001/(b*b/D);
 
-  // cout << radius << "\t" << t << "\t" << b << "\t" << D << endl;
-
   q = 0;
   m = 1;
       
@@ -431,7 +410,6 @@ double qFunct ( double radius, double t, double b, double D ) {
     q += term;
     m += 2;
 
-// cout << term << endl;
 
   } while ( abs(term) > conv | m<100 );
 
@@ -464,12 +442,8 @@ double pFunct ( double radius, double t, double b, double D ) {
     P += term;
     m += 1;
 
-  // } while ( abs (term2 - term1) > P_CONVERGENCE | termA>termB/100);
   } while ( abs(term) > conv  |  m<20 | P<0);
 
-  // cout << P << endl;
-
-  // return m-1;
   return P;
 }
 
@@ -495,12 +469,8 @@ double pFunct_init ( double r, double t, double r0, double t0, double b, double 
     P += term;
     m += 1;
 
-  // } while ( abs (term2 - term1) > P_CONVERGENCE | termA>termB/100);
   } while ( abs(term) > conv  |  m<20 );
 
-  // cout << P << endl;
-
-  // return m-1;
   return P;
 }
 
@@ -568,9 +538,6 @@ double Sder2 ( double t, double b, double D) {
         termD = (m+1)*(m+1)*(m+1)*(m+1);
         term =  ( termA*termB - termC*termD );
 
-      // cout << m << "\t" << pow(coeff1,m*m) << endl;
-      // cout << m+1 << "\t" << pow(coeff1,(m+1)*(m+1)) << "\t" << term << endl;
-
         S += term;
         m += 2;
 
@@ -612,59 +579,3 @@ double Pder2 ( double radius, double t, double b, double D, double S ) {
 
 }
 
-double legendre_funct ( int l, double x){
-
-  if (l==0)
-    return 1;
-  if (l==1)
-    return x;
-
-  return (2*(l-1)+1)*x*legendre_funct(l-1,x)/l - (l-1)*legendre_funct(l-2,x)/(l);
-
-}
-
-// double THETAfunct ( double theta, double dt, double r, double D  ) {
-
-//   double coeff1 = exp(-D*dt/r/r);
-//   double term,termA,termB;
-//   double TH = 0;
-//   int l=0;
-
-//   do{
-
-//     termA = double(l+1);
-//     // termA = 1;
-//     termB = pow(coeff1,l*(l+1));
-//     term = 0.5*std::tr1::assoc_legendre(l+1,0,cos(theta))*std::tr1::assoc_legendre(l,0,0)*termA*termB;
-//     TH += term;
-//     l += 1;
-
-//   } while (l <1000 );
-//   // } while ( abs(term) > 0.000001 | l<100 | TH<0 | termA<0.001*termB );
-
-//   return TH;
-
-// }
-
-
-// double THETAder ( double theta, double dt, double r, double D  ) {
-
-//   double coeff1 = exp(-D*dt/r/r);
-//   double term,termA,termB;
-//   double TH = 0;
-//   int l=0;
-
-//   do{
-
-//     termA = (l+1);
-//     termB = pow(coeff1,l*(l+1));
-//     term = 0.5*std::tr1::assoc_legendre(l,0,cos(theta))*std::tr1::assoc_legendre(l,0,0)*termA*termB;
-//     TH += term;
-//     l += 1;
-
-//   // } while (l <20 );
-//   } while ( abs(term) > 0.000001 | l<100 | TH<0| termA<0.001*termB );
-
-//   return TH;
-
-// }

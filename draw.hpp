@@ -65,8 +65,6 @@ double drawPosNewt ( double t, double b, double D, double xi ) {
   }
 
 
-  // cout << D*t/b/b << endl;
-
     double S = Sfunct (t,b,D);
     double P = Pfunct (r,t,b,D,S);
     double dP = Pder (r,t,b,D,S);
@@ -94,8 +92,6 @@ double drawPosNewt ( double t, double b, double D, double xi ) {
       P = Pfunct (r,t,b,D,S);
       dP = Pder (r,t,b,D,S);
 
-// std::cout << r <<std::endl;
-// std::cout << r << "\t" << P << "\t" << dP  <<std::endl;
     }
 
 
@@ -113,15 +109,11 @@ double drawFree ( double t, double D, double xi ){
   double r = dr/2;
   double P=0;
 
-
-// std::cout << xi << "\t" << t << "\t" << D <<  std::endl;
-  
   while (P<xi){
 
     P += exp(-r*r/4/D/t)/sqrt(4*M_PI*pow(D*t,3))*r*r*dr;
     r += dr;
 
-// std::cout << r << "\t" << P <<"\t" << exp(-r*r/4/D/t)/sqrt(4*M_PI*pow(D*t,3))*r*r*dr << std::endl;
 
   }
 
@@ -146,11 +138,9 @@ double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
         double deltaR = 10 * b * (1-t / tau);
         r0 = b - deltaR;
         double PQ = PQ00funct (r0,t,tau,b,D,q);
-//        std :: cout << PQ << " " << xi << std::endl;
         while ( PQ > xi ){
             r0 -= deltaR;
             PQ = PQ00funct (r0,t,tau,b,D,q);;
-//            std :: cout << PQ << std::endl;
 
         }
 
@@ -167,7 +157,6 @@ double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
     double rMem = -1;
 
     while ( abs(P-xi)>DRAW_CONVERGENCE | abs(r-rMem) > DRAW_CONVERGENCE*b ){
-//        std::cout << r0 << " " << r1 << " " << r << " " << P << " " << xi << std::endl;
 
         count++;
         if (count > MAX_ITERATIONS){
@@ -206,9 +195,6 @@ double drawPosPQbis ( double t, double radius0, double tau, double b, double D, 
 
     q = qFunct (radius0,tau,b,D);
     P = PQfunct (r,t,radius0,tau,b,D,q);
-//    std::cout<<"\t" << xi << "\t" << P << "\t" << P-xi <<std::endl;
-
-//    double deltaR = (b - radius0)/4;
 
     if (P>xi){
         r0 = 0;
@@ -221,7 +207,6 @@ double drawPosPQbis ( double t, double radius0, double tau, double b, double D, 
 
     r = (r0 + r1) /2;
     P = PQfunct (r,t,radius0,tau,b,D,q);
-//    std::cout << r0 << "\t" <<r  << "\t" << r1 << "\t" << P-xi << std::endl;
 
     int count = 0;
     double rMem = -1;
@@ -245,7 +230,6 @@ double drawPosPQbis ( double t, double radius0, double tau, double b, double D, 
         r = (r0 + r1)/2;
         P = PQfunct (r,t,radius0,tau,b,D,q);
 
-//         std::cout << r0 << "\t" <<r  << "\t" << r1 << "\t" << P-xi << std::endl;
 
     };
 

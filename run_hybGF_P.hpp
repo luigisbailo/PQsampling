@@ -45,18 +45,9 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 
 		if ( particles[partList[0]].burst ) stat[0]++;
-//
-//		 std::cout << std::setprecision(6);
-//		 printPos_per ( particles, partList, N );
-//		 // printDist_per (particles, partList, N, L);
-//		 std::cout << "\n";
 
 		updatePart_GF ( &particles[partList[0]], r, tau_bm, L );
 		//differently from aGF, updatePart() here samples also the exit position from the shell
-//
-
-		// check_GF ( particles, partList,  N, L );
-		// check_times ( particles, partList, N);
 
 		getDist ( particles, partList, distRow, &maxSh, N, L );
 
@@ -72,7 +63,7 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 		particles[partList[0]].burst = false; //when a particle is burst its position is updated and put on top of the list
 
 		if ( R > 0 ) {
-//std::cout << "GF" << std::endl;
+
 			stat [1] ++;
 			if (R>L/20) R=L/20;
 			GFstep_GF ( &particles[partList[0]], r, R );
@@ -94,17 +85,7 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 		if ( particles[partList[0]].tau_exit > tProj | particles[partList[0]].tau_exit == tProj ) {
 
-//            		 std::cout << std::setprecision(6);
-//		 printPos_per ( particles, partList, N );
-//		 // printDist_per (particles, partList, N, L);
-//		 std::cout << "\n";
-
 			synchPart_P_GF ( particles, partList, r, N, tProj, L );
-
-//            std::cout << std::setprecision(6);
-//            printPos_per ( particles, partList, N );
-//            // printDist_per (particles, partList, N, L);
-//            std::cout << "\n";
 
 			for ( int n=0; n<N; n++ ){
 

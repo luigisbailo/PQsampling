@@ -57,17 +57,6 @@ int main (int argc, char *argv[]) {
 	double Tsim=1000;
 	int Nsamples=250;
 
-//	std::stringstream convert_nProj (argv[1]);
-//  	std::stringstream convert_Tsim (argv[2]);
-//  	std::stringstream convert_Nsamples (argv[3]
-
-//	if (!(convert_nProj >> nProj ))
-//	    exit (EXIT_FAILURE);
-//	if (!(convert_Tsim >> Tsim ))
-//	    exit (EXIT_FAILURE);
-//	if (!(convert_Nsamples >> Nsamples ))
-//	    exit (EXIT_FAILURE);
-
 	int stat[3];
 	double diffStat[nProj][10];
 	double Diff_P [N][Nsamples][nProj];
@@ -82,10 +71,6 @@ int main (int argc, char *argv[]) {
 
 
 	for ( int count = 0; count < Nsamples; count++){
-
-//		std::cout << count << std::endl;
-
-//		double average = 0;
 
 		for (int d=0; d<3; d++ )
 			stat[d] = 0;

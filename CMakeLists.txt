@@ -12,22 +12,17 @@ add_executable(PQsampling
 #    Fig4/main_GFproj.cpp
 #    main.cpp
 #    Annihilation/main.cpp
-    Annihilation_proj/main.cpp
+        Annihilation_proj/main_annih_proj.cpp
     Brute_force/bruteForce.hpp
     burst.hpp
     checks.hpp
     draw.hpp
         greensFunct.hpp
-    greensFunctDef.hpp
-    init.hpp
+        init.hpp
     parameters.hpp
-    parametersDef.hpp
-    print.hpp
-    run_aGF1.hpp
-    run_aGF2.hpp
+        print.hpp
         Brute_force/run_BM.hpp
-    run_GF.hpp
-    run_hybGF_P.hpp
+        run_hybGF_P.hpp
     run_hybGF_P_proj.hpp
     run_hybGF_PQ.hpp
     run_hybGF_PQ_proj.hpp

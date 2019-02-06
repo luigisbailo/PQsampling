@@ -100,6 +100,7 @@ void printPos_per (particle *particles, int *partList, int N){
    <<particles[partList[count]].radius <<"\t"
    <<particles[partList[count]].burst <<"\t"
    <<particles[partList[count]].gf<<"\n";
+
   }
 }
 
@@ -206,6 +207,7 @@ void sortBurst ( particle *particles, int *partList, int N) {
         partList[m] = partList[m-1];
 
       }
+
       partList[1]=tempList;
     }
 

@@ -39,7 +39,6 @@ void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng
                 partList[n+1]=tempList;
             }
 
-
             break;
         }
 
@@ -48,7 +47,6 @@ void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng
     particles[partList[0]].pos_exit[0] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM;
     particles[partList[0]].pos_exit[1] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM;
     particles[partList[0]].pos_exit[2] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM;
-
 
     checkBound (particles[partList[0]].pos_exit, particles[partList[0]].pos_period, L );
 
@@ -106,11 +104,8 @@ void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_r
                 partList[n]=partList[n+1];
                 partList[n+1]=tempList;
             }
-
-
             break;
         }
-
     }
 
     if (particles[partList[0]].active) {
@@ -136,6 +131,7 @@ void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_r
 
 }
 
+
 void BFstep_annih ( particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, int N, double sqrt2TAU_BM, double L ) {
 //dist,XYZ,deltaPos,varPos are just pointers to external free memory
 //sqrtTAU_BM is sqrt(2*TAU_BM)
@@ -155,7 +151,6 @@ void BFstep_annih ( particle *particles, BFdistances *d, gsl_rng *r, double tau_
         deltaPos[1] = 0;
         deltaPos[2] = 0;
 
-
         for( int j=0; j<N; j++){
 
             if (!particles[j].active)
@@ -174,12 +169,12 @@ void BFstep_annih ( particle *particles, BFdistances *d, gsl_rng *r, double tau_
 
                 particles[i].active = false;
                 particles[j].active = false;
+
                 break;
+
             }
 
         }
-
-
 
         //brownian displacement
         deltaPos[0] += gsl_ran_gaussian (r,1)*particles[i].sqrtDiff * sqrt2TAU_BM;
@@ -195,5 +190,3 @@ void BFstep_annih ( particle *particles, BFdistances *d, gsl_rng *r, double tau_
     }
 
 }
-
-

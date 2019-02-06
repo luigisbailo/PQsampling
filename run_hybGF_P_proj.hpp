@@ -44,22 +44,9 @@ void run_hybGF_P_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double D
     while ( particles[partList[0]].tau_exit < Tsim ) {
 
     	if ( particles[partList[0]].burst ) stat[0]++;
-//
-//		 std::cout << std::setprecision(6);
-//		 printPos_per ( particles, partList, N );
-//		 // printDist_per (particles, partList, N, L);
-//		 std::cout << "\n";
 
 		updatePart_GF_P_proj ( &particles[partList[0]], r, tau_bm, L );    
 		//differently from aGF, updatePart() here samples also the exit position from the shell
-
-//		std::cout << std::setprecision(6);
-//		printPos_per ( particles, partList, N );
-//		// printDist_per (particles, partList, N, L);
-//		std::cout << "\n";
-
-		// check_GF ( particles, partList,  N, L );
-		// check_times ( particles, partList, N);
 
 		getDist ( particles, partList, distRow, &maxSh, N, L );
 
