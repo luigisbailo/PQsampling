@@ -29,7 +29,7 @@ using namespace std::chrono;
 #include "shell.hpp"
 #include "print.hpp"
 #include "burst.hpp"
-#include "bruteForce.hpp"
+#include "Brute_force/bruteForce.hpp"
 #include "checks.hpp"
 
 int main () {         

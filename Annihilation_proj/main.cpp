@@ -32,8 +32,8 @@ using namespace std::chrono;
 #include "../Brute_force/bruteForce.hpp"
 #include "../checks.hpp"
 #include "../tools_annih.h"
-#include "./run_annih_P.hpp"
-#include "./run_annih_PQ.hpp"
+#include "run_annih_P_proj.hpp"
+#include "run_annih_PQ_proj.hpp"
 #include "../Brute_force/run_annih_BM.hpp"
 
 
@@ -68,7 +68,7 @@ int main (int argc, char *argv[]) {
     for ( int count = 0; count < Nsamples; count++ ){
 
 
-        run_annih_P ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
+        run_annih_P_proj ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
 
         for ( int t=0; t<nProj; t++){
             n_stat_P [count][t] = n_stat[t];
@@ -76,7 +76,7 @@ int main (int argc, char *argv[]) {
         }
 
 
-        run_annih_PQ ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
+        run_annih_PQ_proj ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
 
         for ( int t=0; t<nProj; t++){
 

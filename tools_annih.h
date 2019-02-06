@@ -56,6 +56,86 @@ void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng
 
 }
 
+
+void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
+//sqrtTAU_BM is sqrt(2*TAU_BM)
+
+    double dist,deltaPosInt[3], deltaPosDiff[3], varPos[3];
+
+    //diffusive displacement, it might be conditioned by the PQ sampling
+    deltaPosDiff[0] = 0;
+    deltaPosDiff[1] = 0;
+    deltaPosDiff[2] = 0;
+
+    //interaction displacement
+    deltaPosInt[0] = 0;
+    deltaPosInt[1] = 0;
+    deltaPosInt[2] = 0;
+
+    for( int j=1; j<N; j ++){
+
+        int jPart = partList[j];
+
+        if (particles[jPart].gf | !particles[jPart].active) continue;
+
+        dist = distRow[j];
+
+        if ( dist < 0 && particles[partList[0]].type==particles[jPart].type ){
+            // if the distance with another particle is lower than R_INTER we take into account their interaction
+            // varPos is the cartesian projection of the particles distance
+            // the origin is centered in the count position
+
+            particles[partList[0]].active = false;
+            particles[partList[0]].tau_exit = Tsim;
+            particles[partList[0]].time  = Tsim;
+            particles[partList[0]].tau_exitSampled = Tsim;
+
+            particles[jPart].active = false;
+            particles[jPart].tau_exit = Tsim;
+            particles[jPart].time  = Tsim;
+            particles[jPart].tau_exitSampled = Tsim;
+
+            int tempList=0;
+            for ( int n=j; n<N-1; n++ ){
+                tempList=partList[n];
+                partList[n]=partList[n+1];
+                partList[n+1]=tempList;
+            }
+            for ( int n=0; n<N-1; n++ ){
+                tempList=partList[n];
+                partList[n]=partList[n+1];
+                partList[n+1]=tempList;
+            }
+
+
+            break;
+        }
+
+    }
+
+    if (particles[partList[0]].active) {
+
+        if (particles[partList[0]].tau_exitSampled > particles[partList[0]].time) {
+
+            deltaPosDiff[0] = particles[partList[0]].displPQ[0][particles[partList[0]].countPQ];
+            deltaPosDiff[1] = particles[partList[0]].displPQ[1][particles[partList[0]].countPQ];
+            deltaPosDiff[2] = particles[partList[0]].displPQ[2][particles[partList[0]].countPQ];
+            particles[partList[0]].countPQ++;
+        } else {
+
+            deltaPosDiff[0] = gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM;
+            deltaPosDiff[1] = gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM;
+            deltaPosDiff[2] = gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM;
+        }
+
+        particles[partList[0]].pos_exit[0] = particles[partList[0]].pos[0] + deltaPosInt[0] + deltaPosDiff[0];
+        particles[partList[0]].pos_exit[1] = particles[partList[0]].pos[1] + deltaPosInt[1] + deltaPosDiff[1];
+        particles[partList[0]].pos_exit[2] = particles[partList[0]].pos[2] + deltaPosInt[2] + deltaPosDiff[2];
+        particles[partList[0]].tau_exit += tau_bm;
+    }
+
+}
+
 void BFstep_annih ( particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, int N, double sqrt2TAU_BM, double L ) {
 //dist,XYZ,deltaPos,varPos are just pointers to external free memory
 //sqrtTAU_BM is sqrt(2*TAU_BM)

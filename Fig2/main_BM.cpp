@@ -25,9 +25,9 @@
 #include "../shell.hpp"
 #include "../print.hpp"
 #include "../burst.hpp"
-#include "../bruteForce.hpp"
+#include "../Brute_force/bruteForce.hpp"
 #include "../checks.hpp"
-#include "../run_BM.hpp"
+#include "../Brute_force/run_BM.hpp"
 
 
 int main (int argc, char *argv[]) {

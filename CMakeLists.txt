@@ -11,8 +11,9 @@ add_executable(PQsampling
 #    Fig2/main_GF.cpp
 #    Fig3/main_GFproj.cpp
 #    main.cpp
-    Annihilation/main.cpp
-    bruteForce.hpp
+#    Annihilation/main.cpp
+    Annihilation_proj/main.cpp
+    Brute_force/bruteForce.hpp
     burst.hpp
     checks.hpp
     draw.hpp
@@ -25,7 +26,7 @@ add_executable(PQsampling
     print.hpp
     run_aGF1.hpp
     run_aGF2.hpp
-    run_BM.hpp
+        Brute_force/run_BM.hpp
     run_GF.hpp
     run_hybGF_P.hpp
     run_hybGF_P_proj.hpp
@@ -33,7 +34,7 @@ add_executable(PQsampling
     run_hybGF_PQ_proj.hpp
     shell.hpp
     step.hpp
-    tools.hpp Annihilation/tools_annih.h)
+    tools.hpp tools_annih.h)
 
 
 find_package(GSL REQUIRED)

@@ -24,7 +24,7 @@
 #include "../shell.hpp"
 #include "../print.hpp"
 #include "../burst.hpp"
-#include "../bruteForce.hpp"
+#include "../Brute_force/bruteForce.hpp"
 #include "../checks.hpp"
 #include "../run_hybGF_P.hpp"
 #include "../run_hybGF_PQ.hpp"
