@@ -30,4 +30,4 @@ plt.tight_layout()
 art = []
 art.append(lgd)
 # plt.show()
-plt.savefig ('Fig3.eps',dpi=600, additional_artist=art, bbox_inches="tight")
+plt.savefig ('Fig4.eps',dpi=600, additional_artist=art, bbox_inches="tight")

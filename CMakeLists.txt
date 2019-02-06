@@ -9,7 +9,7 @@ add_executable(PQsampling
 #    Fig2/main.cpp
 #    Fig2/main_BM.cpp
 #    Fig2/main_GF.cpp
-#    Fig3/main_GFproj.cpp
+#    Fig4/main_GFproj.cpp
 #    main.cpp
 #    Annihilation/main.cpp
     Annihilation_proj/main.cpp
@@ -17,8 +17,7 @@ add_executable(PQsampling
     burst.hpp
     checks.hpp
     draw.hpp
-    drawDef.hpp
-    greensFunct.hpp
+        greensFunct.hpp
     greensFunctDef.hpp
     init.hpp
     parameters.hpp
