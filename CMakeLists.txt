@@ -22,13 +22,9 @@ add_executable(PQsampling
     parameters.hpp
         print.hpp
         Brute_force/run_BM.hpp
-        run_hybGF_P.hpp
-    run_hybGF_P_proj.hpp
-    run_hybGF_PQ.hpp
-    run_hybGF_PQ_proj.hpp
-    shell.hpp
+        shell.hpp
     step.hpp
-    tools.hpp tools_annih.h)
+    tools.hpp toolsAnnih.h)
 
 
 find_package(GSL REQUIRED)

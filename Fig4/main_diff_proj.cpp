@@ -31,8 +31,8 @@ using namespace std::chrono;
 #include "../burst.hpp"
 #include "../Brute_force/bruteForce.hpp"
 #include "../checks.hpp"
-#include "../run_hybGF_P_proj.hpp"
-#include "../run_hybGF_PQ_proj.hpp"
+#include "./run_hybGF_P_proj.hpp"
+#include "./run_hybGF_PQ_proj.hpp"
 #include "../Brute_force/run_BM.hpp"
 
 

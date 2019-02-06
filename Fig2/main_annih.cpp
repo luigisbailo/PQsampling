@@ -31,7 +31,7 @@ using namespace std::chrono;
 #include "../burst.hpp"
 #include "../Brute_force/bruteForce.hpp"
 #include "../checks.hpp"
-#include "../tools_annih.h"
+#include "../toolsAnnih.h"
 #include "./run_annih_P.hpp"
 #include "./run_annih_PQ.hpp"
 #include "../Brute_force/run_annih_BM.hpp"
