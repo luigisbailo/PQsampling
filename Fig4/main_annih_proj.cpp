@@ -31,7 +31,7 @@ using namespace std::chrono;
 #include "../burst.hpp"
 #include "../Brute_force/bruteForce.hpp"
 #include "../checks.hpp"
-#include "../tools_annih.h"
+#include "../toolsAnnih.h"
 #include "run_annih_P_proj.hpp"
 #include "run_annih_PQ_proj.hpp"
 #include "../Brute_force/run_annih_BM.hpp"
@@ -56,7 +56,7 @@ int main (int argc, char *argv[]) {
 
     int nProj=20;
     double Tsim=1000;
-    int Nsamples=250;
+    int Nsamples=50;
 
     int stat[3];
     int n_stat[nProj];
