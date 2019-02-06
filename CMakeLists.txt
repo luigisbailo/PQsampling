@@ -5,24 +5,17 @@ set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 add_executable(PQsampling
-#    Fig1/main.cpp
-#    Fig2/main.cpp
-#    Fig2/main_BM.cpp
-#    Fig2/main_GF.cpp
-#    Fig4/main_GFproj.cpp
-#    main.cpp
-#    Annihilation/main.cpp
-        Annihilation_proj/main_annih_proj.cpp
-        BD/bruteForce.hpp
+    Fig1/main.cpp
+    BD/bruteForce.hpp
     burst.hpp
     checks.hpp
     draw.hpp
-        greensFunct.hpp
-        init.hpp
+    greensFunct.hpp
+    init.hpp
     parameters.hpp
-        print.hpp
-        BD/run_BD.hpp
-        shell.hpp
+    print.hpp
+    BD/run_BD.hpp
+    shell.hpp
     step.hpp
     tools.hpp toolsAnnih.hpp)
 
