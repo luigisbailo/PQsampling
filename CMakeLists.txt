@@ -13,7 +13,7 @@ add_executable(PQsampling
 #    main.cpp
 #    Annihilation/main.cpp
         Annihilation_proj/main_annih_proj.cpp
-    Brute_force/bruteForce.hpp
+        BD/bruteForce.hpp
     burst.hpp
     checks.hpp
     draw.hpp
@@ -21,10 +21,10 @@ add_executable(PQsampling
         init.hpp
     parameters.hpp
         print.hpp
-        Brute_force/run_BM.hpp
+        BD/run_BD.hpp
         shell.hpp
     step.hpp
-    tools.hpp toolsAnnih.h)
+    tools.hpp toolsAnnih.hpp)
 
 
 find_package(GSL REQUIRED)
