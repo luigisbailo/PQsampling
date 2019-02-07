@@ -19,7 +19,6 @@ void GFstep_GF_proj ( particle *myPart, gsl_rng *r, double R, double dt){
   myPart->tau_exit += drawTimeNewt ( R, myPart->Diff, gsl_rng_uniform(r) );
   myPart->tau_exitSampled = myPart -> tau_exit;
   myPart->tau_exit = trunc( myPart->tau_exit / dt ) * dt;
-//    std::cout << "-------"<<myPart->tau_exit-myPart->time<<"\t"<<myPart->tau_exitSampled-myPart->time<<std::endl;
   myPart->shell = R;
 
     
@@ -45,7 +44,7 @@ void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, d
     dist = distRow[j];
 
     if ( dist < 0 ){
-      // if the distance with another particle is lower than R_INTER we take into account their interaction
+      // if the distance to another particle is lower than R_INTER we take into account their interaction
       // varPos is the cartesian projection of the particles distancce
       // the origin is centered in the count position
 
@@ -130,7 +129,6 @@ void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r,
 
     if ( particles[partList[0]].tau_exitSampled>particles[partList[0]].time) {
 
-//        std::cout << "\t" <<particles[partList[0]].countPQ << "\t"  << sqrt(pow(particles[partList[0]].displPQ[0][particles[partList[0]].countPQ],2) + pow(particles[partList[0]].displPQ[1][particles[partList[0]].countPQ],2) + pow(particles[partList[0]].displPQ[2][particles[partList[0]].countPQ],2)) <<  std::endl;
         deltaPosDiff[0] = particles[partList[0]].displPQ[0][particles[partList[0]].countPQ];
         deltaPosDiff[1] = particles[partList[0]].displPQ[1][particles[partList[0]].countPQ];
         deltaPosDiff[2] = particles[partList[0]].displPQ[2][particles[partList[0]].countPQ];
@@ -234,15 +232,6 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
 
   for ( int n=0; n<N; n++) {
 
-//    if ( Tsynch < particles[n].time ){
-//
-//       std::cout << "ERROR: synch;  Tsynch = " << Tsynch <<"\n";
-//       std::cout << std::setprecision(5);
-//       std::cout << "Particle : " << particles[n].label << std::endl;
-//       printPos_per ( particles, partList, N );
-//
-//    }
-//
       if (!particles[n].active)
           continue;
 
@@ -261,10 +250,6 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
 
     }
     else if (particles[n].tau_exitSampled > particles[n].time){
-
-//TO DO: INSERT INTERACTIONS ----------------------------------------------------
-//-------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------
 
         particles[n].pos[0] += particles[n].displPQ[0][particles[n].countPQ];
         particles[n].pos[1] += particles[n].displPQ[1][particles[n].countPQ];

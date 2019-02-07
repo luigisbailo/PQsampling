@@ -17,8 +17,6 @@ double Sfunct ( double t, double b, double D) {
       termA = pow (coeff1,m*m);
       termB = pow (coeff1,(m+1)*(m+1));
       term = coeff2 * (termA-termB);
-      
-
       S += term;
       m += 2;
 
@@ -30,11 +28,9 @@ double Sfunct ( double t, double b, double D) {
   else 
     S = 0;
 
-
   return S;
 
 }
-
 
 
 double Sder ( double t, double b, double D) {
@@ -72,11 +68,9 @@ double Sder ( double t, double b, double D) {
   else 
     S = 0;
 
-  // return m-1;
   return S;
 
 }
-
 
 
 double Pfunct ( double radius, double t, double b, double D, double S ) {
@@ -90,8 +84,6 @@ double Pfunct ( double radius, double t, double b, double D, double S ) {
 
   P = 0;
   m = 1;
-
-
 
   if (t < b*b/D*0.2) {      
 
@@ -111,14 +103,9 @@ double Pfunct ( double radius, double t, double b, double D, double S ) {
 
   }
 
-
-
-  // return m-1;
-  return P;  
-
+  return P;
 
 }
-
 
 
 double Pder ( double radius, double t, double b, double D, double S ) {
@@ -154,12 +141,11 @@ double Pder ( double radius, double t, double b, double D, double S ) {
   }
 
   return P;
+
 }
 
 
-
 double PQfunct ( double radius, double t, double r0, double tau, double b, double D, double q ) {
-
 
   double coeff1 = exp ( - M_PI*M_PI*D/(b*b));
   double coeff2 = 2*D/b/r0;
@@ -179,7 +165,6 @@ double PQfunct ( double radius, double t, double r0, double tau, double b, doubl
 
     do {
 
-
       termA =  pow( coeff1, m*m*t + n*n*(tau-t) );
 
       if ( m != n)
@@ -187,14 +172,9 @@ double PQfunct ( double radius, double t, double r0, double tau, double b, doubl
       else if ( m == n )
         termB =  n*M_PI*radius/b - n*sin((m+n)*M_PI*radius/b)/(m+n); 
       termB = termB * sin(m*M_PI*r0/b);
-
       term1 =  coeff2 * termA * termB / q;
-
       term2 += term1;
-
       n += 1;
-
-
       termA =  pow( coeff1, m*m*t + n*n*(tau-t) );
 
       if ( m != n)
@@ -204,9 +184,7 @@ double PQfunct ( double radius, double t, double r0, double tau, double b, doubl
       termB = termB * sin(m*M_PI*r0/b);
 
       term1 =  coeff2 * termA * termB / q;
-
       term2 -= term1;
-
       n += 1;
 
     } while (  abs (term1) > conv | termA*n*n>0.000001 | n<10 ) ;
@@ -218,8 +196,8 @@ double PQfunct ( double radius, double t, double r0, double tau, double b, doubl
 
   return PQ;
 
-
 }
+
 
 double PQder ( double radius, double t, double r0, double tau, double b, double D, double q ) {
 
@@ -230,10 +208,8 @@ double PQder ( double radius, double t, double r0, double tau, double b, double 
   int m,n;
   double conv = 0.00000001/b;
 
-
   PQ = 0;
   m = 1;
-
 
   do {
 
@@ -275,7 +251,6 @@ double PQder ( double radius, double t, double r0, double tau, double b, double 
 }
 
 
-
 double PQ00funct ( double radius, double t, double tau, double b, double D, double q ) {
 
 
@@ -296,7 +271,6 @@ double PQ00funct ( double radius, double t, double tau, double b, double D, doub
 
     do {
 
-
       termA =  pow( coeff1, m*m*t + n*n*(tau-t) );
 
       if ( m != n)
@@ -305,12 +279,8 @@ double PQ00funct ( double radius, double t, double tau, double b, double D, doub
         termB =  m*n*M_PI*radius/b - m*n*sin((m+n)*M_PI*radius/b)/(m+n); 
 
       term1 =  coeff2 * termA * termB / q;
-
       term2 += term1;
-
       n += 1;
-
-
       termA =  pow( coeff1, m*m*t + n*n*(tau-t) );
 
       if ( m != n)
@@ -318,9 +288,7 @@ double PQ00funct ( double radius, double t, double tau, double b, double D, doub
       else if ( m == n )
         termB =  m*n*M_PI*radius/b - m*n*sin((m+n)*M_PI*radius/b)/(m+n); 
 
-
       term1 =  coeff2 * termA * termB / q;
-
       term2 -= term1;
 
       n += 1;
@@ -329,13 +297,12 @@ double PQ00funct ( double radius, double t, double tau, double b, double D, doub
 
     PQ += term2;
     m += 1;
+
   } while ( abs (term2) > conv | termA*m*m>0.000001 | m<5 );
  
-  return PQ;  
-
+  return PQ;
 
 }
-
 
 
 double PQ00der ( double radius, double t, double tau, double b, double D, double q ) {
@@ -347,10 +314,8 @@ double PQ00der ( double radius, double t, double tau, double b, double D, double
   int m,n;
   double conv = 0.00000001/b;
 
-
   PQ = 0;
   m = 1;
-
 
   do {
 
@@ -389,7 +354,6 @@ double PQ00der ( double radius, double t, double tau, double b, double D, double
 }
 
 
-
 double qFunct ( double radius, double t, double b, double D ) {
 
   double coeff1 = exp ( - M_PI*M_PI*D*t/(b*b));
@@ -413,10 +377,7 @@ double qFunct ( double radius, double t, double b, double D ) {
 
   } while ( abs(term) > conv | m<100 );
 
-
-  return q;  
-
-
+  return q;
 
 }
 
@@ -445,6 +406,7 @@ double pFunct ( double radius, double t, double b, double D ) {
   } while ( abs(term) > conv  |  m<20 | P<0);
 
   return P;
+
 }
 
 
@@ -472,10 +434,8 @@ double pFunct_init ( double r, double t, double r0, double t0, double b, double 
   } while ( abs(term) > conv  |  m<20 );
 
   return P;
+
 }
-
-
-
 
 
 double Sfunct_init ( double tau, double radius, double t, double b, double D) {
@@ -507,14 +467,9 @@ double Sfunct_init ( double tau, double radius, double t, double b, double D) {
   else 
     S = 0;
 
-
-
-  // return m-1;
   return S;
 
 }
-
-
 
 double Sder2 ( double t, double b, double D) {
 
@@ -543,11 +498,9 @@ double Sder2 ( double t, double b, double D) {
 
     } while ( abs (term) > conv | termC > termD/100  );
 
-
   return S*coeff2;
 
 }
-
 
 
 double Pder2 ( double radius, double t, double b, double D, double S ) {
@@ -572,8 +525,6 @@ double Pder2 ( double radius, double t, double b, double D, double S ) {
     m += 1;
 
   } while ( abs (term) > conv | termA>termB/100 );
-
-
 
   return P*coeff2;
 

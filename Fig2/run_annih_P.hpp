@@ -41,11 +41,6 @@ void run_annih_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 	while ( particles[partList[0]].tau_exit < Tsim ) {
 
-//         std::cout << "-----------------------------------\n";
-//         std::cout << std::setprecision(6);
-//        printPos_annih ( particles, partList, N );
-//         std::cout << "\n";
-
 
         if ( !particles[partList[0]].active )
             continue;
@@ -85,7 +80,6 @@ void run_annih_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 		sortBurst ( particles, partList, N);
 
-
 		//The particles are sorted according to tau_exit, while instead tau_exitSampled keeps only memory of a previously sampled exit time
 
         sortPart(particles, partList, N);
@@ -114,7 +108,6 @@ void run_annih_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 			tProj = countProj * Tsim / nProj;
 
 		}
-
 
 	} ;
 

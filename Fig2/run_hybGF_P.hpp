@@ -82,7 +82,6 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 		//The particles are sorted according tau_exit, while instead tau_exitSampled keeps only memory of a previously sampled exit time
 		sortPart ( particles, partList, N);
 
-
 		if ( particles[partList[0]].tau_exit > tProj | particles[partList[0]].tau_exit == tProj ) {
 
 			synchPart_P_GF ( particles, partList, r, N, tProj, L );
@@ -104,7 +103,6 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 			tProj = countProj * Tsim / nProj;
 
 		}
-
 
 	} ;
 

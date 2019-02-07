@@ -84,9 +84,7 @@ void run_annih_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
 		if ( particles[partList[0]].tau_exit > tProj | particles[partList[0]].tau_exit == tProj ) {
 
-
 			synchPart_PQ_GF ( particles, partList, r, N, tProj, L );
-
 
 			int n_active = 0;
 

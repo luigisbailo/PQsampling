@@ -107,7 +107,6 @@ void run_annih_PQ ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, 
 
 		}
 
-
 	} ;
 
 	gsl_rng_free (r);

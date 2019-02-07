@@ -102,8 +102,6 @@ void run_hybGF_P_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double D
 
 		}
 
-
-
     } ;
 
     gsl_rng_free (r);

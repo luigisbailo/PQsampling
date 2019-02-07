@@ -22,7 +22,6 @@ double drawTimeNewt ( double b, double D, double xi ) {
       std::cout << "Error: finding the root of S was not possible for:" << std::endl;
       std::cout << "b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
       return t;
-      // exit (EXIT_FAILURE);
     }
 
     tmem = t;
@@ -34,19 +33,14 @@ double drawTimeNewt ( double b, double D, double xi ) {
 
   }
 
-
-  // return count;
   return t;
     
 }
 
 
-
 double drawPosNewt ( double t, double b, double D, double xi ) {
 
-
   double r;
-
   double t0=0.063;
   double t1=0.234;
   if (t<t0*b*b/D) r = sqrt(t*D)*2;
@@ -70,37 +64,27 @@ double drawPosNewt ( double t, double b, double D, double xi ) {
     double dP = Pder (r,t,b,D,S);
     int count = 0;
     double rMem=-1;
-
  
     while ( abs(r-rMem) > DRAW_CONVERGENCE | abs(P-xi) > DRAW_CONVERGENCE ) {
- 
 
       count++;
       if (count > MAX_ITERATIONS){
-        // cout << setprecision (15);
         std::cout << "Error: finding the root of P was not possible for:" << std::endl;
         std::cout << "t = " << t << "\tb = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
-        // exit (EXIT_FAILURE);
         return r;
       }
 
-
       rMem = r;
       r = r - (P-xi)/dP;
-
-      // S = Sfunct (t,b,D);
       P = Pfunct (r,t,b,D,S);
       dP = Pder (r,t,b,D,S);
 
     }
 
-
-  // return count;    
-  return r;
+    return r;
 
 
 }
-
 
 
 double drawFree ( double t, double D, double xi ){
@@ -114,14 +98,11 @@ double drawFree ( double t, double D, double xi ){
     P += exp(-r*r/4/D/t)/sqrt(4*M_PI*pow(D*t,3))*r*r*dr;
     r += dr;
 
-
   }
 
   return r;
 
 }
-
-
 
 
 double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
@@ -218,7 +199,6 @@ double drawPosPQbis ( double t, double radius0, double tau, double b, double D, 
             std::cout << std::setprecision (15);
             std::cout << "Error: finding the root of PQ was not possible for:" << std::endl;
             std::cout << "r0 = " << radius0 << "\tt = " << t << "\ttau = " << tau << "\t b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
-//             exit (EXIT_FAILURE);
             return r;
         }
 

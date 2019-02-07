@@ -1,45 +1,4 @@
-//TO COMPILE: g++ -std=c++11 main.cpp -o main -lgsl -lgslcblas -lm
-
-#define print(x) cout << x << endl;
-
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-#include <gsl/gsl_roots.h>
-#include <gsl/gsl_math.h>
-#include <cmath>
-#include <gsl/gsl_errno.h>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <vector>
-#include <iomanip>
-#include <chrono>
-#include <cstring>
-#include <sstream>
-
-using namespace std::chrono;
-
-
-#include "../parameters.hpp"
-#include "../greensFunct.hpp"
-#include "../draw.hpp"
-#include "../tools.hpp"
-#include "../init.hpp"
-#include "../step.hpp"
-#include "../shell.hpp"
-#include "../print.hpp"
-#include "../burst.hpp"
-#include "../Brute_force/bruteForce.hpp"
-#include "../checks.hpp"
-#include "../toolsAnnih.hpp"
-#include "run_annih_P_proj.hpp"
-#include "run_annih_PQ_proj.hpp"
-#include "../Brute_force/run_annih_BM.hpp"
-
-
-int main (int argc, char *argv[]) {
-
-
+void fig2_annih (){
 
     double D_A = 0.01;
     double D_B = 0.01;
@@ -56,7 +15,7 @@ int main (int argc, char *argv[]) {
 
     int nProj=20;
     double Tsim=1000;
-    int Nsamples=50;
+    int Nsamples=100;
 
     int stat[3];
     int n_stat[nProj];
@@ -68,7 +27,7 @@ int main (int argc, char *argv[]) {
     for ( int count = 0; count < Nsamples; count++ ){
 
 
-        run_annih_P_proj ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
+        run_annih_P ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
 
         for ( int t=0; t<nProj; t++){
             n_stat_P [count][t] = n_stat[t];
@@ -76,7 +35,7 @@ int main (int argc, char *argv[]) {
         }
 
 
-        run_annih_PQ_proj ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
+        run_annih_PQ ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
 
         for ( int t=0; t<nProj; t++){
 

@@ -159,7 +159,6 @@ void getDist ( particle *particles, int* partList, double *distRow, double *maxS
     }
   }
 
-
   // "maxSh" says the largest shell that the particle 0 can construct 
   *maxSh = distRow[pos] / ( 1 + particles[partList[pos]].sqrtDiff/particles[partList[0]].sqrtDiff );
 
