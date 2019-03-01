@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 void fig2_diff () {
 
 	double D_A = 0.01;
@@ -66,7 +69,6 @@ void fig2_diff () {
 
 			}
 		}
-
 
 
 		for (int d=0; d<3; d++ )

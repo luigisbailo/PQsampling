@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 void fig1 () {
 
 	double b=1;

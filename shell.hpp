@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 #pragma once
 
 double getR_GF ( particle *particles, int *particleList, double *shells, double *distRow, int N, double L ){
@@ -16,7 +19,7 @@ double getR_GF ( particle *particles, int *particleList, double *shells, double 
   for ( int j=1; j<N; j++) {
 
     jPart = particleList [j];
-    // Rshell is an array of 3 elements, the 1st-[0] contains the distance with the j-particle, the 2nd the distance with the expected exit position, the 3rd
+    // Rshell is an array of 3 elements, the 1st-[0] contains the distance with the j-particle, the 2nd the distance with the expected exit position
     if ( particles[jPart].gf == false ){
       Rshell =  distRow [j] / 2;
     }

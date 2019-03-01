@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 #pragma once
 
 void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B, double D_A, double D_B, double tau_bm, double alpha, double L) {
@@ -50,7 +53,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
 
     double distMin,dist;
       int k =0;
-    //The following cycle ensures that particles are not in within interaction distance at initialization
+    //The following loop ensures that particles are not within interaction distance at initialization
     do{
 
       distMin = L;
@@ -88,6 +91,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
 
 
   }
+
 }
 
 
@@ -151,7 +155,6 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
       }
     }while (distMin<particles[count].radius );
 
-    
 
     particles[count].pos_exit[0] = x;
     particles[count].pos_exit[1] = y;
@@ -202,8 +205,6 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
     particles[i].gf = true;
     particles[i].tau_exit += drawTimeNewt ( R, particles[i].Diff, gsl_rng_uniform(r) );
     particles[i].tau_exitSampled = particles[i].tau_exit;
-//    particles[i].tau_exit = trunc( particles[i].tau_exit / tau_bm ) * tau_bm;
-
     particles[i].shell = R;
 
   }      
@@ -247,7 +248,6 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
   }
 
  }
-
 
 }
 

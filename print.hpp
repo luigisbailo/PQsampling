@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 #pragma once
 
 void printPos ( particle *particles, int *partList, int N){

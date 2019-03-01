@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 void fig4_diff_proj(){
 
 	double D_A = 0.01;

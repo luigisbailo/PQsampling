@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 #pragma once
 
 double Sfunct ( double t, double b, double D) {

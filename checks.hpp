@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 #pragma once
 
 void check_aGF (  particle *particles, int *partList, int N, double L ){
@@ -10,7 +13,6 @@ void check_aGF (  particle *particles, int *partList, int N, double L ){
 
   if ( particles[partList[0]].pos[0]>L | particles[partList[0]].pos[0]<0 | particles[partList[0]].pos[1]>L | particles[partList[0]].pos[1] <0  | particles[partList[0]].pos[2]>L | particles[partList[0]].pos[2]<0  ) {
     std::cout << "ERROR: pos\n";
-    // printPos (particles,N);
     exit (EXIT_FAILURE);
   
   } 
@@ -18,7 +20,6 @@ void check_aGF (  particle *particles, int *partList, int N, double L ){
   if (  particles[partList[0]].gf == true  &&
        (particles[partList[0]].pos_exit[0]>L | particles[partList[0]].pos_exit[0]<0 | particles[partList[0]].pos_exit[1]>L | particles[partList[0]].pos_exit[1] <0  | particles[partList[0]].pos_exit[2]>L | particles[partList[0]].pos_exit[2]<0 ) ) {
     std::cout << "ERROR: pos_exit\n";
-    // printPos (particles,N);
     exit (EXIT_FAILURE);
   
   } 
@@ -30,13 +31,8 @@ void check_aGF (  particle *particles, int *partList, int N, double L ){
       std::cout << sqrt(dist2_per(&particles[partList[0]],&particles[jPart],L)) - particles[partList[0]].shell - particles[jPart].shell << "\n";
       exit(EXIT_FAILURE);
     }
-    
-    // if (sqrt(dist2_per(&particles[partList[0]],&particles[jPart],XYZ))<0.001) {
-     //   std::cout << "ERROR: repulsion\n";
-     //   //exit(EXIT_FAILURE);
-    // }
   }
-  
+
 }
 
 
@@ -64,11 +60,7 @@ void check_GF (  particle *particles, int *partList, int N, double L ){
       std::cout << sqrt(dist2_per(&particles[partList[0]],&particles[jPart],L)) - particles[partList[0]].shell - particles[jPart].shell << "\n";
       exit(EXIT_FAILURE);
     }
-    
-    // if (sqrt(dist2_per(&particles[partList[0]],&particles[jPart],XYZ))<0.001) {
-	   //   std::cout << "ERROR: repulsion\n";
-	   //   //exit(EXIT_FAILURE);
-    // }
+
   }
   
 }

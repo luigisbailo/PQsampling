@@ -1,6 +1,7 @@
-void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
+// author luigisbailo
 
-//sqrtTAU_BM is sqrt(2*TAU_BM)
+
+void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
 
     double dist;
 
@@ -56,11 +57,10 @@ void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng
 
 
 void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
-//sqrtTAU_BM is sqrt(2*TAU_BM)
 
     double dist,deltaPosInt[3], deltaPosDiff[3], varPos[3];
 
-    //diffusive displacement, it might be conditioned by the PQ sampling
+    //diffusive displacement
     deltaPosDiff[0] = 0;
     deltaPosDiff[1] = 0;
     deltaPosDiff[2] = 0;
@@ -80,8 +80,6 @@ void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_r
 
         if ( dist < 0 && particles[partList[0]].type==particles[jPart].type ){
             // if the distance with another particle is lower than R_INTER we take into account their interaction
-            // varPos is the cartesian projection of the particles distance
-            // the origin is centered in the count position
 
             particles[partList[0]].active = false;
             particles[partList[0]].tau_exit = Tsim;
@@ -133,10 +131,6 @@ void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_r
 
 
 void BFstep_annih ( particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, int N, double sqrt2TAU_BM, double L ) {
-//dist,XYZ,deltaPos,varPos are just pointers to external free memory
-//sqrtTAU_BM is sqrt(2*TAU_BM)
-//deltaPos is an array of the increments in the position
-//particles are in a box modeled with a soft core repulsion on the boundaries
 
     double dist,deltaPos [3], varPos[3];
 

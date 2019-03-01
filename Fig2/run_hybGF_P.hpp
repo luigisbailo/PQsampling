@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 #pragma once
 
 void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, double tau_bm, double alpha, double Tsim, int nProj, double L, int *stat, double diffStat[][10] ) {

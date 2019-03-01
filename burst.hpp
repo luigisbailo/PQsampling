@@ -1,10 +1,13 @@
+// author luigisbailo
+
+
 #pragma once
 
 void burst_P_GF ( particle *particles, int *partList, double *distRow, gsl_rng *r,  int N, int iPart, double L ) {
 
   double deltaPos [3];
 
-  // it cycles over all particles to check weather they are within the bursting radius
+  // it cycles over all particles to check whether they are within the bursting radius
   for (int j=1; j<N; j++){
 
     int jPart = partList[j];
@@ -50,14 +53,14 @@ void burst_P_GF ( particle *particles, int *partList, double *distRow, gsl_rng *
 
       }
       else{
-        //In case the domain is burst at the same time of the construction
 
+        //In case the domain is burst at the same time of the construction
         particles[jPart].shell = 0;
         particles[jPart].tau_exit = particles[iPart].time;
 
       }
 
-      // "distRow[]" is updated with the new distances, and weather there is a new closest distance to insert in distRow[0] is checked    
+      // "distRow[]" is updated with the new distances, and whether there is a new closest distance to insert in distRow[0] is checked
       distRow [j] = sqrt(dist2_per ( &particles[iPart], &particles[jPart], L )) - particles[iPart].radius - particles[jPart].radius;
       if (distRow[j]<distRow[0]) distRow[0]=distRow[j];
 
@@ -104,6 +107,7 @@ void burst_PQ_GF ( particle *particles, int *partList, double *distRow, gsl_rng 
 
             }
             else if (particles[iPart].time>particles[jPart].time){
+
                 //At very small times, the bursting procedure consists simply in a brownian motion integration step
                 double sqrt2dt = sqrt (2*(particles[iPart].time-particles[jPart].time));
                 particles[jPart].pos[0] += gsl_ran_gaussian (r,1)*particles[jPart].sqrtDiff * sqrt2dt;
@@ -120,7 +124,6 @@ void burst_PQ_GF ( particle *particles, int *partList, double *distRow, gsl_rng 
             }
             else{
                 //In case the domain is burst at the same time of the construction
-
                 particles[jPart].shell = 0;
                 particles[jPart].tau_exit = particles[iPart].time;
 

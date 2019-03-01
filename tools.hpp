@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 #pragma once
 
 #include "draw.hpp"
@@ -125,7 +128,7 @@ void printPos_annih (particle *particles, int *partList, int N){
 void getDist ( particle *particles, int* partList, double *distRow, double *maxSh ,int N, double L ) {
 
   int pos;
-  //The j-th element of the vector "distRow[]" is filled with the distance with the j-th particle
+  //The j-th element of the vector "distRow[]" contains the distance with the j-th particle
   //The j-th particle means the j-th ordered on a exit-time basis
   //The 0 position is left empty, since "getDist()" is always called for the particle 0   
   for ( int j=1; j<N; j++ ) {

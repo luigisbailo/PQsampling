@@ -1,9 +1,12 @@
+// author luigisbailo
+
+
 #pragma once
 
 void GFstep_GF ( particle *myPart, gsl_rng *r, double R ){
 //The shell radius "R" has been already determined with getR () and it has been already checked that the domain can be constructed
 
-  //extraction of the exit time and exit position in polar coordinates
+    //extraction of the exit time and exit position in polar coordinates
     myPart->tau_exit += drawTimeNewt ( R, myPart->Diff, gsl_rng_uniform(r) );
     myPart->tau_exitSampled = myPart->tau_exit;
     myPart->shell = R;
@@ -27,7 +30,6 @@ void GFstep_GF_proj ( particle *myPart, gsl_rng *r, double R, double dt){
 
 
 void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L ) {
-//sqrtTAU_BM is sqrt(2*TAU_BM)
 
   double dist,deltaPos[3], varPos[3];
 
@@ -45,8 +47,6 @@ void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, d
 
     if ( dist < 0 ){
       // if the distance to another particle is lower than R_INTER we take into account their interaction
-      // varPos is the cartesian projection of the particles distancce
-      // the origin is centered in the count position
 
       varPos[0] = particles[partList[0]].pos[0] - particles[jPart].pos[0];
         if (varPos[0]>L/2) varPos[0] -= L;
@@ -81,11 +81,10 @@ void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, d
 
 
 void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L ) {
-//sqrtTAU_BM is sqrt(2*TAU_BM)
 
     double dist,deltaPosInt[3], deltaPosDiff[3], varPos[3];
 
-    //diffusive displacement, it might be conditioned by the PQ sampling
+    //diffusive displacement
     deltaPosDiff[0] = 0;
     deltaPosDiff[1] = 0;
     deltaPosDiff[2] = 0;
@@ -105,8 +104,6 @@ void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r,
 
         if ( dist < 0 ){
             // if the distance with another particle is lower than R_INTER we take into account their interaction
-            // varPos is the cartesian projection of the particles distancce
-            // the origin is centered in the count position
 
             varPos[0] = particles[partList[0]].pos[0] - particles[jPart].pos[0];
             if (varPos[0]>L/2) varPos[0] -= L;
@@ -224,7 +221,6 @@ void synchPart_P_GF ( particle *particles, int *partList, gsl_rng *r, int N, dou
 }
 
 
-
 void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
 
 
@@ -276,4 +272,3 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
   }
     
 }
-

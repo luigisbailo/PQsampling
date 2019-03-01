@@ -1,3 +1,6 @@
+// author luigisbailo
+
+
 void fig2_annih (){
 
     double D_A = 0.01;
