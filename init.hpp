@@ -3,7 +3,7 @@
 
 #pragma once
 
-void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B, double D_A, double D_B, double tau_bm, double alpha, double L) {
+void initPos_hybGF ( struct particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B, double D_A, double D_B, double tau_bm, double alpha, double L) {
 
     double x,y,z;
 
@@ -18,7 +18,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
       particles[count].R_gfrd = alpha*sqrt(D_A*tau_bm);
       particles[count].R_bd = alpha*sqrt(D_A*tau_bm);
       particles[count].burstR = alpha*sqrt(fmin(D_A,D_B)*tau_bm);
-      particles[count].active = true;
+      particles[count].active = 1;
 
     }
     else{
@@ -30,7 +30,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
       particles[count].R_gfrd = alpha*sqrt(D_B*tau_bm);
       particles[count].R_bd = alpha*sqrt(D_A*tau_bm);
       particles[count].burstR = alpha*sqrt(fmin(D_A,D_B)*tau_bm);
-      particles[count].active = true;
+      particles[count].active = 1;
 
     }
 
@@ -40,8 +40,8 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
     particles[count].tau_exit = 0;
     particles[count].tau_exitSampled=0;
     particles[count].shell = 0; 
-    particles[count].burst = false; 
-    particles[count].gf = false;
+    particles[count].burst = 0;
+    particles[count].gf = 0;
     for ( int i = 0; i < MEMORY_PQ; i++){
 
         particles[count].displPQ[0][i] = 0;
@@ -73,7 +73,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
      }
       k++;
       if (k>100*MAX_ITERATIONS) {
-        std::cout << "kill sim. init" << std::endl;
+        printf ("\nkill sim. init\n");
         exit(EXIT_FAILURE);
       }
       }while (distMin<particles[count].radius );
@@ -96,7 +96,7 @@ void initPos_hybGF ( particle *particles, gsl_rng *r, int N_A, int N_B, double R
 
 
 
-void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B, double D_A, double D_B, double tau_bm, double L) {
+void initPos_BM ( struct particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B, double D_A, double D_B, double tau_bm, double L) {
 
   double x,y,z;
 
@@ -106,15 +106,15 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
     particles[count].time = 0;
     particles[count].tau_exit = 0; 
     particles[count].shell = 0; 
-    particles[count].burst = false; 
-    particles[count].gf = false;
+    particles[count].burst = 0;
+    particles[count].gf = 0;
 
     if (count < N_A){
 
       particles[count].Diff = D_A;
       particles[count].sqrtDiff = sqrt(D_A);
       particles[count].radius = R_A;
-      particles[count].active = true;
+      particles[count].active = 1;
       particles[count].type = 0;
 
     }
@@ -123,7 +123,7 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
       particles[count].Diff = D_B;
       particles[count].sqrtDiff = sqrt(D_B);
       particles[count].radius = R_B;
-      particles[count].active = true;
+      particles[count].active = 1;
         particles[count].type = 1;
     }
     double distMin,dist;
@@ -149,7 +149,7 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
      }
       k++;
       if (k>10*MAX_ITERATIONS){
-        std::cout << "kill sim. init" << std::endl;
+        printf("\nkill sim. init\n");
         exit(EXIT_FAILURE);
 
       }
@@ -174,7 +174,7 @@ void initPos_BM ( particle *particles, gsl_rng *r, int N_A, int N_B, double R_A,
 
 
 
-void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, double sqrt2TAU_BM, double L, int *stat ) {
+void initShell_GF ( struct particle *particles, gsl_rng *r, int N, double tau_bm, double sqrt2TAU_BM, double L, int *stat ) {
 
   double dists [N], deltaPos[3], varPos[3];
 
@@ -202,7 +202,7 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
 
     (*stat) ++;
  
-    particles[i].gf = true;
+    particles[i].gf = 1;
     particles[i].tau_exit += drawTimeNewt ( R, particles[i].Diff, gsl_rng_uniform(r) );
     particles[i].tau_exitSampled = particles[i].tau_exit;
     particles[i].shell = R;
@@ -210,7 +210,7 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
   }      
   else {
 
-    particles[i].gf = false;
+    particles[i].gf = 0;
 
     deltaPos[0] = 0;
     deltaPos[1] = 0;
@@ -252,7 +252,7 @@ void initShell_GF ( particle *particles, gsl_rng *r, int N, double tau_bm, doubl
 }
 
 
-void initShell_GF_proj ( particle *particles, gsl_rng *r, int N, double tau_bm, double sqrt2TAU_BM, double L, int *stat ) {
+void initShell_GF_proj ( struct particle *particles, gsl_rng *r, int N, double tau_bm, double sqrt2TAU_BM, double L, int *stat ) {
 
   double dists [N], deltaPos[3], varPos[3];
 
@@ -277,7 +277,7 @@ void initShell_GF_proj ( particle *particles, gsl_rng *r, int N, double tau_bm, 
 
     (*stat) ++;
  
-    particles[i].gf = true;
+    particles[i].gf = 1;
     particles[i].tau_exit += drawTimeNewt ( R, particles[i].Diff, gsl_rng_uniform(r) ); 
     particles[i].tau_exitSampled = particles[i].tau_exit;
     particles[i].tau_exit = trunc ( particles[i].tau_exit / tau_bm ) * tau_bm;
@@ -286,7 +286,7 @@ void initShell_GF_proj ( particle *particles, gsl_rng *r, int N, double tau_bm, 
   }      
   else {
 
-    particles[i].gf = false;
+    particles[i].gf = 0;
 
     deltaPos[0] = 0;
     deltaPos[1] = 0;

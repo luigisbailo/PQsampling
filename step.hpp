@@ -3,7 +3,7 @@
 
 #pragma once
 
-void GFstep_GF ( particle *myPart, gsl_rng *r, double R ){
+void GFstep_GF ( struct particle *myPart, gsl_rng *r, double R ){
 //The shell radius "R" has been already determined with getR () and it has been already checked that the domain can be constructed
 
     //extraction of the exit time and exit position in polar coordinates
@@ -15,7 +15,7 @@ void GFstep_GF ( particle *myPart, gsl_rng *r, double R ){
 
 
 
-void GFstep_GF_proj ( particle *myPart, gsl_rng *r, double R, double dt){
+void GFstep_GF_proj ( struct particle *myPart, gsl_rng *r, double R, double dt){
 //The shell radius "R" has been already determined with getR () and it has been already checked that the domain can be constructed
 
   //extraction of the exit time and exit position in polar coordinates
@@ -29,7 +29,8 @@ void GFstep_GF_proj ( particle *myPart, gsl_rng *r, double R, double dt){
 
 
 
-void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L ) {
+void BMstep ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm,
+              double sqrt2TAU_BM, int N, double L ) {
 
   double dist,deltaPos[3], varPos[3];
 
@@ -59,9 +60,12 @@ void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, d
         else if (varPos[2]<-L/2) varPos[2] += L;
 
       // The particles interact via a repulsive harmonic interaction
-      deltaPos[0] += K*particles[partList[0]].Diff * (varPos[0]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
-      deltaPos[1] += K*particles[partList[0]].Diff * (varPos[1]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
-      deltaPos[2] += K*particles[partList[0]].Diff * (varPos[2]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
+      deltaPos[0] += K*particles[partList[0]].Diff *
+              (varPos[0]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
+      deltaPos[1] += K*particles[partList[0]].Diff *
+              (varPos[1]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
+      deltaPos[2] += K*particles[partList[0]].Diff *
+              (varPos[2]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
 
     }
 
@@ -80,7 +84,7 @@ void BMstep ( particle *particles, int *partList, double *distRow, gsl_rng *r, d
 
 
 
-void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L ) {
+void BMstepPQ ( struct sparticle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L ) {
 
     double dist,deltaPosInt[3], deltaPosDiff[3], varPos[3];
 
@@ -116,9 +120,12 @@ void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r,
             else if (varPos[2]<-L/2) varPos[2] += L;
 
             // The particles interact via a repulsive harmonic interaction
-            deltaPosInt[0] += K*particles[partList[0]].Diff * (varPos[0]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
-            deltaPosInt[1] += K*particles[partList[0]].Diff * (varPos[1]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
-            deltaPosInt[2] += K*particles[partList[0]].Diff * (varPos[2]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
+            deltaPosInt[0] += K*particles[partList[0]].Diff *
+                    (varPos[0]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
+            deltaPosInt[1] += K*particles[partList[0]].Diff *
+                    (varPos[1]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
+            deltaPosInt[2] += K*particles[partList[0]].Diff *
+                    (varPos[2]/(dist+particles[partList[0]].radius+particles[jPart].radius)) * (-dist) * tau_bm;
 
         }
 
@@ -147,7 +154,7 @@ void BMstepPQ ( particle *particles, int *partList, double *distRow, gsl_rng *r,
 
 
 
-void synchPart_P_GF ( particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
+void synchPart_P_GF ( struct particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
 
 
   double synchPos [3];
@@ -159,17 +166,14 @@ void synchPart_P_GF ( particle *particles, int *partList, gsl_rng *r, int N, dou
 
     if ( Tsynch < particles[n].time && particles[n].active ){
 
-       std::cout << "ERROR: synch;  Tsynch = " << Tsynch <<"\n";
-       std::cout << std::setprecision(5);
-       std::cout << "Particle : " << particles[n].label << std::endl;
-       printPos_per ( particles, partList, N );
+       printf("ERROR: synch\n");
        exit (EXIT_FAILURE);
 
     }
 
 
-    particles[n].gf = false;
-    particles[n].burst = false;
+    particles[n].gf = 0;
+    particles[n].burst = 0;
 
     if ( particles[n].shell>0  && Tsynch-particles[n].time> (particles[n].shell*particles[n].shell)/particles[n].Diff/100 ){
 
@@ -221,7 +225,7 @@ void synchPart_P_GF ( particle *particles, int *partList, gsl_rng *r, int N, dou
 }
 
 
-void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
+void synchPart_PQ_GF ( struct particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
 
 
   double synchPos [3];
@@ -231,14 +235,15 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
       if (!particles[n].active)
           continue;
 
-    particles[n].gf = false;
-    particles[n].burst = false;
+    particles[n].gf = 0;
+    particles[n].burst = 0;
     if (particles[n].time>=Tsynch){
         continue;
     }
     if (particles[n].shell>0 && Tsynch-particles[n].time> (particles[n].shell*particles[n].shell)/particles[n].Diff/100  ){
 
-        double Rsynch =  drawPosPQ00bis( Tsynch-particles[n].time, particles[n].tau_exitSampled-particles[n].time, particles[n].shell, particles[n].Diff, gsl_rng_uniform(r) );
+        double Rsynch =  drawPosPQ00bis( Tsynch-particles[n].time, particles[n].tau_exitSampled-particles[n].time,
+                                         particles[n].shell, particles[n].Diff, gsl_rng_uniform(r) );
         polarTransf ( synchPos, Rsynch, gsl_rng_uniform (r), gsl_rng_uniform (r));
         particles[n].pos[0] += synchPos[0];
         particles[n].pos[1] += synchPos[1];
@@ -254,9 +259,9 @@ void synchPart_PQ_GF ( particle *particles, int *partList, gsl_rng *r, int N, do
     }
     else{
         //It is the case of BM
-        particles[n].pos[0] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
-        particles[n].pos[1] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
-        particles[n].pos[2] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) ) ;
+        particles[n].pos[0] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) );
+        particles[n].pos[1] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) );
+        particles[n].pos[2] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) );
 
       }
       checkBound (particles[n].pos, particles[n].pos_period, L );

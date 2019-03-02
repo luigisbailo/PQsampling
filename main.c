@@ -25,10 +25,10 @@
 //#include "init.hpp"
 //#include "step.hpp"
 //#include "shell.hpp"
-//#include "print.hpp"
+////#include "print.hpp"
 //#include "burst.hpp"
-//#include "checks.hpp"
-//#include "toolsAnnih.hpp"
+////#include "checks.hpp"
+////#include "toolsAnnih.hpp"
 //
 //#include "BD/bruteForce.hpp"
 //#include "BD/run_BD.hpp"
@@ -39,7 +39,7 @@
 //#include "Fig2/run_annih_PQ.hpp"
 //#include "Fig2/run_annih_P.hpp"
 //#include "Fig2/run_annih_PQ.hpp"
-//#include "Fig2/fig2_diff.hpp"
+#include "Fig2/fig2_diff.hpp"
 //#include "Fig2/fig2_annih.hpp"
 //#include "Fig4/run_hybGF_P_proj.hpp"
 //#include "Fig4/run_hybGF_PQ_proj.hpp"
@@ -58,8 +58,8 @@ int main () {
 
     printf("\n\nFig2-MSD is being produced:\n\n");
 
-//    fig2_diff();
-
+    fig2_diff();
+//
     printf("\n\nFig2-kinetiks is being produced:\n\n");
 
 //    fig2_annih();

@@ -77,7 +77,7 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 			stat [2] ++;
 			BMstep ( particles, partList, distRow, r, tau_bm,  sqrt2TAU_BM, N, L );
-			particles[partList[0]].gf = false;
+			particles[partList[0]].gf = 0;
 		}
 
 		sortBurst ( particles, partList, N);
