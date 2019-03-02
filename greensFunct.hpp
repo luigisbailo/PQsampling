@@ -23,7 +23,7 @@ double Sfunct ( double t, double b, double D) {
       S += term;
       m += 2;
 
-    } while ( abs (term) > conv );
+    } while ( fabs (term) > conv );
 
     S = 1-S;
 
@@ -63,7 +63,7 @@ double Sder ( double t, double b, double D) {
       S += term;
       m += 2;
 
-    } while ( abs (term) > conv | termC > termD/100 | S < 0 );
+    } while ( fabs (term) > conv | termC > termD/100 | S < 0 );
     //The second condition takes into account that the series, for short times, can be negative in the beginning, because of the term m*m 
     //The series, when the term m*m  is dominant at short times, grows to a peak, and then finally deceases to zero
     //The S<0 condition is to ensure a longer convergence for short times
@@ -98,7 +98,7 @@ double Pfunct ( double radius, double t, double b, double D, double S ) {
       P += term;
       m += 1;
 
-    } while ( abs(term) > conv  |  termA>termB/100 |  P>1 );
+    } while ( fabs(term) > conv  |  termA>termB/100 |  P>1 );
 
   } else {
 
@@ -134,7 +134,7 @@ double Pder ( double radius, double t, double b, double D, double S ) {
       P += term;
       m += 1;
 
-    } while ( abs(term) > conv  |  termA>termB/100 );
+    } while ( fabs(term) > conv  |  termA>termB/100 );
 
   }
   else {
@@ -190,12 +190,12 @@ double PQfunct ( double radius, double t, double r0, double tau, double b, doubl
       term2 -= term1;
       n += 1;
 
-    } while (  abs (term1) > conv | termA*n*n>0.000001 | n<10 ) ;
+    } while (  fabs (term1) > conv | termA*n*n>0.000001 | n<10 ) ;
 
     PQ += term2;
     m += 1;
 
-  } while ( abs (term2) > conv | termA*m*m>0.00001 | m<10 );
+  } while ( fabs (term2) > conv | termA*m*m>0.00001 | m<10 );
 
   return PQ;
 
@@ -242,12 +242,12 @@ double PQder ( double radius, double t, double r0, double tau, double b, double 
       term1 =  coeff2 * termA * termB / q;
       term2 -= term1;
 
-    } while ( abs(term1) > conv | termA*n*n>0.0000001 | n<200 );
+    } while ( fabs(term1) > conv | termA*n*n>0.0000001 | n<200 );
 
     PQ += term2;
     m += 1;
 
-  } while ( abs(term2) > conv | termA*m*m>0.00001 | m<2000);
+  } while ( fabs(term2) > conv | termA*m*m>0.00001 | m<2000);
 
   return PQ;
 
@@ -296,12 +296,12 @@ double PQ00funct ( double radius, double t, double tau, double b, double D, doub
 
       n += 1;
 
-    } while (  abs (term1) > conv | termA*n*n>0.000001 | n<5 ) ;
+    } while (  fabs (term1) > conv | termA*n*n>0.000001 | n<5 ) ;
 
     PQ += term2;
     m += 1;
 
-  } while ( abs (term2) > conv | termA*m*m>0.000001 | m<5 );
+  } while ( fabs (term2) > conv | termA*m*m>0.000001 | m<5 );
  
   return PQ;
 
@@ -346,11 +346,11 @@ double PQ00der ( double radius, double t, double tau, double b, double D, double
       term1 =  coeff2 * termA * termB / q;
       term2 -= term1;
 
-    } while ( abs(term1) > conv | termA*n*n>0.000001 | n<5 );
+    } while ( fabs(term1) > conv | termA*n*n>0.000001 | n<5 );
 
     PQ += term2;
     m += 1;
-  } while ( abs(term2) > conv | termA*m*m>0.000001 | m<15);
+  } while ( fabs(term2) > conv | termA*m*m>0.000001 | m<15);
 
   return PQ;
 
@@ -378,7 +378,7 @@ double qFunct ( double radius, double t, double b, double D ) {
     m += 2;
 
 
-  } while ( abs(term) > conv | m<100 );
+  } while ( fabs(term) > conv | m<100 );
 
   return q;
 
@@ -406,7 +406,7 @@ double pFunct ( double radius, double t, double b, double D ) {
     P += term;
     m += 1;
 
-  } while ( abs(term) > conv  |  m<20 | P<0);
+  } while ( fabs(term) > conv  |  m<20 | P<0);
 
   return P;
 
@@ -434,7 +434,7 @@ double pFunct_init ( double r, double t, double r0, double t0, double b, double 
     P += term;
     m += 1;
 
-  } while ( abs(term) > conv  |  m<20 );
+  } while ( fabs(term) > conv  |  m<20 );
 
   return P;
 
@@ -463,7 +463,7 @@ double Sfunct_init ( double tau, double radius, double t, double b, double D) {
       S += term;
       m += 2;
 
-    } while ( abs (term) > conv );
+    } while ( fabs (term) > conv );
 
     S = 1-S;
   }
@@ -499,7 +499,7 @@ double Sder2 ( double t, double b, double D) {
         S += term;
         m += 2;
 
-    } while ( abs (term) > conv | termC > termD/100  );
+    } while ( fabs (term) > conv | termC > termD/100  );
 
   return S*coeff2;
 
@@ -527,7 +527,7 @@ double Pder2 ( double radius, double t, double b, double D, double S ) {
     P += term;
     m += 1;
 
-  } while ( abs (term) > conv | termA>termB/100 );
+  } while ( fabs (term) > conv | termA>termB/100 );
 
   return P*coeff2;
 

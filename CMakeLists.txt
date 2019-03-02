@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.9)
 project(paper_formalization_first_passage)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_STANDARD 11)
 
 add_executable(main
-        main.cpp
+        main.c
         burst.hpp
         checks.hpp
         draw.hpp

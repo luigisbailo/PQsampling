@@ -17,14 +17,12 @@ double drawTimeNewt ( double b, double D, double xi ) {
   int count = 0;
 
 
-  while ( abs(t-tmem) > DRAW_CONVERGENCE | abs(S-xi) > DRAW_CONVERGENCE ) {
+  while ( fabs(t-tmem) > DRAW_CONVERGENCE |fabs(S-xi) > DRAW_CONVERGENCE ) {
 
     count++;
     if (count > MAX_ITERATIONS){
-      std:: setprecision (15);
-      std::cout << "Error: finding the root of S was not possible for:" << std::endl;
-      std::cout << "b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
-      return t;
+        printf("\nError: finding the root of S was not possible\n");
+       return t;
     }
 
     tmem = t;
@@ -58,7 +56,7 @@ double drawPosNewt ( double t, double b, double D, double xi ) {
 
 
   if (D*t/b/b<0.01){
-    std::cout << "ERROR: time too small in drawPos" << std::endl;
+    printf ( "\nERROR: time too small in drawPos\n");
   }
 
 
@@ -68,12 +66,11 @@ double drawPosNewt ( double t, double b, double D, double xi ) {
     int count = 0;
     double rMem=-1;
  
-    while ( abs(r-rMem) > DRAW_CONVERGENCE | abs(P-xi) > DRAW_CONVERGENCE ) {
+    while ( fabs(r-rMem) > DRAW_CONVERGENCE |fabs(P-xi) > DRAW_CONVERGENCE ) {
 
       count++;
       if (count > MAX_ITERATIONS){
-        std::cout << "Error: finding the root of P was not possible for:" << std::endl;
-        std::cout << "t = " << t << "\tb = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
+          printf("\nError: finding the root of P was not possible\n");
         return r;
       }
 
@@ -111,8 +108,7 @@ double drawFree ( double t, double D, double xi ){
 double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
 
     if (t>=tau){
-        std::cout << t << "\t" << tau << std::endl;
-        std::cout << "error drawPosPQ00bis" << std::endl;
+        printf("\nerror drawPosPQ00bis\n");
         exit (EXIT_FAILURE);
     }
     double q = Sder (tau,b,D);
@@ -140,13 +136,11 @@ double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
     int count = 0;
     double rMem = -1;
 
-    while ( abs(P-xi)>DRAW_CONVERGENCE | abs(r-rMem) > DRAW_CONVERGENCE*b ){
+    while ( fabs(P-xi)>DRAW_CONVERGENCE | fabs(r-rMem) > DRAW_CONVERGENCE*b ){
 
         count++;
         if (count > MAX_ITERATIONS){
-            std::cout << std::setprecision (15);
-            std::cout << "Error: finding the root of P was not possible for:" << std::endl;
-            std::cout << "t = " << t << "\t b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
+            printf("\nError: finding the root of P was not possible\n");
             exit (EXIT_FAILURE);
             }
 
@@ -167,11 +161,11 @@ double drawPosPQ00bis ( double t, double tau, double b, double D, double xi ) {
 double drawPosPQbis ( double t, double radius0, double tau, double b, double D, double xi ) {
 
     if (t>=tau){
-        std::cout << "error time drawPosPQbis" << std::endl;
+        printf("\nerror time drawPosPQbis\n");
         exit (EXIT_FAILURE);
     }
     if (radius0>=b){
-        std::cout << "error position drawPosPQbis" << std::endl;
+        printf("\nerror position drawPosPQbis\n");
         exit (EXIT_FAILURE);
     }
     double r0,r1,r,q,P;
@@ -195,13 +189,11 @@ double drawPosPQbis ( double t, double radius0, double tau, double b, double D, 
     int count = 0;
     double rMem = -1;
 
-    while ( abs(r-rMem) >DRAW_CONVERGENCE*b && abs(P-xi) > DRAW_CONVERGENCE ){
+    while ( fabs(r-rMem) >DRAW_CONVERGENCE*b && fabs(P-xi) > DRAW_CONVERGENCE ){
 
         count++;
         if (count > MAX_ITERATIONS){
-            std::cout << std::setprecision (15);
-            std::cout << "Error: finding the root of PQ was not possible for:" << std::endl;
-            std::cout << "r0 = " << radius0 << "\tt = " << t << "\ttau = " << tau << "\t b = " << b << "\t D = " << D << "\t xi = " << xi << std::endl;
+            printf("Error: finding the root of PQ was not possible\n");
             return r;
         }
 
