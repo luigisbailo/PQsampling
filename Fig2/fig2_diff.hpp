@@ -18,7 +18,7 @@ void fig2_diff () {
 
 	int nProj=5;
 	double Tsim=1000;
-	int Nsamples=100;
+	int Nsamples=200;
 
 	int stat[3];
 	double diffStat[nProj][10];

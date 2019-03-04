@@ -49,6 +49,7 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 
 		if ( particles[partList[0]].burst ) stat[0]++;
+//        printPos(particles, partList, N);
 
 		updatePart_GF ( &particles[partList[0]], r, tau_bm, L );
 		//differently from aGF, updatePart() here samples also the exit position from the shell

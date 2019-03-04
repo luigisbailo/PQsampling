@@ -173,7 +173,7 @@ void sortBurst ( struct particle *particles, int *partList, int N) {
 
   for (int n=1; n<N; n++){
 
-    if (particles[partList[n]].burst){
+    if (particles[partList[n]].burst == 0){
 
       tempList = partList[n];
       for ( int m = n; m>1; m-- ){
@@ -276,9 +276,9 @@ void updatePart_GF ( struct particle *P, gsl_rng *r, double dt, double L ) {
     P -> pos[1] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     P -> pos[2] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     checkBound ( P->pos, P->pos_period, L );
-      P -> pos_exit[0] = P -> pos[0];
-      P -> pos_exit[1] = P -> pos[1];
-      P -> pos_exit[2] = P -> pos[2];
+    P -> pos_exit[0] = P -> pos[0];
+    P -> pos_exit[1] = P -> pos[1];
+    P -> pos_exit[2] = P -> pos[2];
     P->time += deltaT;
     P->tau_exit = P->time;
 
