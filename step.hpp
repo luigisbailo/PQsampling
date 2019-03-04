@@ -43,7 +43,7 @@ void BMstep ( struct particle *particles, int *partList, double *distRow, gsl_rn
 
     int jPart = partList[j];
 
-    if (particles[jPart].gf) continue;
+    if (particles[jPart].gf==0) continue;
 
     dist = distRow[j];
 

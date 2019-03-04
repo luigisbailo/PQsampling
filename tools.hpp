@@ -83,10 +83,10 @@ void getDist ( struct particle *particles, int* partList, double *distRow, doubl
   //The 0 position is left empty, since "getDist()" is always called for the particle 0   
   for ( int j=1; j<N; j++ ) {
 
-    if (particles[partList[j]].active == 0) {
+    if (particles[partList[j]].active == 1) {
       distRow [j] = L;
     }
-    else if (particles[partList[j]].gf){
+    else if (particles[partList[j]].gf == 0){
       distRow [j] = sqrt(dist2_per ( &particles[partList[0]], &particles[partList[j]], L )) - particles[partList[0]].radius - particles[partList[j]].radius;
     }
     //distance in case of BM. The two particles times are in within an integration step

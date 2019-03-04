@@ -43,9 +43,9 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 	qsort ( particles, N, sizeof(struct particle), compareTime );
 
 	for (int n=0; n<N; n++) partList[n]=n;
+//    printPos(particles, partList, N);
 
 	while ( particles[partList[0]].tau_exit < Tsim ) {
-//        printPos(particles, partList, N);
 
 
 		if ( particles[partList[0]].burst ) stat[0]++;
