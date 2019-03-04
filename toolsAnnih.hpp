@@ -1,7 +1,7 @@
 // author luigisbailo
 
 
-void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
+void BMstep_annih ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
 
     double dist;
 
@@ -18,12 +18,12 @@ void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng
             // varPos is the cartesian projection of the particles distance
             // the origin is centered in the count position
 
-            particles[partList[0]].active = false;
+            particles[partList[0]].active = 1;
             particles[partList[0]].tau_exit = Tsim;
             particles[partList[0]].time  = Tsim;
             particles[partList[0]].tau_exitSampled = Tsim;
 
-            particles[jPart].active = false;
+            particles[jPart].active = 1;
             particles[jPart].tau_exit = Tsim;
             particles[jPart].time  = Tsim;
             particles[jPart].tau_exitSampled = Tsim;
@@ -56,7 +56,7 @@ void BMstep_annih ( particle *particles, int *partList, double *distRow, gsl_rng
 }
 
 
-void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
+void BMstepPQ_annih ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
 
     double dist,deltaPosInt[3], deltaPosDiff[3], varPos[3];
 
@@ -81,12 +81,12 @@ void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_r
         if ( dist < 0 && particles[partList[0]].type==particles[jPart].type ){
             // if the distance with another particle is lower than R_INTER we take into account their interaction
 
-            particles[partList[0]].active = false;
+            particles[partList[0]].active = 1;
             particles[partList[0]].tau_exit = Tsim;
             particles[partList[0]].time  = Tsim;
             particles[partList[0]].tau_exitSampled = Tsim;
 
-            particles[jPart].active = false;
+            particles[jPart].active = 1;
             particles[jPart].tau_exit = Tsim;
             particles[jPart].time  = Tsim;
             particles[jPart].tau_exitSampled = Tsim;
@@ -130,7 +130,7 @@ void BMstepPQ_annih ( particle *particles, int *partList, double *distRow, gsl_r
 }
 
 
-void BFstep_annih ( particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, int N, double sqrt2TAU_BM, double L ) {
+void BFstep_annih ( struct particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, int N, double sqrt2TAU_BM, double L ) {
 
     double dist,deltaPos [3], varPos[3];
 

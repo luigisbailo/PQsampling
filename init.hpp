@@ -3,7 +3,8 @@
 
 #pragma once
 
-void initPos_hybGF ( struct particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B, double D_A, double D_B, double tau_bm, double alpha, double L) {
+void initPos_hybGF ( struct particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B,
+                     double D_A, double D_B, double tau_bm, double alpha, double L) {
 
     double x,y,z;
 
@@ -18,7 +19,7 @@ void initPos_hybGF ( struct particle *particles, gsl_rng *r, int N_A, int N_B, d
       particles[count].R_gfrd = alpha*sqrt(D_A*tau_bm);
       particles[count].R_bd = alpha*sqrt(D_A*tau_bm);
       particles[count].burstR = alpha*sqrt(fmin(D_A,D_B)*tau_bm);
-      particles[count].active = 1;
+      particles[count].active = 0;
 
     }
     else{
@@ -30,7 +31,7 @@ void initPos_hybGF ( struct particle *particles, gsl_rng *r, int N_A, int N_B, d
       particles[count].R_gfrd = alpha*sqrt(D_B*tau_bm);
       particles[count].R_bd = alpha*sqrt(D_A*tau_bm);
       particles[count].burstR = alpha*sqrt(fmin(D_A,D_B)*tau_bm);
-      particles[count].active = 1;
+      particles[count].active = 0;
 
     }
 
@@ -40,8 +41,8 @@ void initPos_hybGF ( struct particle *particles, gsl_rng *r, int N_A, int N_B, d
     particles[count].tau_exit = 0;
     particles[count].tau_exitSampled=0;
     particles[count].shell = 0; 
-    particles[count].burst = 0;
-    particles[count].gf = 0;
+    particles[count].burst = 1;
+    particles[count].gf = 1;
     for ( int i = 0; i < MEMORY_PQ; i++){
 
         particles[count].displPQ[0][i] = 0;
@@ -96,7 +97,8 @@ void initPos_hybGF ( struct particle *particles, gsl_rng *r, int N_A, int N_B, d
 
 
 
-void initPos_BM ( struct particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B, double D_A, double D_B, double tau_bm, double L) {
+void initPos_BM ( struct particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B,
+                  double D_A, double D_B, double tau_bm, double L) {
 
   double x,y,z;
 
@@ -106,15 +108,15 @@ void initPos_BM ( struct particle *particles, gsl_rng *r, int N_A, int N_B, doub
     particles[count].time = 0;
     particles[count].tau_exit = 0; 
     particles[count].shell = 0; 
-    particles[count].burst = 0;
-    particles[count].gf = 0;
+    particles[count].burst = 1;
+    particles[count].gf = 1;
 
     if (count < N_A){
 
       particles[count].Diff = D_A;
       particles[count].sqrtDiff = sqrt(D_A);
       particles[count].radius = R_A;
-      particles[count].active = 1;
+      particles[count].active = 0;
       particles[count].type = 0;
 
     }
@@ -123,7 +125,7 @@ void initPos_BM ( struct particle *particles, gsl_rng *r, int N_A, int N_B, doub
       particles[count].Diff = D_B;
       particles[count].sqrtDiff = sqrt(D_B);
       particles[count].radius = R_B;
-      particles[count].active = 1;
+      particles[count].active = 0;
         particles[count].type = 1;
     }
     double distMin,dist;
@@ -143,7 +145,7 @@ void initPos_BM ( struct particle *particles, gsl_rng *r, int N_A, int N_B, doub
 
       for ( int n=0; n<count; n++ ){
 
-        dist = sqrt(dist2_per ( &particles[count], &particles[n], L ));// - particles[count].radius - particles[n].radius;
+        dist = sqrt(dist2_per ( &particles[count], &particles[n], L ));
         if (dist<distMin) distMin = dist;
 
      }
@@ -195,14 +197,14 @@ void initShell_GF ( struct particle *particles, gsl_rng *r, int N, double tau_bm
 
     }
     
-    double R = *std::min_element( dists, dists+N ) / 2;
+    double R = min_element( dists, N ) / 2;
 
 
   if ( R > particles[i].R_bd ){
 
     (*stat) ++;
  
-    particles[i].gf = 1;
+    particles[i].gf = 0;
     particles[i].tau_exit += drawTimeNewt ( R, particles[i].Diff, gsl_rng_uniform(r) );
     particles[i].tau_exitSampled = particles[i].tau_exit;
     particles[i].shell = R;
@@ -210,7 +212,7 @@ void initShell_GF ( struct particle *particles, gsl_rng *r, int N, double tau_bm
   }      
   else {
 
-    particles[i].gf = 0;
+    particles[i].gf = 1;
 
     deltaPos[0] = 0;
     deltaPos[1] = 0;
@@ -230,9 +232,12 @@ void initShell_GF ( struct particle *particles, gsl_rng *r, int N, double tau_bm
         if (varPos[2]>L/2) varPos[2] -= L;
         else if (varPos[2]<-L/2) varPos[2] += L;
    
-        deltaPos[0] += K*particles[i].Diff * (varPos[0]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
-        deltaPos[1] += K*particles[i].Diff * (varPos[1]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
-        deltaPos[2] += K*particles[i].Diff * (varPos[2]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
+        deltaPos[0] += K*particles[i].Diff *
+                (varPos[0]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
+        deltaPos[1] += K*particles[i].Diff *
+                (varPos[1]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
+        deltaPos[2] += K*particles[i].Diff *
+                (varPos[2]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
 
       }
 
@@ -270,14 +275,14 @@ void initShell_GF_proj ( struct particle *particles, gsl_rng *r, int N, double t
 
     }
     
-   double R = *std::min_element( dists, dists+N ) / 2;
+   double R = min_element( dists, N ) / 2;
 
 
   if ( R > particles[i].R_bd ){
 
     (*stat) ++;
  
-    particles[i].gf = 1;
+    particles[i].gf = 0;
     particles[i].tau_exit += drawTimeNewt ( R, particles[i].Diff, gsl_rng_uniform(r) ); 
     particles[i].tau_exitSampled = particles[i].tau_exit;
     particles[i].tau_exit = trunc ( particles[i].tau_exit / tau_bm ) * tau_bm;
@@ -286,7 +291,7 @@ void initShell_GF_proj ( struct particle *particles, gsl_rng *r, int N, double t
   }      
   else {
 
-    particles[i].gf = 0;
+    particles[i].gf = 1;
 
     deltaPos[0] = 0;
     deltaPos[1] = 0;
@@ -306,9 +311,12 @@ void initShell_GF_proj ( struct particle *particles, gsl_rng *r, int N, double t
         if (varPos[2]>L/2) varPos[2] -= L;
         else if (varPos[2]<-L/2) varPos[2] += L;
    
-        deltaPos[0] += K*particles[i].Diff * (varPos[0]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
-        deltaPos[1] += K*particles[i].Diff * (varPos[1]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
-        deltaPos[2] += K*particles[i].Diff * (varPos[2]/(dists[j]+particles[i].radius+particles[j].radius)) * (-dists[j]) * tau_bm;
+        deltaPos[0] += K*particles[i].Diff * (varPos[0]/(dists[j]+particles[i].radius+particles[j].radius)) *
+                (-dists[j]) * tau_bm;
+        deltaPos[1] += K*particles[i].Diff * (varPos[1]/(dists[j]+particles[i].radius+particles[j].radius)) *
+                (-dists[j]) * tau_bm;
+        deltaPos[2] += K*particles[i].Diff * (varPos[2]/(dists[j]+particles[i].radius+particles[j].radius)) *
+                (-dists[j]) * tau_bm;
 
       }
 

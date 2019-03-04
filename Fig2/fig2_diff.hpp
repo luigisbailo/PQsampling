@@ -42,12 +42,12 @@ void fig2_diff () {
 			for ( int t=0; t<nProj; t++)
 				diffStat[t][n] = 0;
 
-//		run_hybGF_P ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, diffStat );
+		run_hybGF_P ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, diffStat );
 
 		for ( int t=0; t<nProj; t++){
 
 			for ( int n=0; n<N; n++){
-
+//				printf ("%lf\n",diffStat[t][n]);
 				Diff_P [n][count][t] = diffStat[t][n];
 			}
 

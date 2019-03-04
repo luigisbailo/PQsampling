@@ -74,56 +74,6 @@ double dist2next_per (struct particle *A, struct particle *B, double L ) {
   return XYZ[0]*XYZ[0] + XYZ[1]*XYZ[1] + XYZ[2]*XYZ[2];
 
 }
-//
-//void printPos_per (struct particle *particles, int *partList, int N){
-//
-//  std::cout <<"Part.\t"<<"Time\t\t"<<"Tau\t\t"<<"Shell\t"
-//       <<"x\t"<<"y\t"<<"z\t"
-//       <<"x_ex\t"<<"y_ex\t"<<"z_ex\t"
-//       <<"x_per\t"<<"y_per\t"<<"z_per\t"
-//       <<"Radius\t" <<"BURST\t"<<"GF\n";
-//
-//  for (int count=0; count<N; count++){
-//    std::cout <<particles[partList[count]].label << "\t"
-//   <<particles[partList[count]].time << "\t\t"
-//   <<particles[partList[count]].tau_exit<<"\t\t"
-//   <<particles[partList[count]].shell<<"\t"
-//   <<particles[partList[count]].pos[0]<<"\t"
-//   <<particles[partList[count]].pos[1]<<"\t"
-//   <<particles[partList[count]].pos[2] <<"\t"
-//   <<particles[partList[count]].pos_exit[0]<<"\t"
-//   <<particles[partList[count]].pos_exit[1]<<"\t"
-//   <<particles[partList[count]].pos_exit[2] <<"\t"
-//   <<particles[partList[count]].pos_period[0]<<"\t"
-//   <<particles[partList[count]].pos_period[1]<<"\t"
-//   <<particles[partList[count]].pos_period[2] <<"\t"
-//   <<particles[partList[count]].pos_init[0]<<"\t"
-//   <<particles[partList[count]].pos_init[1]<<"\t"
-//   <<particles[partList[count]].pos_init[2] <<"\t"
-//   <<particles[partList[count]].radius <<"\t"
-//   <<particles[partList[count]].burst <<"\t"
-//   <<particles[partList[count]].gf<<"\n";
-//
-//  }
-//}
-//
-//
-//void printPos_annih (particle *particles, int *partList, int N){
-//
-//  std::cout <<"Part.\t"<<"Time\t\t"<<"Tau\t\t"
-//            <<"Radius\t" <<"BURST\t"<<"GF\t"<<"Active\n";
-//
-//  for (int count=0; count<N; count++){
-//    std::cout <<particles[partList[count]].label << "\t"
-//              <<particles[partList[count]].time << "\t\t"
-//              <<particles[partList[count]].tau_exit<<"\t\t"
-//              <<particles[partList[count]].radius <<"\t"
-//              <<particles[partList[count]].burst <<"\t"
-//              <<particles[partList[count]].gf<<"\t"
-//              <<particles[partList[count]].active << std::endl;
-//  }
-//}
-
 
 void getDist ( struct particle *particles, int* partList, double *distRow, double *maxSh ,int N, double L ) {
 
@@ -169,11 +119,33 @@ void getDist ( struct particle *particles, int* partList, double *distRow, doubl
 }
 
 
+double min_element (double *arr, int N){
 
-int compareTime (struct particle A, struct particle B)  {return A.tau_exit < B.tau_exit;}
+  double min = arr[0];
+  for (int i=0; i<N-1; i++){
+    if (arr[i+1]<arr[i]){
+      min = arr[i+1];
+    }
+  }
+
+  return min;
+
+}
+
+
+int compareTime (const void * part_A, const void * part_B)  {
+
+    double exit_A = ((struct particle*)part_A)->tau_exit;
+    double exit_B = ((struct particle*)part_B)->tau_exit;
+
+
+    return exit_A - exit_B;
+
+}
 
 
 void sortPart ( struct particle *particles, int *partList, int N) {
+// sort the first particle in the list
 
   int tempList;
 
@@ -221,6 +193,8 @@ void sortBurst ( struct particle *particles, int *partList, int N) {
 
 void checkBound (double *pos, int *pos_period, double L) {
 
+//    printf ("%lf\t%lf\t%lf\n",pos[0],pos[1],pos[2]);
+//    printf ("%d\t%d\t%d\n",pos_period[0],pos_period[1],pos_period[2]);
   if ( pos[0] > L ) {
     pos[0] -= L;
     pos_period[0] ++;
@@ -247,6 +221,8 @@ void checkBound (double *pos, int *pos_period, double L) {
     pos[2] += L;
     pos_period[2] --;
   }
+//    printf ("%lf\t%lf\t%lf\n",pos[0],pos[1],pos[2]);
+//    printf ("%d\t%d\t%d\n\n",pos_period[0],pos_period[1],pos_period[2]);
 
 };
 
@@ -284,7 +260,7 @@ void updatePart_GF ( struct particle *P, gsl_rng *r, double dt, double L ) {
 
   double deltaPos [3];
 
-  if ( P->gf ){
+  if ( P->gf == 0){
 
     polarTransf ( deltaPos, P -> shell, gsl_rng_uniform (r), gsl_rng_uniform (r));
     //deltaPos now contains the displacements in cartesian coordinates
@@ -307,7 +283,7 @@ void updatePart_GF ( struct particle *P, gsl_rng *r, double dt, double L ) {
     P->tau_exit = P->time;
 
   }
-  else if ( P->burst == 0 ){
+  else if ( P->burst == 1 ){
     // it is the case of a BM integration
 
     P->pos[0] = P->pos_exit[0];
@@ -325,7 +301,7 @@ void updatePart_GF_P_proj ( struct particle *P, gsl_rng *r, double dt, double L 
 
   double deltaPos [3];
 
-  if ( P->gf  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
+  if ( P->gf==0  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
 
     double R = drawPosNewt ( P->tau_exit-P->time, P->shell, P->Diff, gsl_rng_uniform(r) );
     double R1 = gsl_rng_uniform (r);
@@ -344,7 +320,7 @@ void updatePart_GF_P_proj ( struct particle *P, gsl_rng *r, double dt, double L 
     P->time = P->tau_exit;
 
   }
-  else if (P->gf ) {
+  else if (P->gf==0 ) {
 
     double deltaT = P->tau_exit-P->time;
     P -> pos[0] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
@@ -359,7 +335,7 @@ void updatePart_GF_P_proj ( struct particle *P, gsl_rng *r, double dt, double L 
     P->time = P->tau_exit;
 
   }
-  else if ( !P->burst ){
+  else if ( P->burst==1 ){
     // it is the case of a BM integration (no GF, no burst)
 
     P->pos[0] = P->pos_exit[0];

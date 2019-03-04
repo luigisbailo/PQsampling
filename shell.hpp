@@ -3,7 +3,7 @@
 
 #pragma once
 
-double getR_GF ( particle *particles, int *particleList, double *shells, double *distRow, int N, double L ){
+double getR_GF ( struct particle *particles, int *particleList, double *shells, double *distRow, int N, double L ){
 
   int iPart,jPart;
   double Rshell;
@@ -11,7 +11,7 @@ double getR_GF ( particle *particles, int *particleList, double *shells, double 
   iPart = particleList[0];
 
   //shells[0] contains the minimial shell
-  if ( particles[iPart].gf == true )  
+  if ( particles[iPart].gf == 0 )
     shells[0] = particles[iPart].R_bd; 
   else 
     shells[0] = particles[iPart].R_gfrd;
@@ -19,8 +19,9 @@ double getR_GF ( particle *particles, int *particleList, double *shells, double 
   for ( int j=1; j<N; j++) {
 
     jPart = particleList [j];
-    // Rshell is an array of 3 elements, the 1st-[0] contains the distance with the j-particle, the 2nd the distance with the expected exit position
-    if ( particles[jPart].gf == false ){
+    // Rshell is an array of 3 elements, the 1st-[0] contains the distance with the j-particle,
+    // the 2nd the distance with the expected exit position
+    if ( particles[jPart].gf == 1 ){
       Rshell =  distRow [j] / 2;
     }
     else {
@@ -34,7 +35,7 @@ double getR_GF ( particle *particles, int *particleList, double *shells, double 
 
   }
 
-  return *std::min_element( shells+1,shells+N);
+  return min_element( shells, N );
 
 }
 

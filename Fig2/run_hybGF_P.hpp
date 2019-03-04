@@ -31,7 +31,7 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 	double distRow [N], maxSh;
 
-	particle particles [N];
+	struct particle particles [N];
 	double shells [N];
 	int partList [N];
 
@@ -40,45 +40,52 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 	initShell_GF ( particles, r, N, tau_bm, sqrt2TAU_BM, L, &stat[1]);
 
 	//sort() is a prebuild c++ funct. It sorts particles for increasing exit times
-	std::sort ( particles, particles+N, compareTime );
+	qsort ( particles, N, sizeof(struct particle), compareTime );
+
 	for (int n=0; n<N; n++) partList[n]=n;
 
-
 	while ( particles[partList[0]].tau_exit < Tsim ) {
+//        printPos(particles, partList, N);
 
 
 		if ( particles[partList[0]].burst ) stat[0]++;
 
 		updatePart_GF ( &particles[partList[0]], r, tau_bm, L );
 		//differently from aGF, updatePart() here samples also the exit position from the shell
+//        printPos(particles, partList, N);
 
 		getDist ( particles, partList, distRow, &maxSh, N, L );
 
 		burst_P_GF ( particles, partList, distRow, r, N, partList[0], L);
+//        printPos(particles, partList, N);
 
 		if (particles[partList[0]].tau_exitSampled<particles[partList[0]].time) {
 			R = getR_GF(particles, partList, shells, distRow, N, L);
+
+//            printf("%lf\n",R);
 		}
 		else{
 			R=0;
 		}
 
-		particles[partList[0]].burst = false; //when a particle is burst its position is updated and put on top of the list
+		particles[partList[0]].burst = 1; //when a particle is burst its position is updated and put on top of the list
+//        printf("first %lf\n",R);
 
-		if ( R > 0 ) {
-
+		if ( R > 0.000001 ) {
+//            printf("%lf\n",R);
 			stat [1] ++;
 			if (R>L/20) R=L/20;
 			GFstep_GF ( &particles[partList[0]], r, R );
-			particles[partList[0]].gf = true;
+			particles[partList[0]].gf = 0;
 
 		}
 		else{
 
 			stat [2] ++;
 			BMstep ( particles, partList, distRow, r, tau_bm,  sqrt2TAU_BM, N, L );
-			particles[partList[0]].gf = 0;
+			particles[partList[0]].gf = 1;
 		}
+//        printPos(particles, partList, N);
 
 		sortBurst ( particles, partList, N);
 
@@ -86,8 +93,10 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 		sortPart ( particles, partList, N);
 
 		if ( particles[partList[0]].tau_exit > tProj | particles[partList[0]].tau_exit == tProj ) {
+//        printPos(particles, partList, N);
 
 			synchPart_P_GF ( particles, partList, r, N, tProj, L );
+//    printPos(particles, partList, N);
 
 			for ( int n=0; n<N; n++ ){
 
@@ -99,13 +108,17 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 			initShell_GF ( particles, r, N, tau_bm, sqrt2TAU_BM, L, &stat[1]);
 
-			std::sort ( particles, particles+N, compareTime );
+            qsort ( particles, N, sizeof(struct particle), compareTime );
+
 			for (int n=0; n<N; n++) partList[n]=n;
 
 			countProj ++;
 			tProj = countProj * Tsim / nProj;
 
 		}
+//        printPos(particles, partList, N);
+//
+//        printf("%lf\n",particles[partList[0]].tau_exit);
 
 	} ;
 

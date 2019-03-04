@@ -5,11 +5,12 @@
 
 void GFstep_GF ( struct particle *myPart, gsl_rng *r, double R ){
 //The shell radius "R" has been already determined with getR () and it has been already checked that the domain can be constructed
-
+//    printf("%lf\n",R);
     //extraction of the exit time and exit position in polar coordinates
     myPart->tau_exit += drawTimeNewt ( R, myPart->Diff, gsl_rng_uniform(r) );
     myPart->tau_exitSampled = myPart->tau_exit;
     myPart->shell = R;
+//    printf ("in %lf\n\n",myPart->tau_exit);
 
 }
 
@@ -71,20 +72,23 @@ void BMstep ( struct particle *particles, int *partList, double *distRow, gsl_rn
 
   }
 
-  particles[partList[0]].pos_exit[0] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM + deltaPos[0];
-  particles[partList[0]].pos_exit[1] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM + deltaPos[1];
-  particles[partList[0]].pos_exit[2] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff * sqrt2TAU_BM + deltaPos[2];
+  particles[partList[0]].pos_exit[0] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff *
+                                                 sqrt2TAU_BM + deltaPos[0];
+  particles[partList[0]].pos_exit[1] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff *
+                                                 sqrt2TAU_BM + deltaPos[1];
+  particles[partList[0]].pos_exit[2] +=  gsl_ran_gaussian(r, 1) * particles[partList[0]].sqrtDiff *
+                                                 sqrt2TAU_BM + deltaPos[2];
 
 
   checkBound (particles[partList[0]].pos_exit, particles[partList[0]].pos_period, L );
 
     particles[partList[0]].tau_exit += tau_bm;
-     
 }
 
 
 
-void BMstepPQ ( struct sparticle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L ) {
+void BMstepPQ ( struct particle *particles, int *partList, double *distRow, gsl_rng *r,
+                double tau_bm, double sqrt2TAU_BM, int N, double L ) {
 
     double dist,deltaPosInt[3], deltaPosDiff[3], varPos[3];
 
