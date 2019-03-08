@@ -31,7 +31,7 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 	double distRow [N], maxSh;
 
-	particle particles [N];
+	struct particle particles [N];
 	double shells [N];
 	int partList [N];
 
@@ -39,10 +39,9 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 	initShell_GF ( particles, r, N, tau_bm, sqrt2TAU_BM, L, &stat[1]);
 
-	//sort() is a prebuild c++ funct. It sorts particles for increasing exit times
-	std::sort ( particles, particles+N, compareTime );
-	for (int n=0; n<N; n++) partList[n]=n;
+	qsort ( particles, N, sizeof(struct particle), compareTime );
 
+	for (int n=0; n<N; n++) partList[n]=n;
 
 	while ( particles[partList[0]].tau_exit < Tsim ) {
 
@@ -58,26 +57,26 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 		if (particles[partList[0]].tau_exitSampled<particles[partList[0]].time) {
 			R = getR_GF(particles, partList, shells, distRow, N, L);
+
 		}
 		else{
 			R=0;
 		}
 
-		particles[partList[0]].burst = false; //when a particle is burst its position is updated and put on top of the list
+		particles[partList[0]].burst = 1; //when a particle is burst its position is updated and put on top of the list
 
-		if ( R > 0 ) {
-
+		if ( R > EPSILON) {
 			stat [1] ++;
 			if (R>L/20) R=L/20;
 			GFstep_GF ( &particles[partList[0]], r, R );
-			particles[partList[0]].gf = true;
+			particles[partList[0]].gf = 0;
 
 		}
 		else{
 
 			stat [2] ++;
 			BMstep ( particles, partList, distRow, r, tau_bm,  sqrt2TAU_BM, N, L );
-			particles[partList[0]].gf = false;
+			particles[partList[0]].gf = 1;
 		}
 
 		sortBurst ( particles, partList, N);
@@ -99,7 +98,8 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 			initShell_GF ( particles, r, N, tau_bm, sqrt2TAU_BM, L, &stat[1]);
 
-			std::sort ( particles, particles+N, compareTime );
+            qsort ( particles, N, sizeof(struct particle), compareTime );
+
 			for (int n=0; n<N; n++) partList[n]=n;
 
 			countProj ++;

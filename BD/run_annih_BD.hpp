@@ -18,8 +18,8 @@ void run_annih_BM ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, 
 
 	const int N = N_A + N_B;
 
-	BFdistances d[N];
-	particle particles [N]; 
+	struct BFdistances d[N];
+	struct particle particles [N];
 
 	double tProj = Tsim / nProj;
 	int countProj = 1; 
@@ -39,7 +39,7 @@ void run_annih_BM ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, 
 			int n_active = 0;
 
 			for ( int n=0; n<N; n++){
-				if (particles[n].active)
+				if (particles[n].active == 0)
 					n_active++;
 			}
 

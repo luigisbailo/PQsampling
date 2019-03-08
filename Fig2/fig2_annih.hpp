@@ -33,6 +33,7 @@ void fig2_annih (){
         run_annih_P ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, n_stat );
 
         for ( int t=0; t<nProj; t++){
+
             n_stat_P [count][t] = n_stat[t];
 
         }
@@ -109,12 +110,12 @@ void fig2_annih (){
     }
 
 
-    std::cout << std::setprecision (7);
 
     for ( int t=0; t<nProj; t++){
 
-        std::cout << (t+1)*Tsim/nProj << "\t" << av_n_P[t] << "\t" << av_n_PQ[t] << "\t" << av_n_BM[t] << "\t"  ;
-        std::cout << sd_n_P[t] << "\t" << sd_n_PQ[t] << "\t" << sd_n_BM[t] << std::endl;
+        printf("%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t\n",
+               (t+1)*Tsim/nProj,  av_n_P[t], av_n_PQ[t], av_n_BM[t], sd_n_P[t], sd_n_PQ[t], sd_n_BM[t]);
+
 
     }
 

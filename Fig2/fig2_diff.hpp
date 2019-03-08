@@ -28,7 +28,7 @@ void fig2_diff () {
 
 	//"double diffStat[][10]" where 10 indicates the number of particles
 	if (N != 10){
-		std::cout << "Error in run_hybGF_P: the number of particles must be equal to 10";
+		printf("\nError in run_hybGF_P: the number of particles must be equal to 10\n");
 		exit (EXIT_FAILURE);
 	}
 
@@ -47,7 +47,6 @@ void fig2_diff () {
 		for ( int t=0; t<nProj; t++){
 
 			for ( int n=0; n<N; n++){
-
 				Diff_P [n][count][t] = diffStat[t][n];
 			}
 
@@ -148,12 +147,11 @@ void fig2_diff () {
 
 
 
-	std::cout << std::setprecision (7);
-
 	for ( int t=0; t<nProj; t++){
 
-		std::cout << (t+1)*Tsim/nProj << "\t" << avDiff_P[t] << "\t" << avDiff_PQ[t] << "\t" << avDiff_BM[t] << "\t" ;
-		std::cout << sdDiff_P[t] << "\t" << sdDiff_PQ[t] << "\t" << sdDiff_BM[t] << "\t" <<(t+1)*Tsim/nProj*6*D_A  << std::endl;
+		printf("%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",
+				(t+1)*Tsim/nProj, avDiff_P[t], avDiff_PQ[t], avDiff_BM[t], sdDiff_P[t], sdDiff_PQ[t], sdDiff_BM[t],
+				(t+1)*Tsim/nProj*6*D_A );
 
 	}
 

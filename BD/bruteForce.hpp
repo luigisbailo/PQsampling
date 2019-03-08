@@ -1,4 +1,4 @@
-void getBFdistances ( particle *particles, BFdistances *d, int N, double L){
+void getBFdistances ( struct particle *particles, struct BFdistances *d, int N, double L){
 
     for ( int i=0; i<N; i++ ) {
 
@@ -13,7 +13,8 @@ void getBFdistances ( particle *particles, BFdistances *d, int N, double L){
 
 }
 
-void BFstep ( particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, int N, double sqrt2TAU_BM, double L ) {
+void BFstep ( struct particle *particles, struct BFdistances *d, gsl_rng *r, double tau_bm, int N,
+              double sqrt2TAU_BM, double L ) {
 //dist,XYZ,deltaPos,varPos are just pointers to external free memory 
 //sqrtTAU_BM is sqrt(2*TAU_BM)
 //deltaPos is an array of the increments in the position
@@ -55,12 +56,15 @@ void BFstep ( particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, in
             else if (varPos[2]<-L/2) varPos[2] += L;
 
         // The particles interact via a repulsive harmonic interaction
-        deltaPos[0] += K*particles[i].Diff * (varPos[0]/ dist ) * (particles[i].radius+particles[j].radius -dist) * tau_bm;
-        deltaPos[1] += K*particles[i].Diff * (varPos[1]/ dist ) * (particles[i].radius+particles[j].radius -dist) * tau_bm;
-        deltaPos[2] += K*particles[i].Diff * (varPos[2]/ dist ) * (particles[i].radius+particles[j].radius -dist) * tau_bm;
+        deltaPos[0] += K*particles[i].Diff * (varPos[0]/ dist ) *
+                (particles[i].radius+particles[j].radius -dist) * tau_bm;
+        deltaPos[1] += K*particles[i].Diff * (varPos[1]/ dist ) *
+                (particles[i].radius+particles[j].radius -dist) * tau_bm;
+        deltaPos[2] += K*particles[i].Diff * (varPos[2]/ dist ) *
+                (particles[i].radius+particles[j].radius -dist) * tau_bm;
 
-        if ( abs(sqrt(varPos[0]*varPos[0]+varPos[1]*varPos[1]+varPos[2]*varPos[2])- dist) > 0.001 ){
-        std::cout << "ERROR: distances in forces computing in BM" << std::endl;
+        if ( fabs(sqrt(varPos[0]*varPos[0]+varPos[1]*varPos[1]+varPos[2]*varPos[2])- dist) > 0.001 ){
+        printf( "ERROR: distances in forces computing in BM" );
         }
 
       }
@@ -87,7 +91,7 @@ void BFstep ( particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, in
 
 
 
-void BFupdate ( particle *particles, int N) {
+void BFupdate ( struct particle *particles, int N) {
 
 
   for ( int n=0; n<N; n++){
