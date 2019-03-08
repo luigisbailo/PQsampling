@@ -163,10 +163,10 @@ void synchPart_P_GF ( struct particle *particles, int *partList, gsl_rng *r, int
 
   for ( int n=0; n<N; n++) {
 
-    if (!particles[n].active)
+    if (particles[n].active == 1)
         continue;
 
-    if ( Tsynch < particles[n].time && particles[n].active ){
+    if ( Tsynch < particles[n].time && particles[n].active == 0 ){
 
        printf("ERROR: synch\n");
        exit (EXIT_FAILURE);

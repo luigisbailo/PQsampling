@@ -1,7 +1,8 @@
 // author luigisbailo
 
 
-void BMstep_annih ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
+void BMstep_annih ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm,
+                    double sqrt2TAU_BM, int N, double L, double Tsim ) {
 
     double dist;
 
@@ -9,7 +10,7 @@ void BMstep_annih ( struct particle *particles, int *partList, double *distRow, 
 
         int jPart = partList[j];
 
-        if (particles[jPart].gf | !particles[jPart].active) continue;
+        if (particles[jPart].gf == 0 | particles[jPart].active == 1) continue;
 
         dist = distRow[j];
 
@@ -56,7 +57,8 @@ void BMstep_annih ( struct particle *particles, int *partList, double *distRow, 
 }
 
 
-void BMstepPQ_annih ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm, double sqrt2TAU_BM, int N, double L, double Tsim ) {
+void BMstepPQ_annih ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm,
+                      double sqrt2TAU_BM, int N, double L, double Tsim ) {
 
     double dist,deltaPosInt[3], deltaPosDiff[3], varPos[3];
 
@@ -74,7 +76,7 @@ void BMstepPQ_annih ( struct particle *particles, int *partList, double *distRow
 
         int jPart = partList[j];
 
-        if (particles[jPart].gf | !particles[jPart].active) continue;
+        if (particles[jPart].gf == 0 | particles[jPart].active == 1) continue;
 
         dist = distRow[j];
 
@@ -130,7 +132,8 @@ void BMstepPQ_annih ( struct particle *particles, int *partList, double *distRow
 }
 
 
-void BFstep_annih ( struct particle *particles, BFdistances *d, gsl_rng *r, double tau_bm, int N, double sqrt2TAU_BM, double L ) {
+void BFstep_annih ( struct particle *particles, struct BFdistances *d, gsl_rng *r, double tau_bm, int N,
+                    double sqrt2TAU_BM, double L ) {
 
     double dist,deltaPos [3], varPos[3];
 
@@ -138,7 +141,7 @@ void BFstep_annih ( struct particle *particles, BFdistances *d, gsl_rng *r, doub
 
         particles[i].tau_exit += tau_bm;
 
-        if (!particles[i].active)
+        if (particles[i].active == 1)
             continue;
 
         deltaPos[0] = 0;
@@ -147,7 +150,7 @@ void BFstep_annih ( struct particle *particles, BFdistances *d, gsl_rng *r, doub
 
         for( int j=0; j<N; j++){
 
-            if (!particles[j].active)
+            if ( particles[j].active == 1)
                 continue;
 
             if (i==j) continue;
@@ -161,8 +164,8 @@ void BFstep_annih ( struct particle *particles, BFdistances *d, gsl_rng *r, doub
 
             if ( dist<particles[i].radius+particles[j].radius && particles[i].type==particles[j].type ){
 
-                particles[i].active = false;
-                particles[j].active = false;
+                particles[i].active = 1;
+                particles[j].active = 1;
 
                 break;
 

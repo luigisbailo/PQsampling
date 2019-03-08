@@ -221,8 +221,6 @@ void checkBound (double *pos, int *pos_period, double L) {
     pos[2] += L;
     pos_period[2] --;
   }
-//    printf ("%lf\t%lf\t%lf\n",pos[0],pos[1],pos[2]);
-//    printf ("%d\t%d\t%d\n\n",pos_period[0],pos_period[1],pos_period[2]);
 
 };
 
