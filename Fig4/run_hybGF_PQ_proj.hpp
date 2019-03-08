@@ -31,7 +31,7 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
 	double distRow [N], maxSh;
 
-	particle particles [N]; 
+	struct particle particles [N];
 	double shells [N];	
 	int partList [N];
 
@@ -39,15 +39,16 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
     initShell_GF_proj ( particles, r, N, tau_bm, sqrt2TAU_BM, L, &stat[1]);
 
-    //sort() is a prebuild c++ funct. It sorts particles for increasing exit times
-    std::sort ( particles, particles+N, compareTime );
+	qsort ( particles, N, sizeof(struct particle), compareTime );
+
     for (int n=0; n<N; n++) partList[n]=n;
 
 
     while ( particles[partList[0]].tau_exit < Tsim ) {
 
 
-    	if ( particles[partList[0]].burst ) stat[0]++;
+    	if ( particles[partList[0]].burst == 0 )
+			stat[0]++;
 
 		updatePart_GF_PQ_proj ( &particles[partList[0]], r, tau_bm, L );
 
@@ -62,21 +63,21 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
             R=0;
         }
 
-		particles[partList[0]].burst = false; //when a particle is burst its position is updated and put on top of the list
+		particles[partList[0]].burst = 1; //when a particle is burst its position is updated and put on top of the list
 
-		if ( R > 0 ) {
+		if ( R > EPSILON ) {
 
 			stat [1] ++;
 			if (R>L/8) R=L/8;
 			GFstep_GF_proj ( &particles[partList[0]], r, R , tau_bm);
-			particles[partList[0]].gf = true;
+			particles[partList[0]].gf = 0;
 
 		}
 		else{ 
 			
 			stat [2] ++;
 			BMstepPQ ( particles, partList, distRow, r, tau_bm,  sqrt2TAU_BM, N, L );
-			particles[partList[0]].gf = false;
+			particles[partList[0]].gf = 1;
 		}
 
 		sortBurst ( particles, partList, N);
@@ -99,7 +100,8 @@ void run_hybGF_PQ_proj ( int N_A, int N_B, int R_A, int R_B, double D_A, double 
 
 		    initShell_GF_proj ( particles, r, N, tau_bm, sqrt2TAU_BM, L, &stat[1]);
 
-		    std::sort ( particles, particles+N, compareTime );
+			qsort ( particles, N, sizeof(struct particle), compareTime );
+
 		    for (int n=0; n<N; n++) partList[n]=n;
 
 			countProj ++;

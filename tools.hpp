@@ -60,6 +60,7 @@ double dist2_per (struct particle *A, struct particle *B, double L ) {
 
 }
 
+
 double dist2next_per (struct particle *A, struct particle *B, double L ) {
 
   double XYZ [3];
@@ -74,6 +75,7 @@ double dist2next_per (struct particle *A, struct particle *B, double L ) {
   return XYZ[0]*XYZ[0] + XYZ[1]*XYZ[1] + XYZ[2]*XYZ[2];
 
 }
+
 
 void getDist ( struct particle *particles, int* partList, double *distRow, double *maxSh ,int N, double L ) {
 
@@ -114,7 +116,6 @@ void getDist ( struct particle *particles, int* partList, double *distRow, doubl
 
   // "maxSh" says the largest shell that the particle 0 can construct 
   *maxSh = distRow[pos] / ( 1 + particles[partList[pos]].sqrtDiff/particles[partList[0]].sqrtDiff );
-
 
 }
 
@@ -164,6 +165,7 @@ void sortPart ( struct particle *particles, int *partList, int N) {
 
 }
 
+
 void printPos_per ( struct particle *particle, int *partList, int N);
 
 
@@ -188,7 +190,6 @@ void sortBurst ( struct particle *particles, int *partList, int N) {
   }
 
 }
-
 
 
 void checkBound (double *pos, int *pos_period, double L) {
@@ -225,7 +226,6 @@ void checkBound (double *pos, int *pos_period, double L) {
 };
 
 
-
 void polarTransf ( double *pos, double R, double u, double v ) {
 //Theta is defined in [0,2pi]
 //Phi is defined in [0,pi]
@@ -238,7 +238,6 @@ void polarTransf ( double *pos, double R, double u, double v ) {
   pos[2] = R * cos(phi);  
 
 }
-
 
 
 void polarTransf_angles ( double *pos, double R, double theta, double phi ) {
@@ -313,27 +312,26 @@ void updatePart_GF_P_proj ( struct particle *P, gsl_rng *r, double dt, double L 
     P->pos_exit[0] = P->pos[0];
     P->pos_exit[1] = P->pos[1];
     P->pos_exit[2] = P->pos[2];
-
     P->shell = 0;
     P->time = P->tau_exit;
 
   }
-  else if (P->gf==0 ) {
+  else if ( P->gf == 0 ) {
 
     double deltaT = P->tau_exit-P->time;
     P -> pos[0] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     P -> pos[1] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     P -> pos[2] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
     checkBound ( P->pos, P->pos_period, L );
-      P->pos_exit[0] = P->pos[0];
-      P->pos_exit[1] = P->pos[1];
-      P->pos_exit[2] = P->pos[2];
+    P->pos_exit[0] = P->pos[0];
+    P->pos_exit[1] = P->pos[1];
+    P->pos_exit[2] = P->pos[2];
 
-      P->shell = 0;
+    P->shell = 0;
     P->time = P->tau_exit;
 
   }
-  else if ( P->burst==1 ){
+  else if ( P->burst == 1 ){
     // it is the case of a BM integration (no GF, no burst)
 
     P->pos[0] = P->pos_exit[0];
@@ -352,7 +350,7 @@ void updatePart_GF_PQ_proj ( struct particle *P, gsl_rng *r, double dt, double L
 
   double deltaPos[3],deltaPosFut[3];
 
-  if ( P->gf  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
+  if ( P->gf == 0  &&  P->tau_exit-P->time > (P->shell*P->shell) / P->Diff / 100 ){
 
       double R = drawPosPQ00bis ( P->tau_exit-P->time, P->tau_exitSampled-P->time, P->shell, P->Diff, gsl_rng_uniform(r) );
       double theta =  2 * M_PI * gsl_rng_uniform (r);
@@ -391,7 +389,7 @@ void updatePart_GF_PQ_proj ( struct particle *P, gsl_rng *r, double dt, double L
       P -> gf = 0;
 
   }
-  else if (P->gf ) {
+  else if ( P->gf == 0 ) {
     //this cycle is for the case of a very small time sampling (very unlikely)
     double deltaT = P->tau_exit-P->time;
     P -> pos[0] += gsl_ran_gaussian (r,1)*P->sqrtDiff*sqrt(2*deltaT);
@@ -408,7 +406,7 @@ void updatePart_GF_PQ_proj ( struct particle *P, gsl_rng *r, double dt, double L
       P -> gf = 0;
 
   }
-  else if ( !P->burst  ){
+  else if ( P->burst == 1 ){
     // it is the case of a BM integration, when the particle has been burst, it skips the update cycle
 
     checkBound (P->pos_exit,P->pos_period, L);

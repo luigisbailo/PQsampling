@@ -16,8 +16,6 @@ double drawTimeNewt ( double b, double D, double xi ) {
   double dS = Sder (t,b,D);
   int count = 0;
 
-//        printf ("temp t %lf",t );
-
   while ( fabs(t-tmem) > DRAW_CONVERGENCE |fabs(S-xi) > DRAW_CONVERGENCE ) {
 
     count++;
@@ -32,10 +30,9 @@ double drawTimeNewt ( double b, double D, double xi ) {
     S = 1-Sfunct (t,b,D);
     if ( S==1 ) return t;
     dS = Sder (t,b,D);
-//    printf("S:%lf\tdS:%lf\n",S,dS);
+
   }
 
-//    printf ("t:%lf\n",t);
   return t;
     
 }

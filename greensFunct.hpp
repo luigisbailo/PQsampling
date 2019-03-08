@@ -474,6 +474,7 @@ double Sfunct_init ( double tau, double radius, double t, double b, double D) {
 
 }
 
+
 double Sder2 ( double t, double b, double D) {
 
   double coeff1 = exp ( - M_PI*M_PI*D*t/(b*b) );

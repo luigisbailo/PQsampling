@@ -102,12 +102,11 @@ void fig4_annih_proj (){
 
     }
 
-    std::cout << std::setprecision (7);
 
     for ( int t=0; t<nProj; t++){
 
-        std::cout << (t+1)*Tsim/nProj << "\t" << av_n_P[t] << "\t" << av_n_PQ[t] << "\t" << av_n_BM[t] << "\t"  ;
-        std::cout << sd_n_P[t] << "\t" << sd_n_PQ[t] << "\t" << sd_n_BM[t] << std::endl;
+        printf("%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",
+               (t+1)*Tsim/nProj,av_n_P[t],av_n_PQ[t],av_n_BM[t],sd_n_P[t],sd_n_PQ[t],sd_n_BM[t]);
 
     }
 

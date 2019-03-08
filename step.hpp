@@ -13,7 +13,6 @@ void GFstep_GF ( struct particle *myPart, gsl_rng *r, double R ){
 }
 
 
-
 void GFstep_GF_proj ( struct particle *myPart, gsl_rng *r, double R, double dt){
 //The shell radius "R" has been already determined with getR () and it has been already checked that the domain can be constructed
 
@@ -25,7 +24,6 @@ void GFstep_GF_proj ( struct particle *myPart, gsl_rng *r, double R, double dt){
 
     
 }
-
 
 
 void BMstep ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm,
@@ -82,7 +80,6 @@ void BMstep ( struct particle *particles, int *partList, double *distRow, gsl_rn
 
     particles[partList[0]].tau_exit += tau_bm;
 }
-
 
 
 void BMstepPQ ( struct particle *particles, int *partList, double *distRow, gsl_rng *r,
@@ -153,7 +150,6 @@ void BMstepPQ ( struct particle *particles, int *partList, double *distRow, gsl_
     particles[partList[0]].tau_exit += tau_bm;
 
 }
-
 
 
 void synchPart_P_GF ( struct particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
@@ -242,7 +238,8 @@ void synchPart_PQ_GF ( struct particle *particles, int *partList, gsl_rng *r, in
     if (particles[n].time>=Tsynch){
         continue;
     }
-    if (particles[n].shell>0 && Tsynch-particles[n].time> (particles[n].shell*particles[n].shell)/particles[n].Diff/100  ){
+    if (particles[n].shell>0 &&
+            Tsynch-particles[n].time > (particles[n].shell*particles[n].shell)/particles[n].Diff/100  ){
 
         double Rsynch =  drawPosPQ00bis( Tsynch-particles[n].time, particles[n].tau_exitSampled-particles[n].time,
                                          particles[n].shell, particles[n].Diff, gsl_rng_uniform(r) );
@@ -258,6 +255,7 @@ void synchPart_PQ_GF ( struct particle *particles, int *partList, gsl_rng *r, in
         particles[n].pos[1] += particles[n].displPQ[1][particles[n].countPQ];
         particles[n].pos[2] += particles[n].displPQ[2][particles[n].countPQ];
         particles[n].countPQ ++;
+
     }
     else{
         //It is the case of BM

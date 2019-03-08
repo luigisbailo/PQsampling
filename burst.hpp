@@ -163,12 +163,15 @@ void burst_PQ_GF_proj ( struct particle *particles, int *partList, double *distR
     // 2 - particle exit-time smaller than bursting time
     //     one particle may exit its domain, do the BM fractional propagation and then burst the other domain after its exit time
     // 3 - domain in within bursting distance
-    if ( particles[jPart].gf && particles[iPart].time<particles[jPart].tau_exitSampled && distRow[j] - particles[jPart].shell < particles[iPart].burstR ){
+    if ( particles[jPart].gf == 0 &&
+            particles[iPart].time<particles[jPart].tau_exitSampled &&
+            distRow[j] - particles[jPart].shell < particles[iPart].burstR ){
 
         particles[jPart].gf = 1;
 
         //The P function is not sampled at very small times, when the survival function S can be approximated to 1
-        if (particles[iPart].time-particles[jPart].time> (particles[jPart].shell*particles[jPart].shell)/particles[jPart].Diff/100){
+        if (particles[iPart].time-particles[jPart].time >
+                (particles[jPart].shell*particles[jPart].shell)/particles[jPart].Diff/100){
             particles[jPart].burst = 0;
 
             double tempPos[3], radiusPQ;
@@ -176,7 +179,8 @@ void burst_PQ_GF_proj ( struct particle *particles, int *partList, double *distR
             double phi = acos( 2*gsl_rng_uniform (r) - 1 );
             double tau_exit = particles[jPart].tau_exitSampled-particles[jPart].time;
             double t_sampling = particles[iPart].time-particles[jPart].time;
-            radiusPQ = drawPosPQ00bis ( t_sampling, tau_exit, particles[jPart].shell, particles[jPart].Diff, gsl_rng_uniform(r) );
+            radiusPQ = drawPosPQ00bis ( t_sampling, tau_exit, particles[jPart].shell,
+                                        particles[jPart].Diff, gsl_rng_uniform(r) );
 
             polarTransf_angles ( deltaPos, radiusPQ, theta, phi);
             //deltaPos now contains the displacements in cartesian coordinate
@@ -218,7 +222,8 @@ void burst_PQ_GF_proj ( struct particle *particles, int *partList, double *distR
 
                         R_temp = sqrt(pow(X_temp + dx_trial, 2) + pow(Y_temp + dy_trial, 2) + pow(Z_temp + dz_trial, 2));
 
-                    }while (!(R_temp > radiusPQ - epsilon && R_temp < radiusPQ + epsilon && R_temp<particles[jPart].shell) );
+                    } while (!(R_temp > radiusPQ - epsilon &&
+                             R_temp < radiusPQ + epsilon && R_temp<particles[jPart].shell) );
 
                 }
                 else{
@@ -273,9 +278,12 @@ void burst_PQ_GF_proj ( struct particle *particles, int *partList, double *distR
 
             double deltaT = tau_bm - (particles[jPart].tau_exitSampled - particles[jPart].tau_exit);
 
-            particles[jPart].displPQ[0][count_PQ] = tempPos[0] - X_temp + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
-            particles[jPart].displPQ[1][count_PQ] = tempPos[1] - Y_temp + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
-            particles[jPart].displPQ[2][count_PQ] = tempPos[2] - Z_temp + sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
+            particles[jPart].displPQ[0][count_PQ] = tempPos[0] - X_temp +
+                    sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
+            particles[jPart].displPQ[1][count_PQ] = tempPos[1] - Y_temp +
+                    sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
+            particles[jPart].displPQ[2][count_PQ] = tempPos[2] - Z_temp +
+                    sqrt(2*deltaT)*particles[jPart].sqrtDiff*gsl_ran_gaussian (r,1);
 
             particles[jPart].totPQdispl = count_PQ;
 
@@ -285,12 +293,9 @@ void burst_PQ_GF_proj ( struct particle *particles, int *partList, double *distR
             particles[jPart].shell = 0;
             particles[jPart].time = particles[iPart].time;
             particles[jPart].tau_exit = particles[iPart].time;
-//            if (particles[jPart].tau_exitSampled>tProj)
-//                particles[jPart].tau_exitSampled = particles[iPart].time - tau_bm;
-//            // tau_exitSampled remains unchanged
 
         }
-      else if (particles[iPart].time>particles[jPart].time){
+        else if (particles[iPart].time>particles[jPart].time){
 
         //At very small times, the bursting procedure consists simply in a brownian motion integration step 
         double sqrt2dt = sqrt (2*(particles[iPart].time-particles[jPart].time));
@@ -320,7 +325,8 @@ void burst_PQ_GF_proj ( struct particle *particles, int *partList, double *distR
         }
 
       // "distRow[]" is updated with the new distances, and weather there is a new closest distance to insert in distRow[0] is checked    
-      distRow [j] = sqrt(dist2_per ( &particles[iPart], &particles[jPart], L )) - particles[iPart].radius - particles[jPart].radius;
+      distRow [j] = sqrt(dist2_per ( &particles[iPart], &particles[jPart], L )) -
+              particles[iPart].radius - particles[jPart].radius;
       if (distRow[j]<distRow[0]) distRow[0]=distRow[j];      
 
     }

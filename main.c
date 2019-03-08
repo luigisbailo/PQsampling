@@ -5,14 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#include <iostream>
-//#include <fstream>
-//#include <algorithm>
-//#include <vector>
-//#include <iomanip>
-//#include <chrono>
-//#include <cstring>
-//#include <sstream>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_roots.h>
@@ -40,36 +32,35 @@
 #include "Fig2/run_annih_PQ.hpp"
 #include "Fig2/fig2_diff.hpp"
 #include "Fig2/fig2_annih.hpp"
-//#include "Fig4/run_hybGF_P_proj.hpp"
-//#include "Fig4/run_hybGF_PQ_proj.hpp"
-//#include "Fig4/run_annih_PQ_proj.hpp"
-//#include "Fig4/run_annih_P_proj.hpp"
-//#include "Fig4/run_annih_PQ_proj.hpp"
-//#include "Fig4/fig4_diff_proj.hpp"
-//#include "Fig4/fig4_annih_proj.hpp"
+#include "Fig4/run_hybGF_P_proj.hpp"
+#include "Fig4/run_hybGF_PQ_proj.hpp"
+#include "Fig4/run_annih_PQ_proj.hpp"
+#include "Fig4/run_annih_P_proj.hpp"
+#include "Fig4/fig4_diff_proj.hpp"
+#include "Fig4/fig4_annih_proj.hpp"
 
 
 int main () {
 
     printf("\n\nFig1 is being produced:\n\n");
 
-//    fig1();
+    fig1();
 
     printf("\n\nFig2-MSD is being produced:\n\n");
 
-//    fig2_diff();
-//
+    fig2_diff();
+
     printf("\n\nFig2-kinetiks is being produced:\n\n");
 
-//    fig2_annih();
+    fig2_annih();
 
     printf("\n\nFig4-MSD is being produced:\n\n");
 
-//    fig4_diff_proj();
+    fig4_diff_proj();
 
-    printf("\n\nFig2-kinetiks is being produced:\n\n");
+    printf("\n\nFig4-kinetiks is being produced:\n\n");
 
-//    fig4_annih_proj();
+    fig4_annih_proj();
 
 
 }

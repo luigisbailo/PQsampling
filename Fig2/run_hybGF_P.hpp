@@ -65,7 +65,7 @@ void run_hybGF_P ( int N_A, int N_B, int R_A, int R_B, double D_A, double D_B, d
 
 		particles[partList[0]].burst = 1; //when a particle is burst its position is updated and put on top of the list
 
-		if ( R > 0.0001 ) {
+		if ( R > EPSILON) {
 			stat [1] ++;
 			if (R>L/20) R=L/20;
 			GFstep_GF ( &particles[partList[0]], r, R );

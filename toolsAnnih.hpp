@@ -108,7 +108,7 @@ void BMstepPQ_annih ( struct particle *particles, int *partList, double *distRow
         }
     }
 
-    if (particles[partList[0]].active) {
+    if (particles[partList[0]].active == 0) {
 
         if (particles[partList[0]].tau_exitSampled > particles[partList[0]].time) {
 
@@ -182,7 +182,6 @@ void BFstep_annih ( struct particle *particles, struct BFdistances *d, gsl_rng *
         particles[i].pos_exit[1] += deltaPos[1];
         particles[i].pos_exit[2] += deltaPos[2];
         checkBound (particles[i].pos_exit, particles[i].pos_period, L );
-
 
     }
 

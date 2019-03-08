@@ -96,7 +96,6 @@ void initPos_hybGF ( struct particle *particles, gsl_rng *r, int N_A, int N_B, d
 }
 
 
-
 void initPos_BM ( struct particle *particles, gsl_rng *r, int N_A, int N_B, double R_A, double R_B,
                   double D_A, double D_B, double tau_bm, double L) {
 
@@ -170,10 +169,8 @@ void initPos_BM ( struct particle *particles, gsl_rng *r, int N_A, int N_B, doub
 
 
   }
+
 }
-
-
-
 
 
 void initShell_GF ( struct particle *particles, gsl_rng *r, int N, double tau_bm, double sqrt2TAU_BM, double L, int *stat ) {
@@ -326,7 +323,6 @@ void initShell_GF_proj ( struct particle *particles, gsl_rng *r, int N, double t
     particles[i].pos_exit[0] = particles[i].pos[0] + deltaPos[0] + gsl_ran_gaussian (r,1)*particles[i].sqrtDiff * sqrt2TAU_BM;
     particles[i].pos_exit[1] = particles[i].pos[1] + deltaPos[1] + gsl_ran_gaussian (r,1)*particles[i].sqrtDiff * sqrt2TAU_BM;
     particles[i].pos_exit[2] = particles[i].pos[2] + deltaPos[2] + gsl_ran_gaussian (r,1)*particles[i].sqrtDiff * sqrt2TAU_BM;
-
 
   }
 
