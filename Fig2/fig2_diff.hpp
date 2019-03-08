@@ -18,7 +18,7 @@ void fig2_diff () {
 
 	int nProj=5;
 	double Tsim=1000;
-	int Nsamples=200;
+	int Nsamples=100;
 
 	int stat[3];
 	double diffStat[nProj][10];
@@ -47,7 +47,6 @@ void fig2_diff () {
 		for ( int t=0; t<nProj; t++){
 
 			for ( int n=0; n<N; n++){
-//				printf ("%lf\n",diffStat[t][n]);
 				Diff_P [n][count][t] = diffStat[t][n];
 			}
 
@@ -60,7 +59,7 @@ void fig2_diff () {
 			for ( int t=0; t<nProj; t++)
 				diffStat[t][n] = 0;
 
-//		run_hybGF_PQ ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, diffStat );
+		run_hybGF_PQ ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, alpha, Tsim, nProj, L, stat, diffStat );
 
 		for ( int n=0; n<N; n++){
 			for ( int t=0; t<nProj; t++){
@@ -77,7 +76,7 @@ void fig2_diff () {
 			for ( int t=0; t<nProj; t++)
 				diffStat[t][n] = 0;
 
-//		run_BM ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, Tsim, nProj, L, diffStat );
+		run_BM ( N_A, N_B, R_A, R_B, D_A, D_B, tau_bm, Tsim, nProj, L, diffStat );
 
 		for ( int n=0; n<N; n++){
 			for ( int t=0; t<nProj; t++){

@@ -5,12 +5,10 @@
 
 void GFstep_GF ( struct particle *myPart, gsl_rng *r, double R ){
 //The shell radius "R" has been already determined with getR () and it has been already checked that the domain can be constructed
-//    printf("%lf\n",R);
     //extraction of the exit time and exit position in polar coordinates
     myPart->tau_exit += drawTimeNewt ( R, myPart->Diff, gsl_rng_uniform(r) );
     myPart->tau_exitSampled = myPart->tau_exit;
     myPart->shell = R;
-//    printf ("in %lf\n\n",myPart->tau_exit);
 
 }
 

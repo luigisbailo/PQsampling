@@ -83,7 +83,7 @@ void burst_PQ_GF ( struct particle *particles, int *partList, double *distRow, g
         int jPart = partList[j];
 
 
-        if ( particles[jPart].gf && distRow[j] - particles[jPart].shell < particles[iPart].burstR
+        if ( particles[jPart].gf==0 && distRow[j] - particles[jPart].shell < particles[iPart].burstR
              && particles[iPart].time<particles[jPart].tau_exit){
 
             particles[jPart].burst = 0;
