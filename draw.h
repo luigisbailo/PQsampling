@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "greensFunct.hpp"
+#include "greensFunct.h"
 
 double drawTimeNewt ( double b, double D, double xi ) {
 
