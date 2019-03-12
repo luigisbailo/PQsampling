@@ -89,14 +89,18 @@ void getDist ( struct particle *particles, int* partList, double *distRow, doubl
       distRow [j] = L;
     }
     else if (particles[partList[j]].gf == 0){
-      distRow [j] = sqrt(dist2_per ( &particles[partList[0]], &particles[partList[j]], L )) - particles[partList[0]].radius - particles[partList[j]].radius;
+      distRow [j] = sqrt(dist2_per ( &particles[partList[0]], &particles[partList[j]], L )) -
+              particles[partList[0]].radius - particles[partList[j]].radius;
     }
     //distance in case of BM. The two particles times are in within an integration step
-    else if ( fabs(particles[partList[0]].time-particles[partList[j]].time) < fabs(particles[partList[0]].time-particles[partList[j]].tau_exit) ){
-      distRow [j] = sqrt(dist2_per ( &particles[partList[0]], &particles[partList[j]], L )) - particles[partList[0]].radius - particles[partList[j]].radius;
+    else if ( fabs(particles[partList[0]].time-particles[partList[j]].time)
+              < fabs(particles[partList[0]].time - particles[partList[j]].tau_exit) ){
+      distRow [j] = sqrt(dist2_per ( &particles[partList[0]], &particles[partList[j]], L )) -
+              particles[partList[0]].radius - particles[partList[j]].radius;
     }  
     else {
-      distRow [j] = sqrt(dist2next_per ( &particles[partList[0]], &particles[partList[j]], L )) - particles[partList[0]].radius - particles[partList[j]].radius;
+      distRow [j] = sqrt(dist2next_per ( &particles[partList[0]], &particles[partList[j]], L )) -
+              particles[partList[0]].radius - particles[partList[j]].radius;
     }
 
   }
@@ -122,23 +126,26 @@ void getDist ( struct particle *particles, int* partList, double *distRow, doubl
 
 double min_element (double *arr, int N){
 
-  double min = arr[0];
-  for (int i=0; i<N-1; i++){
-    if (arr[i+1]<arr[i]){
-      min = arr[i+1];
-    }
-  }
+    double min = arr[0];
 
-  return min;
+    for (int i=1; i<N; i++){
+
+        if (arr[i]<min){
+
+            min = arr[i];
+
+        }
+    }
+
+    return min;
 
 }
 
 
 int compareTime (const void * part_A, const void * part_B)  {
 
-    double exit_A = ((struct particle*)part_A)->tau_exit;
-    double exit_B = ((struct particle*)part_B)->tau_exit;
-
+    double exit_A = 100*((struct particle*)part_A)->tau_exit;
+    double exit_B = 100*((struct particle*)part_B)->tau_exit;
 
     return exit_A - exit_B;
 
