@@ -13,6 +13,7 @@ void GFstep_GF ( struct particle *myPart, gsl_rng *r, double R ){
 }
 
 
+
 void GFstep_GF_proj ( struct particle *myPart, gsl_rng *r, double R, double dt){
 //The shell radius "R" has been already determined with getR () and it has been already checked that the domain can be constructed
 
@@ -24,6 +25,7 @@ void GFstep_GF_proj ( struct particle *myPart, gsl_rng *r, double R, double dt){
 
     
 }
+
 
 
 void BMstep ( struct particle *particles, int *partList, double *distRow, gsl_rng *r, double tau_bm,
@@ -80,6 +82,7 @@ void BMstep ( struct particle *particles, int *partList, double *distRow, gsl_rn
 
     particles[partList[0]].tau_exit += tau_bm;
 }
+
 
 
 void BMstepPQ ( struct particle *particles, int *partList, double *distRow, gsl_rng *r,
@@ -150,6 +153,7 @@ void BMstepPQ ( struct particle *particles, int *partList, double *distRow, gsl_
     particles[partList[0]].tau_exit += tau_bm;
 
 }
+
 
 
 void synchPart_P_GF ( struct particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
@@ -223,6 +227,7 @@ void synchPart_P_GF ( struct particle *particles, int *partList, gsl_rng *r, int
 }
 
 
+
 void synchPart_PQ_GF ( struct particle *particles, int *partList, gsl_rng *r, int N, double Tsynch, double L ) {
 
 
@@ -258,6 +263,7 @@ void synchPart_PQ_GF ( struct particle *particles, int *partList, gsl_rng *r, in
 
     }
     else{
+
         //It is the case of BM
         particles[n].pos[0] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) );
         particles[n].pos[1] += gsl_ran_gaussian (r,1) * particles[n].sqrtDiff * sqrt( 2 * ( Tsynch-particles[n].time ) );

@@ -11,14 +11,17 @@ void check_aGF (  struct particle *particles, int *partList, int N, double L ){
     exit (EXIT_FAILURE);
   }
 
-  if ( particles[partList[0]].pos[0]>L | particles[partList[0]].pos[0]<0 | particles[partList[0]].pos[1]>L | particles[partList[0]].pos[1] <0  | particles[partList[0]].pos[2]>L | particles[partList[0]].pos[2]<0  ) {
+  if ( particles[partList[0]].pos[0]>L | particles[partList[0]].pos[0]<0 | particles[partList[0]].pos[1]>L |
+          particles[partList[0]].pos[1] <0  | particles[partList[0]].pos[2]>L | particles[partList[0]].pos[2]<0  ) {
     printf("ERROR: pos\n");
     exit (EXIT_FAILURE);
   
   } 
 
   if (  particles[partList[0]].gf == 0  &&
-       (particles[partList[0]].pos_exit[0]>L | particles[partList[0]].pos_exit[0]<0 | particles[partList[0]].pos_exit[1]>L | particles[partList[0]].pos_exit[1] <0  | particles[partList[0]].pos_exit[2]>L | particles[partList[0]].pos_exit[2]<0 ) ) {
+       (particles[partList[0]].pos_exit[0]>L | particles[partList[0]].pos_exit[0]<0 |
+               particles[partList[0]].pos_exit[1]>L | particles[partList[0]].pos_exit[1] <0  |
+               particles[partList[0]].pos_exit[2]>L | particles[partList[0]].pos_exit[2]<0 ) ) {
     printf("ERROR: pos_exit\n");
     exit (EXIT_FAILURE);
   
@@ -26,7 +29,10 @@ void check_aGF (  struct particle *particles, int *partList, int N, double L ){
 
   for (int count=1; count<N; count++){
     int jPart = partList[count];
-    if ( sqrt(dist2_per(&particles[partList[0]],&particles[jPart],L)) - particles[partList[0]].shell - particles[jPart].shell - particles[partList[0]].radius - particles[jPart].radius < - 0.0000000001  && particles[jPart].shell>0 ){
+    if ( sqrt(dist2_per(&particles[partList[0]],&particles[jPart],L)) -
+                 particles[partList[0]].shell - particles[jPart].shell -
+                 particles[partList[0]].radius - particles[jPart].radius < - 0.0000000001  &&
+            particles[jPart].shell>0 ){
       printf("ERROR: distance particles");
       exit(EXIT_FAILURE);
     }
@@ -44,7 +50,8 @@ void check_GF (  struct particle *particles, int *partList, int N, double L ){
   }
 
 
-  if ( particles[partList[0]].pos[0]>L | particles[partList[0]].pos[0]<0 | particles[partList[0]].pos[1]>L | particles[partList[0]].pos[1] <0  | particles[partList[0]].pos[2]>L | particles[partList[0]].pos[2]<0  ) {
+  if ( particles[partList[0]].pos[0]>L | particles[partList[0]].pos[0]<0 | particles[partList[0]].pos[1]>L |
+          particles[partList[0]].pos[1] <0  | particles[partList[0]].pos[2]>L | particles[partList[0]].pos[2]<0  ) {
     printf("ERROR: pos\n");
     exit (EXIT_FAILURE);
   
@@ -53,7 +60,9 @@ void check_GF (  struct particle *particles, int *partList, int N, double L ){
   for (int count=1; count<N; count++){
 
     int jPart = partList[count];
-    if ( sqrt(dist2_per(&particles[partList[0]],&particles[jPart],L)) - particles[partList[0]].shell - particles[jPart].shell - particles[partList[0]].radius - particles[jPart].radius < - 0.0000000001  && particles[jPart].shell>0 ){
+    if ( sqrt(dist2_per(&particles[partList[0]],&particles[jPart],L)) - particles[partList[0]].shell -
+                 particles[jPart].shell - particles[partList[0]].radius - particles[jPart].radius < - 0.0000000001  &&
+            particles[jPart].shell>0 ){
       printf("ERROR: distance particles\n");
       exit(EXIT_FAILURE);
     }
