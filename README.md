@@ -1,4 +1,4 @@
-Codes to generate the results shown in the following paper:
+Codes used for generating the results shown in the following paper:
 
 # On the formalization of Asynchronous First Passage Algorithms
 
