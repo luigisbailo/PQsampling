@@ -8,4 +8,5 @@ formalization of the problem, we recast the current principles of the algorithm 
 and numerical evidence gives further justification to our claims.
 
 https://aip.scitation.org/doi/full/10.1063/1.5083147
+
 https://arxiv.org/abs/1903.06040
