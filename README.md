@@ -7,4 +7,5 @@ We then show why, despite such a contradiction, the numerical results are not ex
 formalization of the problem, we recast the current principles of the algorithm in a more solid conceptual framework,
 and numerical evidence gives further justification to our claims.
 
+https://aip.scitation.org/doi/full/10.1063/1.5083147
 https://arxiv.org/abs/1903.06040
